@@ -11,7 +11,7 @@ export function renderLibby(mainHTML, { title, backHref, rightHTML = '', active 
   const nav = `
     ${tab('library', 'index.html', icons.building, 'Library')}
     ${tab('shelf', 'shelf.html', icons.shelf, 'Shelf', badge)}
-    ${tab('search', 'index.html?focus=search', icons.search, 'Search')}
+    ${tab('search', 'list.html?focus=search', icons.search, 'Search')}
     ${tab('timeline', 'shelf.html?tab=timeline', icons.clock, 'Timeline')}
     ${tab('menu', 'menu.html', icons.menu, 'Menu')}
   `

@@ -41,5 +41,5 @@ export function browseHref(params = {}) {
     else next.delete(key)
   })
   const q = next.toString()
-  return q ? `index.html?${q}` : 'index.html'
+  return q ? `list.html?${q}` : 'list.html'
 }

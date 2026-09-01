@@ -15,25 +15,44 @@ const q = qs('q')
 const list = qs('list') || (q ? 'all' : 'popular')
 const format = qs('format')
 const availability = qs('availability')
+const audience = qs('audience')
 const sort = qs('sort') || 'popularity'
 const focusSearch = qs('focus') === 'search'
 const pageNum = Math.max(1, Number(qs('page') || '1') || 1)
 
-const filtered = sortBooks(
-  searchBooks(q, {
-    list: list === 'all' ? undefined : list,
-    format: format || undefined,
-    availability: availability || undefined,
-  }),
-  sort,
-)
+const filtered = (() => {
+  if (list === 'random') {
+    return searchBooks('', { format: format || undefined, availability: availability || undefined, audience: audience || undefined }).sort(
+      () => Math.random() - 0.5,
+    )
+  }
+  return sortBooks(
+    searchBooks(q, {
+      list: list === 'all' || list === 'random' ? undefined : list,
+      format: format || undefined,
+      availability: availability || undefined,
+      audience: audience || undefined,
+    }),
+    sort,
+  )
+})()
 const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
 const safePage = Math.min(pageNum, totalPages)
 const pageItems = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
-const heading = q ? `“${q}”` : LISTS[list]?.title || 'Popular'
+const heading = q
+  ? `“${q}”`
+  : list === 'random'
+    ? 'Random'
+    : audience === 'children'
+      ? 'For kids'
+      : audience === 'teens'
+        ? 'For teens'
+        : LISTS[list]?.title || 'Titles'
 const blurb = q
   ? `${filtered.length} title${filtered.length === 1 ? '' : 's'}`
-  : LISTS[list]?.blurb || 'Titles lots of people at your library are borrowing.'
+  : list === 'random'
+    ? 'A shuffled look at the collection.'
+    : LISTS[list]?.blurb || 'Browse titles from your library.'
 
 function listItem(book) {
   const preferred =
@@ -63,7 +82,7 @@ function listItem(book) {
     </div>
     ${book.series ? `<p class="series-line">${escapeHtml(book.series.name)} #${book.series.position}</p>` : ''}
     <h3><a href="${titleHref(book.id)}">${escapeHtml(book.title)}</a></h3>
-    <p class="libby-item-author"><a href="index.html?q=${encodeURIComponent(book.author)}">${escapeHtml(book.author)}</a></p>
+    <p class="libby-item-author"><a href="list.html?q=${encodeURIComponent(book.author)}">${escapeHtml(book.author)}</a></p>
   </li>`
 }
 
@@ -101,7 +120,7 @@ renderLibby(
   </div>`,
   {
     title: q ? 'Search' : heading,
-    backHref: q || focusSearch || pageNum > 1 ? 'index.html' : '',
+    backHref: 'index.html',
     rightHTML: `<button type="button" class="icon-btn" aria-label="Filters" data-filters>${icons.filter}</button>`,
     active: focusSearch ? 'search' : 'library',
   },
@@ -110,7 +129,7 @@ renderLibby(
 document.querySelector('.libby-search')?.addEventListener('submit', (e) => {
   e.preventDefault()
   const next = e.target.querySelector('input').value.trim()
-  location.href = next ? `index.html?q=${encodeURIComponent(next)}` : 'index.html'
+  location.href = next ? `list.html?q=${encodeURIComponent(next)}` : 'list.html?focus=search'
 })
 
 document.querySelector('[data-cycle-format]')?.addEventListener('click', () => {

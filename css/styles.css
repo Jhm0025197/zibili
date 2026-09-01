@@ -614,6 +614,44 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--opl-heading); font-w
 .toast-libby { background: var(--libby-maroon); bottom: 88px; }
 
 .browse { width: min(720px, calc(100% - 40px)); margin: 0 auto; padding: 8px 0 96px; min-width: 0; }
+.home-library { width: min(860px, calc(100% - 40px)); }
+.home-kicker { margin: 0 0 12px; color: var(--libby-muted); font-size: 14px; }
+.home-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0 0 28px;
+}
+.home-chips a {
+  color: var(--libby-maroon);
+  font-size: 16px;
+  text-transform: lowercase;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  white-space: nowrap;
+}
+.home-shelf { margin: 0 0 36px; }
+.shelf-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.shelf-head h2 { font-size: 28px; margin: 0; }
+.shelf-head h2 a { text-decoration: none; }
+.shelf-head h2 a:hover { text-decoration: underline; }
+.shelf-head > a { color: var(--libby-maroon); font-size: 15px; }
+.shelf-rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 118px;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 4px 0 12px;
+}
+.shelf-card { text-decoration: none; color: inherit; }
+.shelf-card .cover { width: 118px; }
 .libby-filters { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0 0 8px; }
 .filter-link {
   background: none;

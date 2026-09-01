@@ -1,6 +1,6 @@
 # Zibili
 
-A Libby-style digital library: popular titles, search, borrow and holds, samples, tags, and a shelf.
+A Libby-style digital library. The home screen is the library page (filters and cover shelves). Tap a list for the title list, or a cover for details. Borrow, holds, samples, tags, and a shelf.
 
 Plain HTML, CSS, and a little JavaScript. No build step.
 

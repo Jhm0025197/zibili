@@ -60,8 +60,8 @@ function paint(formatIndex) {
         ${book.series ? `<p class="series-line">${escapeHtml(book.series.name)} #${book.series.position}</p>` : ''}
         <h2>${escapeHtml(book.title)}</h2>
         <p class="byline">
-          <a href="index.html?q=${encodeURIComponent(book.author)}">${escapeHtml(book.author)}</a>
-          ${format.narrator ? ` · narrated by <a href="index.html?q=${encodeURIComponent(format.narrator)}">${escapeHtml(format.narrator)}</a>` : ''}
+          <a href="list.html?q=${encodeURIComponent(book.author)}">${escapeHtml(book.author)}</a>
+          ${format.narrator ? ` · narrated by <a href="list.html?q=${encodeURIComponent(format.narrator)}">${escapeHtml(format.narrator)}</a>` : ''}
         </p>
         <p class="rating-line">
           <span class="stars" aria-label="${book.rating} out of 5 stars">${[0, 1, 2, 3, 4].map((i) => icons.star(i < full)).join('')}</span>
@@ -86,7 +86,7 @@ function paint(formatIndex) {
       </section>
       <section class="subjects">
         <h3>Subjects</h3>
-        <div class="subject-row">${book.subjects.map((s) => `<a href="index.html?q=${encodeURIComponent(s)}">${escapeHtml(s)}</a>`).join('')}</div>
+        <div class="subject-row">${book.subjects.map((s) => `<a href="list.html?q=${encodeURIComponent(s)}">${escapeHtml(s)}</a>`).join('')}</div>
       </section>
       <section class="also-row">
         <h3>Readers also borrowed</h3>
