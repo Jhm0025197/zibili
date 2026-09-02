@@ -34,6 +34,21 @@ export function titleHref(id) {
   return `title.html?id=${encodeURIComponent(id)}`
 }
 
+export function readHref(id, page) {
+  const params = new URLSearchParams({ id })
+  if (page) params.set('page', String(page))
+  return `read.html?${params}`
+}
+
+export function hasPdf(book) {
+  return Boolean(book?.pdf)
+}
+
+export function downloadHref(book) {
+  if (!book?.pdf) return ''
+  return `${book.pdf}?download=1`
+}
+
 export function browseHref(params = {}) {
   const next = new URLSearchParams(location.search)
   Object.entries(params).forEach(([key, value]) => {

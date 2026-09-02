@@ -1,0 +1,15 @@
+{
+  "title": "Introduction to Philosophy",
+  "author": "Nathan Smith",
+  "publisher": "OpenStax",
+  "released": "June 15, 2022",
+  "isbn13": "9781951693596",
+  "language": "English",
+  "audience": "adults",
+  "subjects": ["Philosophy", "Humanities", "Ethics"],
+  "lists": ["new", "available", "popular"],
+  "course_codes": ["PHI1010"],
+  "license": "CC BY-NC-SA 4.0",
+  "quote": "Open textbook · CC BY-NC-SA 4.0",
+  "description": "An OpenStax introduction to philosophy covering ethics, epistemology, metaphysics, and the history of ideas. Written for a first college course and free to read, share, and adapt under a Creative Commons license."
+}

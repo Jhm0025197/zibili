@@ -2,7 +2,7 @@ import { getBook, relatedBooks } from './data.js'
 import { icons } from './icons.js'
 import { openSheet, renderLibby } from './chrome.js'
 import { lib } from './state.js'
-import { bindCovers, coverHTML, escapeHtml, qs, titleHref } from './util.js'
+import { bindCovers, coverHTML, downloadHref, escapeHtml, hasPdf, qs, readHref, titleHref } from './util.js'
 
 const book = getBook(qs('id'))
 
@@ -20,8 +20,9 @@ function paint(formatIndex) {
   const loaned = lib.isLoaned(book.id, format.type)
   const held = lib.isHeld(book.id, format.type)
   const tagged = lib.hasTag(book.id)
+  const readable = hasPdf(book)
   const waitersPerCopy = format.holds && format.copies ? (format.holds / format.copies).toFixed(1) : null
-  const actionLabel = loaned ? 'Open' : format.available ? 'Borrow' : held ? 'Manage Hold' : 'Place Hold'
+  const actionLabel = readable ? 'Read' : loaned ? 'Open' : format.available ? 'Borrow' : held ? 'Manage Hold' : 'Place Hold'
   const sampleLabel = format.type === 'audiobook' ? 'Listen to Sample' : 'Read Sample'
   const related = relatedBooks(book)
   const full = Math.round(book.rating || 0)
@@ -45,7 +46,8 @@ function paint(formatIndex) {
           }
         </div>
         <div class="title-actions">
-          <button type="button" class="libby-action" data-primary>${format.available || loaned ? icons.card : icons.clock}<span>${actionLabel}</span></button>
+          <button type="button" class="libby-action" data-primary>${readable || format.available || loaned ? icons.book : icons.clock}<span>${actionLabel}</span></button>
+          ${readable ? `<a class="libby-action" href="${escapeHtml(downloadHref(book))}" download="${escapeHtml(book.id)}.pdf">${icons.download}<span>Download</span></a>` : ''}
           <button type="button" class="libby-action" data-sample>${icons.play}<span>${sampleLabel}</span></button>
           <button type="button" class="libby-action ${tagged ? 'is-on' : ''}" data-tag>${icons.tag}<span>${tagged ? 'Tagged' : 'Tag'}</span></button>
           ${
@@ -63,11 +65,15 @@ function paint(formatIndex) {
           <a href="list.html?q=${encodeURIComponent(book.author)}">${escapeHtml(book.author)}</a>
           ${format.narrator ? ` · narrated by <a href="list.html?q=${encodeURIComponent(format.narrator)}">${escapeHtml(format.narrator)}</a>` : ''}
         </p>
-        <p class="rating-line">
+        ${
+          book.ratingsCount
+            ? `<p class="rating-line">
           <span class="stars" aria-label="${book.rating} out of 5 stars">${[0, 1, 2, 3, 4].map((i) => icons.star(i < full)).join('')}</span>
           <strong>${book.rating.toFixed(1)}</strong>
           <span>${book.ratingsCount.toLocaleString()} ratings</span>
-        </p>
+        </p>`
+            : ''
+        }
       </header>
       ${book.quote ? `<blockquote class="title-quote">${escapeHtml(book.quote)}</blockquote>` : ''}
       <div class="blurb">${book.description.split('\n').map((p) => `<p>${escapeHtml(p)}</p>`).join('')}</div>
@@ -82,6 +88,8 @@ function paint(formatIndex) {
           <dt>ISBN</dt><dd>${escapeHtml(book.isbn13)}</dd>
           <dt>Language</dt><dd>${escapeHtml(book.language)}</dd>
           <dt>Audience</dt><dd class="cap">${escapeHtml(book.audience)}</dd>
+          ${book.license ? `<dt>License</dt><dd>${escapeHtml(book.license)}</dd>` : ''}
+          ${(book.course_codes || []).length ? `<dt>Course</dt><dd>${escapeHtml(book.course_codes.join(', '))}</dd>` : ''}
         </dl>
       </section>
       <section class="subjects">
@@ -129,6 +137,10 @@ function paint(formatIndex) {
 
   function primary() {
     document.querySelector('.sheet-scrim')?.remove()
+    if (readable) {
+      location.href = readHref(book.id)
+      return
+    }
     if (loaned) {
       location.href = 'shelf.html'
       return

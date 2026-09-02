@@ -2,7 +2,7 @@ import { LISTS, PAGE_SIZE, searchBooks, sortBooks } from './data.js'
 import { icons } from './icons.js'
 import { openSheet, renderLibby } from './chrome.js'
 import { lib } from './state.js'
-import { bindCovers, browseHref, coverHTML, escapeHtml, qs, titleHref } from './util.js'
+import { bindCovers, browseHref, coverHTML, downloadHref, escapeHtml, hasPdf, qs, readHref, titleHref } from './util.js'
 
 const SORTS = [
   { id: 'popularity', label: 'popularity' },
@@ -60,8 +60,10 @@ function listItem(book) {
   const loaned = lib.isLoaned(book.id, preferred.type)
   const held = lib.isHeld(book.id, preferred.type)
   const tagged = lib.hasTag(book.id)
-  const actionLabel = loaned ? 'Open' : preferred.available ? 'Borrow' : held ? 'Manage Hold' : 'Place Hold'
+  const readable = hasPdf(book)
+  const actionLabel = readable ? 'Read' : loaned ? 'Open' : preferred.available ? 'Borrow' : held ? 'Manage Hold' : 'Place Hold'
   const sampleLabel = preferred.type === 'audiobook' ? 'Listen to Sample' : 'Read Sample'
+  const act = readable ? 'read' : loaned ? 'open' : preferred.available ? 'borrow' : 'hold'
   return `<li class="libby-item">
     <div class="libby-item-top">
       <a href="${titleHref(book.id)}" class="libby-item-cover" aria-label="${escapeHtml(book.title)}">
@@ -69,9 +71,10 @@ function listItem(book) {
         ${preferred.type === 'audiobook' ? `<span class="under-cover">${icons.headphones} ${escapeHtml(preferred.duration || '')}</span>` : ''}
       </a>
       <div class="libby-item-actions">
-        <button type="button" class="libby-action" data-act="${loaned ? 'open' : preferred.available ? 'borrow' : 'hold'}" data-id="${escapeHtml(book.id)}" data-format="${preferred.type}">
-          ${preferred.available || loaned ? icons.card : icons.clock}${actionLabel}
+        <button type="button" class="libby-action" data-act="${act}" data-id="${escapeHtml(book.id)}" data-format="${preferred.type}">
+          ${readable || preferred.available || loaned ? icons.book : icons.clock}${actionLabel}
         </button>
+        ${readable ? `<a class="libby-action" href="${escapeHtml(downloadHref(book))}" download="${escapeHtml(book.id)}.pdf">${icons.download}Download</a>` : ''}
         <button type="button" class="libby-action" data-act="sample" data-id="${escapeHtml(book.id)}" data-format="${preferred.type}">
           ${icons.play}${sampleLabel}
         </button>
@@ -101,7 +104,7 @@ renderLibby(
       focusSearch || q
         ? `<form class="libby-search">
             ${icons.search}
-            <input name="q" value="${escapeHtml(q)}" placeholder="Search by title, author, narrator, or subject">
+            <input name="q" value="${escapeHtml(q)}" placeholder="Search by title, author, course, or subject">
           </form>`
         : ''
     }
@@ -187,8 +190,12 @@ document.querySelectorAll('[data-act]').forEach((btn) =>
     const book = pageItems.find((b) => b.id === btn.dataset.id)
     if (!book) return
     const fmt = book.formats.find((f) => f.type === btn.dataset.format) || book.formats[0]
+    if (btn.dataset.act === 'read') {
+      location.href = readHref(book.id)
+      return
+    }
     if (btn.dataset.act === 'open') {
-      location.href = 'shelf.html'
+      location.href = hasPdf(book) ? readHref(book.id) : 'shelf.html'
       return
     }
     if (btn.dataset.act === 'tag') {

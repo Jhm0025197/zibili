@@ -1,3 +1,14 @@
 node_modules
 dist
 .DS_Store
+books/*.pdf
+books/**/*.pdf
+data/
+*.db
+*.db-shm
+*.db-wal
+.env
+.venv/
+__pycache__/
+tests/__pycache__/
+*.py[cod]

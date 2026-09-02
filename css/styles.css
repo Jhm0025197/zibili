@@ -521,6 +521,7 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--opl-heading); font-w
   cursor: pointer;
 }
 .libby-action svg { width: 22px; height: 22px; }
+a.libby-action { text-decoration: none; color: var(--libby-maroon); }
 .libby-action.is-on { color: var(--libby-ink); }
 .wait-note { font-size: 14px; color: var(--libby-muted); margin: 8px 0 0; max-width: 36ch; }
 .title-meta h2 { font-size: clamp(32px, 5vw, 44px); margin: 0 0 6px; }
@@ -786,8 +787,79 @@ a.maroon-btn:hover { color: #fff; }
   font-size: 15px;
   padding: 0;
   text-decoration: underline;
+  display: inline;
 }
 .timeline p { border-top: 1px solid rgba(80, 60, 40, 0.12); padding: 12px 0; margin: 0; }
+
+.reader {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 56px);
+  background: #2c2622;
+}
+.reader-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--libby-paper);
+  border-bottom: 1px solid rgba(80, 60, 40, 0.12);
+  position: sticky;
+  top: 56px;
+  z-index: 4;
+}
+.reader-btn {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--libby-ink);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  line-height: 1;
+}
+.reader-btn svg { width: 20px; height: 20px; }
+.reader-btn-next { transform: scaleX(-1); }
+.reader-btn:hover { background: rgba(0, 0, 0, 0.06); }
+.reader-page {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--libby-muted);
+}
+.reader-page input {
+  width: 64px;
+  border: 1px solid rgba(80, 60, 40, 0.2);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font: inherit;
+  background: #fff;
+  color: var(--libby-ink);
+}
+.reader-spacer { flex: 1; }
+.reader-stage {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+.reader-stage canvas {
+  max-width: 100%;
+  height: auto;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  background: #fff;
+}
+.reader-status {
+  color: #efe6d6;
+  font-size: 16px;
+  padding: 48px 16px;
+  text-align: center;
+}
 
 @media (max-width: 960px) {
   .hero-split, .explore, .support, .title-hero { grid-template-columns: 1fr; }
@@ -809,6 +881,8 @@ a.maroon-btn:hover { color: #fff; }
     z-index: 6;
   }
   .libby-tab { font-size: 10px; text-decoration: none; color: var(--libby-ink); }
+  .reader { min-height: calc(100vh - 120px); }
+  .reader-toolbar { top: 52px; }
 }
 
 @media (max-width: 760px) {

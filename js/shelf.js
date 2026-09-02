@@ -1,7 +1,7 @@
 import { BOOKS } from './data.js'
 import { renderLibby } from './chrome.js'
 import { lib } from './state.js'
-import { coverHTML, escapeHtml, qs, titleHref } from './util.js'
+import { coverHTML, escapeHtml, hasPdf, qs, readHref, titleHref } from './util.js'
 
 const tab = qs('tab') || 'loans'
 const taggedIds = lib.tags.wishlist || []
@@ -42,7 +42,7 @@ if (tab === 'loans') {
                 item,
                 `<p class="title-row-format">${escapeHtml(item.format)} · due ${new Date(item.due).toLocaleDateString()}</p>
                  <div class="shelf-actions">
-                   <button type="button" class="text-action">${item.format === 'audiobook' ? 'Open Audiobook' : 'Read With Libby'}</button>
+                   <a class="text-action" href="${hasPdf(item.book) ? readHref(item.book.id) : titleHref(item.book.id)}">${item.format === 'audiobook' ? 'Open Audiobook' : hasPdf(item.book) ? 'Read' : 'Read With Libby'}</a>
                    <button type="button" class="text-action" data-return="${escapeHtml(item.bookId)}" data-format="${escapeHtml(item.format)}">Return Early</button>
                  </div>`,
               ),

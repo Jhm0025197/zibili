@@ -417,7 +417,7 @@ export const EXHIBITS = [
   },
 ]
 
-export const BOOKS = [
+const DEMO_BOOKS = [
   {
     id: '12099213',
     title: 'The Women',
@@ -988,6 +988,26 @@ export const BOOKS = [
   },
 ]
 
+async function loadCatalog() {
+  try {
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), 4000)
+    const response = await fetch('/api/catalog', {
+      signal: controller.signal,
+      headers: { Accept: 'application/json' },
+    })
+    clearTimeout(timer)
+    if (!response.ok) throw new Error('catalog')
+    const data = await response.json()
+    if (!Array.isArray(data) || data.length === 0) throw new Error('empty')
+    return data
+  } catch {
+    return DEMO_BOOKS
+  }
+}
+
+export const BOOKS = await loadCatalog()
+
 export const LISTS = {
   popular: { title: 'Popular', blurb: 'Titles lots of people at your library are borrowing.' },
   new: { title: 'Newly added', blurb: 'Fresh arrivals in the digital collection.' },
@@ -1090,7 +1110,7 @@ export function searchBooks(query, { list, format, audience, availability } = {}
       if (!formats.some((f) => f.available)) return false
     }
     if (!q) return true
-    const hay = [b.title, b.author, b.subjects.join(' '), b.series?.name || ''].join(' ').toLowerCase()
+    const hay = [b.title, b.author, (b.subjects || []).join(' '), b.series?.name || '', (b.course_codes || []).join(' ')].join(' ').toLowerCase()
     return hay.includes(q)
   })
 }
