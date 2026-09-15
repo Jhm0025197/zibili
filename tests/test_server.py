@@ -298,7 +298,7 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn("svg", headers.get("content-type", ""))
 
-        for path in ("/server.py", "/data/zibili.db", "/books/sample.pdf", "/ingest.py"):
+        for path in ("/server.py", "/data/zibili.db", "/books/sample.pdf", "/ingest.py", "/vendor/axe/axe.min.js", "/seed/students.json"):
             status, _, _ = self.request("GET", path)
             self.assertEqual(status, 404, path)
 

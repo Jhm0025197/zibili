@@ -7,18 +7,21 @@ One line per thing that is out of scope for SLC v1. Anything here is a deliberat
 - Borrow, holds, and loan periods: removed. Open textbooks have no copy limits. Add back only if a licensed title ever enters the catalog.
 - Audiobook and sample formats: removed. Every title is a PDF.
 - Printed page labels: the reader and ledger use physical page indices; showing the book's printed page number needs `pdf.getPageLabels()`.
+- Section retitles: the id-map keys on the title, so a renamed section reads as delete plus insert. Content matching would keep the ID.
 - Full-text search: only title, author, subject, and course code are searched. SQLite FTS5 over extracted page text is the next step.
 - Highlights and paragraph anchors.
-- Markdown chunking and per-section HTML rendering: the reader shows PDF pages, sections come from the outline.
+- Markdown chunking and per-section HTML rendering: the reader shows PDF pages, sections come from the outline (see `docs/decisions/0001-pdf-sections-not-chunks.md`).
+- Dark-mode inversion of the PDF canvas: the page keeps the document's own colours.
 - EPUB and CNXML ingest adapters.
-- Multi-course, multi-book seeding: one course, one book.
-- Signed session cookie and CSRF token: v1 dev login sets an unsigned cookie on localhost.
-- LTI 1.3 launch from Canvas; SSO.
-- Real LRS export (xAPI).
-- AI chat sidecar, TTS, format wheel, render library.
-- Instructor-authored assignments: the assignment set is seeded.
-- Program/department tier in the college drill-down.
-- Postgres migration.
+- Multi-course, multi-book seeding: one course, one book. The second ingested book is in the library but not attached to a course.
+- Signed session cookie and CSRF token: v1 dev login sets an unsigned cookie on localhost. Do this before the server is reachable from anywhere else.
 - Rate limiting on POST /api/events.
-- Offline (service worker) support and self-hosted fonts.
-- Dark-mode inversion of the PDF canvas.
+- Instructor-authored assignments: the assignment set is seeded.
+- Real prior-spend figure: `seed/prior-spend.json` is a placeholder and the college view labels it an estimate until `verified` is true.
+- LTI 1.3 launch from Canvas; SSO.
+- Real LRS export (xAPI): events are shaped for it but nothing emits statements.
+- AI chat sidecar, TTS, format wheel, render library.
+- Program/department tier in the college drill-down.
+- Postgres migration: the schema is Postgres-shaped but runs on SQLite.
+- Offline (service worker) support and self-hosted fonts: Google Fonts is the one runtime network call.
+- JavaScript unit tests: the browser is covered by `scripts/smoke.py` and `scripts/axe.py`, not by a JS test runner.

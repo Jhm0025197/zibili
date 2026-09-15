@@ -14,6 +14,32 @@
   --libby-sans: 'Source Sans 3', 'Public Sans', sans-serif;
 }
 
+
+/* Dark mode follows the system setting. The PDF canvas keeps the document's
+   own colours; inverting it is a backlog item. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --libby-paper: #201c19;
+    --libby-paper-2: #2a2521;
+    --libby-rail: #181512;
+    --libby-surface: #2c2622;
+    --libby-ink: #ece4d8;
+    --libby-muted: #b3a79a;
+    --libby-maroon: #e08a95;
+    --libby-maroon-dark: #f0a8b1;
+    --libby-on-accent: #24100f;
+    --libby-hover: rgba(255, 255, 255, 0.08);
+    --libby-line: rgba(255, 255, 255, 0.14);
+  }
+  .libby-rail-item.active, .libby-tab.active, .libby-rail-item:hover { background: rgba(224, 138, 149, 0.18); }
+  .toc-chapter button.is-current { background: rgba(224, 138, 149, 0.2); }
+  table.data tr.is-current { background: rgba(224, 138, 149, 0.12); }
+  .cover { background: #3a332e; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5); }
+  .reader { background: #121010; }
+  .reader-stage canvas { box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6); }
+  .sheet-scrim { background: rgba(0, 0, 0, 0.6); }
+}
+
 *,
 *::before,
 *::after { box-sizing: border-box; }

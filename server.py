@@ -777,6 +777,8 @@ class ZibiliHandler(BaseHTTPRequestHandler):
         if "\x00" in relative or any(part.startswith(".") for part in Path(relative).parts):
             raise APIError(404, "not_found", "File not found.")
         relative_path = Path(relative)
+        if relative_path.parts[:2] == ("vendor", "axe"):
+            raise APIError(404, "not_found", "File not found.")  # test tooling, not for readers
         is_root = len(relative_path.parts) == 1 and relative in PUBLIC_ROOT_FILES
         is_asset = (
             len(relative_path.parts) > 1

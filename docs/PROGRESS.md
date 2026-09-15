@@ -45,6 +45,32 @@ What works, what is next. Updated at the end of every phase.
 - `college.html`, admin only: dollars displaced (labelled an estimate until `seed/prior-spend.json` says `verified: true`), students active, sections live, and change since the previous term with a caveat while the current term is under three weeks old. A term-by-term table and a by-course table follow.
 - `GET /api/college/summary` returns aggregates only. A test asserts the response contains no student hash and no student name.
 
+## Phase 7: accessibility, dark mode, tooling, docs (done)
+
+- Dark mode follows the system setting through the `--libby-*` variables. The PDF page keeps the book's own colours.
+- Every page has a skip link, one `<main>`, a visible focus ring, `aria-current` on the active tab, and sheets that close on Escape and return focus.
+- `npm run axe` runs axe-core (vendored, MPL-2.0, never served) over the library, reader, course, and college pages in light and dark with the WCAG 2.1 AA tags. Result at the end of this phase: zero violations on all eight page-and-theme combinations.
+- `npm run smoke` walks sixteen page-and-role combinations, desktop and mobile, screenshots each, and fails on any page or HTTP error.
+- README, backlog, and `docs/decisions/0001-pdf-sections-not-chunks.md` describe the build as it is.
+
+## Done condition, checked
+
+1. Ingest twice, zero ID churn: yes. `books/id-map.json` is byte-identical after a re-ingest and after `--force`.
+2. Download returns the original; Read opens at the last position: yes.
+3. Reading three sections as a seeded student shows in the professor view on reload: yes, covered by a route test and by hand.
+4. College view computes dollars displaced from `prior-spend.json` times the roster, with the seeded prior term beside it: yes, labelled as an estimate.
+5. axe shows no critical issues on the four pages, both themes: yes, zero violations of any severity.
+6. Fresh clone runs with `pip install -r requirements.txt`, `python ingest.py add`, `python server.py` and no environment variables: yes.
+7. This file says what works and what is next: yes.
+
+## Known limits
+
+- One course and one book are seeded. Business Law is in the library but attached to no course, so nothing about it reaches the dashboards.
+- The dev login cookie is unsigned. Fine on localhost, not beyond it.
+- The fee in `seed/prior-spend.json` is a placeholder; the college view says so until `verified` is set.
+- Page numbers are physical indices, not the book's printed page labels.
+- Google Fonts is the one runtime network call. Offline, the app falls back to system fonts.
+
 ## Next
 
-Phase 7: dark mode, accessibility check, tooling, docs, push.
+In leverage order, each on its own branch: LTI 1.3 launch from a Canvas sandbox, full-text search over page text, printed page labels, a second seeded course on the Business Law book.
