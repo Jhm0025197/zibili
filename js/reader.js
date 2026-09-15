@@ -4,6 +4,8 @@ import { icons } from './icons.js'
 import { openSheet, renderLibby } from './chrome.js'
 import { flush, logEvent } from './ledger.js'
 import { session } from './session.js'
+import { applyTools, loadTools, nearestZoom, openTools, saveTools } from './tools.js'
+import { createWheel } from './wheel.js'
 import { downloadHref, escapeHtml, qs, titleHref } from './util.js'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL('../vendor/pdfjs/pdf.worker.mjs', import.meta.url).href
@@ -31,7 +33,7 @@ const CRUMB_THROTTLE_MS = 500
 const MAX_CANVAS_PIXELS = 16777216
 
 const FORMATS = [
-  { id: 'read', label: 'Read', icon: 'book' },
+  { id: 'read', label: 'Read', icon: 'book', hint: 'You are here' },
   { id: 'listen', label: 'Listen', icon: 'headphones', copy: 'Listen would read this section aloud and highlight each sentence as it is spoken. Not in v1.' },
   { id: 'summary', label: 'Summary', icon: 'summary', copy: 'Summary would give you a short, plain-language version of the assigned pages. Not in v1.' },
   { id: 'infographic', label: 'Infographic', icon: 'college', copy: 'Infographic would lay out the section’s key ideas as one picture. Not in v1.' },
@@ -91,13 +93,10 @@ function readerNote() {
   return `<p class="reader-note">Signed in as ${escapeHtml(session.person.role)}. Reading isn’t recorded for you.</p>`
 }
 
-function formatWheel() {
-  return `<div class="format-wheel chip-row" role="group" aria-label="Format">
-    ${FORMATS.map((f) =>
-      f.id === 'read'
-        ? `<button type="button" class="chip is-on" data-format="read" aria-current="true">${icons[f.icon]}<span>${f.label}</span></button>`
-        : `<button type="button" class="chip" data-format="${f.id}" aria-haspopup="dialog">${icons[f.icon]}<span>${f.label}</span></button>`,
-    ).join('')}
+function fabs() {
+  return `<div class="reader-fabs">
+    <button type="button" class="fab" data-fab="wheel" aria-label="Formats">${icons.wheel}</button>
+    <button type="button" class="fab" data-fab="tools" aria-label="Reading tools" aria-haspopup="dialog">${icons.access}</button>
   </div>`
 }
 
@@ -107,6 +106,7 @@ function isCancelled(error) {
 
 async function paint() {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+  const tools = loadTools()
 
   renderLibby(
     `<div class="reader">
@@ -122,11 +122,11 @@ async function paint() {
         <button type="button" class="reader-btn" data-zoom-out aria-label="Zoom out">−</button>
         <button type="button" class="reader-btn" data-zoom-in aria-label="Zoom in">+</button>
       </div>
-      ${formatWheel()}
       <p class="reader-crumb" data-crumb aria-live="polite" hidden></p>
       ${readerNote()}
       <div class="reader-stage"><p class="reader-status">Opening ${escapeHtml(book.title)}…</p></div>
-    </div>`,
+    </div>
+    ${fabs()}`,
     {
       title: book.title,
       backHref: titleHref(book.id),
@@ -141,9 +141,10 @@ async function paint() {
   const ofLabel = document.querySelector('[data-of]')
   const crumb = document.querySelector('[data-crumb]')
 
+  applyTools(tools)
   let pdf = null
   let numPages = 0
-  let zoom = 1
+  let zoom = nearestZoom(tools.zoom)
   let scale = 1
   const dpr = Math.min(window.devicePixelRatio || 1, 2)
   let baseSize = { width: 612, height: 792 }
@@ -172,18 +173,24 @@ async function paint() {
 
   document.querySelector('[data-prev]').addEventListener('click', () => showPage(pageNumber - 1))
   document.querySelector('[data-next]').addEventListener('click', () => showPage(pageNumber + 1))
-  document.querySelector('[data-zoom-in]').addEventListener('click', () => {
-    zoom = Math.min(2.5, zoom + 0.25)
-    relayout()
-  })
-  document.querySelector('[data-zoom-out]').addEventListener('click', () => {
-    zoom = Math.max(0.5, zoom - 0.25)
-    relayout()
-  })
+  document.querySelector('[data-zoom-in]').addEventListener('click', () => setZoom(Math.min(2.5, zoom + 0.25)))
+  document.querySelector('[data-zoom-out]').addEventListener('click', () => setZoom(Math.max(0.5, zoom - 0.25)))
   document.querySelector('[data-contents]').addEventListener('click', openContents)
-  document.querySelectorAll('.format-wheel [data-format]').forEach((btn) =>
-    btn.addEventListener('click', () => openFormat(btn.dataset.format)),
-  )
+  createWheel({
+    trigger: document.querySelector('[data-fab="wheel"]'),
+    label: 'Formats',
+    currentId: 'read',
+    items: FORMATS.map((f) => ({ id: f.id, label: f.label, icon: icons[f.icon], hint: f.hint || 'Not in v1' })),
+    onPick: (formatId) => openFormat(formatId),
+  })
+  document.querySelector('[data-fab="tools"]').addEventListener('click', () => {
+    openTools(tools, {
+      onChange: (next, changed) => {
+        if ('zoom' in changed) setZoom(next.zoom, { persist: false })
+        if ('focus' in changed) relayout()
+      },
+    })
+  })
   pageInput.addEventListener('change', () => showPage(Number(pageInput.value) || 1))
   document.addEventListener('keydown', (event) => {
     if (event.altKey || event.ctrlKey || event.metaKey) return
@@ -433,6 +440,15 @@ async function paint() {
       if (rendered.size <= MAX_RENDERED) break
       release(n)
     }
+  }
+
+  function setZoom(next, { persist = true } = {}) {
+    zoom = next
+    if (persist) {
+      tools.zoom = nearestZoom(zoom)
+      saveTools(tools)
+    }
+    relayout()
   }
 
   function relayout() {

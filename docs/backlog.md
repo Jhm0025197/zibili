@@ -11,7 +11,8 @@ One line per thing that is out of scope for SLC v1. Anything here is a deliberat
 - Full-text search: only title, author, subject, and course code are searched. SQLite FTS5 over extracted page text is the next step.
 - Highlights and paragraph anchors.
 - Markdown chunking and per-section HTML rendering: the reader shows PDF pages, sections come from the outline (see `docs/decisions/0001-pdf-sections-not-chunks.md`).
-- Dark-mode inversion of the PDF canvas: the page keeps the document's own colours.
+- Reading-profile typography (typeface, spacing, measure): the book is a PDF, so Reading tools offer zoom, page colour, a ruler and focus mode instead. Typeface and spacing need the markdown reader.
+- App-chrome text size: browser zoom covers it; a dedicated control would need the px-based styles rewritten in rem.
 - EPUB and CNXML ingest adapters.
 - Multi-course, multi-book seeding: one course, one book. The second ingested book is in the library but not attached to a course.
 - Signed session cookie and CSRF token: v1 dev login sets an unsigned cookie on localhost. Do this before the server is reachable from anywhere else.

@@ -34,7 +34,7 @@ Page numbers are 1-based physical page indices, the same numbers PDF.js uses.
 
 **Library.** Home shelves, search, title page with cover, description, license, course code. Two buttons: *Read* opens the reader at the last position, *Download* returns the original file.
 
-**Reader.** PDF.js continuous-scroll reader: every page in one document, rendered as it comes into view, with prev/next, zoom, page input, a Contents drawer from the outline, the format wheel, position memory, and keyboard nav. Logs `opened`, `read`, `dwelled`, `reread` with the section ID and page.
+**Reader.** PDF.js continuous-scroll reader: every page in one document, rendered as it comes into view, with prev/next, zoom, page input, a Contents drawer from the outline, the pop-up format wheel, Reading tools (text size, page colour, theme, ruler, focus mode), position memory, and keyboard nav. Logs `opened`, `read`, `dwelled`, `reread` with the section ID and page.
 
 **Professor view.** One course, one term. Roster table: student, last active, sections opened, % of assigned read, time on the book. Click a student for their section-by-section trail. Class rollup: most and least read sections, assigned sections nobody opened, dwell outliers. Data comes from the real ledger joined to the roster, scoped to this instructor's course.
 

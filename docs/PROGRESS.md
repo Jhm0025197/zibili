@@ -56,7 +56,8 @@ What works, what is next. Updated at the end of every phase.
 ## Phase 8: continuous reader and the format wheel (done)
 
 - The reader is one long scroll: a placeholder per page sized before anything is drawn, pages rendered as they come into view, at most twelve kept rendered. The page number, section line, URL, and saved position follow the scroll. Prev, Next, the page box, arrow keys, and the Contents drawer still jump. Zoom keeps the page. A fast fling logs one `opened` for where you stop, not one per section passed.
-- The format wheel (Read · Listen · Summary · Infographic · Story · Cards · Quiz · Ask) sits under the toolbar. Read is current. Each other format opens a sheet that says in one sentence what it would do and that it is not in v1. Nothing is logged for those taps.
+- The format wheel (Read · Listen · Summary · Infographic · Story · Cards · Quiz · Ask) opens from a round button at the bottom right as a dial: the eight formats around a ring, the name of the one you are on in the centre. Arrow keys walk the ring, Escape closes it. Read is current. Each other format opens a sheet that says in one sentence what it would do and that it is not in v1. Nothing is logged for those taps.
+- Next to it, Reading tools: text size, page colour (normal, sepia, dark page), theme (system, light, dark), a reading ruler that follows the pointer, and a focus mode that hides the navigation. Settings stay in this browser, apply before first paint on every page, and are never sent anywhere.
 
 ## Done condition, checked
 
@@ -76,6 +77,7 @@ What works, what is next. Updated at the end of every phase.
 - Page numbers are physical indices, not the book's printed page labels.
 - Google Fonts is the one runtime network call. Offline, the app falls back to system fonts.
 - The format wheel is an interface only. Every format except Read says so.
+- Reading tools resize the book, not the app around it. For larger menus and labels use the browser's own zoom, which every page respects.
 
 ## Next
 

@@ -66,16 +66,58 @@ def act_format(page, notes: list[str]) -> bool:
     posted = []
     handler = lambda r: posted.append(r.url) if r.method == "POST" and "/api/events" in r.url else None  # noqa: E731
     page.on("request", handler)
-    page.click(".format-wheel [data-format='listen']")
+    page.click("[data-fab='wheel']")
+    page.wait_for_selector(".wheel:not([hidden])")
+    focused = page.evaluate("document.activeElement && document.activeElement.dataset.id")
+    page.keyboard.press("ArrowRight")
+    moved = page.evaluate("document.activeElement && document.activeElement.dataset.id")
+    centre = page.inner_text(".wheel-center")
+    page.keyboard.press("Enter")
     page.wait_for_selector(".sheet")
     text = page.inner_text(".sheet")
     page.keyboard.press("Escape")
     page.wait_for_selector(".sheet-scrim", state="detached", timeout=5000)
-    focused = page.evaluate("document.activeElement && document.activeElement.dataset.format")
+    wheel_hidden = page.evaluate("document.querySelector('.wheel').hidden")
+    page.click("[data-fab='wheel']")
+    page.wait_for_selector(".wheel:not([hidden])")
+    page.keyboard.press("Escape")
+    back = page.evaluate("document.activeElement && document.activeElement.dataset.fab")
     page.wait_for_timeout(1500)
     page.remove_listener("request", handler)
-    notes.append(f"format sheet: {'Not in v1' in text}, focus back on {focused!r}, events posted: {len(posted)}")
-    return "Not in v1" in text and focused == "listen" and not posted
+    notes.append(
+        f"wheel: opened on {focused!r}, arrow moved to {moved!r}, centre read {centre.splitlines()[0]!r}, "
+        f"sheet says not in v1: {'Not in v1' in text}, wheel closed after pick: {wheel_hidden}, escape returned focus to {back!r}, events posted: {len(posted)}"
+    )
+    return focused == "read" and moved == "listen" and "Not in v1" in text and wheel_hidden and back == "wheel" and not posted
+
+
+def act_tools(page, notes: list[str]) -> bool:
+    page.evaluate("localStorage.removeItem('zibili-reading-tools')")
+    page.click("[data-fab='tools']")
+    page.wait_for_selector(".sheet--tools")
+    page.click(".sheet--tools [data-zoom='1']")
+    page.wait_for_timeout(600)
+    zoom_text = page.inner_text(".sheet--tools output")
+    page.click(".sheet--tools [data-set='tint'][data-value='sepia']")
+    tint = page.evaluate("document.querySelector('.reader').dataset.tint")
+    page.click(".sheet--tools [data-set='theme'][data-value='dark']")
+    theme = page.evaluate("document.documentElement.dataset.theme")
+    page.click(".sheet--tools [data-toggle='ruler']")
+    ruler = page.evaluate("Boolean(document.querySelector('.reading-ruler'))")
+    page.click(".sheet--tools [data-toggle='focus']")
+    page.wait_for_timeout(400)
+    rail_hidden = page.evaluate("getComputedStyle(document.querySelector('.libby-rail')).display === 'none'")
+    page.keyboard.press("Escape")
+    page.wait_for_selector(".sheet-scrim", state="detached", timeout=5000)
+    saved = page.evaluate("JSON.parse(localStorage.getItem('zibili-reading-tools'))")
+    page.reload(wait_until="networkidle")
+    page.wait_for_selector(CANVAS, timeout=20000)
+    kept = page.evaluate("[document.documentElement.dataset.theme, document.querySelector('.reader').dataset.tint, Boolean(document.querySelector('.reading-ruler'))]")
+    # leave the browser as we found it
+    page.evaluate("localStorage.removeItem('zibili-reading-tools')")
+    page.reload(wait_until="networkidle")
+    notes.append(f"tools: zoom {zoom_text}, tint {tint}, theme {theme}, ruler {ruler}, focus hid rail {rail_hidden}, saved {saved}, after reload {kept}")
+    return zoom_text == "115%" and tint == "sepia" and theme == "dark" and ruler and rail_hidden and kept == ["dark", "sepia", True]
 
 
 def act_reload(page, notes: list[str]) -> bool:
@@ -107,7 +149,8 @@ STEPS = [
     ("title", None, f"/title.html?id={BOOK}", "[data-chapters]:not([hidden])", "Chapters"),
     ("reader-guest", None, f"/read.html?id={BOOK}&page=20", CANVAS, "Reading as a guest"),
     ("reader-scroll", None, f"/read.html?id={BOOK}&page=20", ".reader-page[data-page='20'] canvas", "of 421", act_scroll),
-    ("reader-format", None, f"/read.html?id={BOOK}&page=20", CANVAS, "Listen", act_format),
+    ("reader-format", None, f"/read.html?id={BOOK}&page=20", CANVAS, "of 421", act_format),
+    ("reader-tools", None, f"/read.html?id={BOOK}&page=20", CANVAS, "of 421", act_tools),
     ("reader-reload", None, f"/read.html?id={BOOK}&page=20", CANVAS, "of 421", act_reload),
     ("menu-picker", None, "/menu.html", ".picker-person", "Prof. Marisol Reyes"),
     ("home-student", "stu-cho", "/index.html", ".shelf-card", "Your library"),
