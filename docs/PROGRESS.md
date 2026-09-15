@@ -33,6 +33,18 @@ What works, what is next. Updated at the end of every phase.
 - The server attaches identity from the session, validates every event, writes the batch in one transaction, and updates the student's position from the newest event carrying a page. Guests keep their page in localStorage; instructors and admins see a note that reading is not recorded.
 - Reopening a book lands on the last page. The shelf's Reading tab, the home page's Continue reading shelf, and the title page's Continue button all read from `GET /api/me/positions` and `GET /api/books/{id}/progress`.
 
+## Phase 5: the professor view (done)
+
+- `instructor.html` shows the signed-in instructor's course: four totals, the roster (student, last active, sections opened, assigned read with a meter, time on the book), the most and least read assigned sections, assigned sections nobody has opened, and students whose time on the book is far from the class median. A term switcher moves between Spring 2026 (seeded history) and Fall 2026 (empty until someone reads).
+- Clicking a student opens their section-by-section trail.
+- Every query behind it takes the instructor's id and filters the course by it in SQL; the roster query is the only place a hash becomes a name. Students and admins see an honest message instead.
+- Routes: `GET /api/instructor/roster`, `GET /api/instructor/students/{hash}`, both gated by `require_role("instructor")`.
+
+## Phase 6: the college view (done)
+
+- `college.html`, admin only: dollars displaced (labelled an estimate until `seed/prior-spend.json` says `verified: true`), students active, sections live, and change since the previous term with a caveat while the current term is under three weeks old. A term-by-term table and a by-course table follow.
+- `GET /api/college/summary` returns aggregates only. A test asserts the response contains no student hash and no student name.
+
 ## Next
 
-Phase 5: the professor view.
+Phase 7: dark mode, accessibility check, tooling, docs, push.

@@ -43,11 +43,26 @@ from library import (
     list_books,
     sections_to_json,
 )
+from queries import (
+    assigned_sections,
+    course_for_instructor,
+    course_totals,
+    courses_for_instructor,
+    elapsed_days,
+    prior_spend_meta,
+    roster,
+    section_rollup,
+    sections_live,
+    student_name,
+    student_trail,
+    term_totals,
+)
 from session import (
     get_person,
     get_session,
     list_people,
     public_person,
+    require_role,
     require_session,
     set_cookie_header,
 )
@@ -64,6 +79,8 @@ PUBLIC_ROOT_FILES = {
     "shelf.html",
     "menu.html",
     "read.html",
+    "instructor.html",
+    "college.html",
     "favicon.ico",
     "favicon.svg",
     "favicon.png",
@@ -89,6 +106,7 @@ BOOK_COVER_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/cover$")
 BOOK_ITEM_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})$")
 BOOK_SECTIONS_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/sections$")
 BOOK_PROGRESS_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/progress$")
+STUDENT_RE = re.compile(r"^/api/instructor/students/([a-f0-9]{32})$")
 
 
 @dataclass(frozen=True)
@@ -308,6 +326,16 @@ class ZibiliHandler(BaseHTTPRequestHandler):
         if method in {"GET", "HEAD"} and progress:
             self.handle_progress(progress.group(1))
             return
+        if method in {"GET", "HEAD"} and path == "/api/instructor/roster":
+            self.handle_instructor_roster()
+            return
+        student = STUDENT_RE.match(path)
+        if method in {"GET", "HEAD"} and student:
+            self.handle_instructor_student(student.group(1))
+            return
+        if method in {"GET", "HEAD"} and path == "/api/college/summary":
+            self.handle_college_summary()
+            return
         if method in {"GET", "HEAD"} and path == "/api/catalog":
             self.handle_catalog()
             return
@@ -490,6 +518,82 @@ class ZibiliHandler(BaseHTTPRequestHandler):
         finally:
             connection.close()
         self.send_json(200, rows)
+
+    def _query_param(self, name: str) -> str | None:
+        values = parse_qs(self.parsed_url.query).get(name)
+        return values[0] if values else None
+
+    def _instructor_course(self, connection: sqlite3.Connection):
+        """The signed-in instructor's chosen (or latest) course, scoped in SQL."""
+        session = require_role(self.session(connection), "instructor")
+        courses = courses_for_instructor(connection, session.person["id"])
+        requested = self._query_param("course")
+        if requested:
+            chosen = next((c for c in courses if c["id"] == requested), None)
+            if chosen is None:
+                raise APIError(404, "not_found", "That course is not one you teach.")
+        else:
+            chosen = courses[0] if courses else None
+        course = course_for_instructor(connection, chosen["id"], session.person["id"]) if chosen else None
+        return session, courses, course
+
+    def handle_instructor_roster(self) -> None:
+        connection = self.app.db.connect()
+        try:
+            session, courses, course = self._instructor_course(connection)
+            payload: dict[str, Any] = {"courses": courses, "course": course, "roster": [], "rollup": [], "assigned": []}
+            if course:
+                instructor_id = session.person["id"]
+                payload["roster"] = roster(connection, course["id"], instructor_id)
+                payload["rollup"] = section_rollup(connection, course["id"], instructor_id)
+                payload["assigned"] = assigned_sections(connection, course["id"], instructor_id)
+        finally:
+            connection.close()
+        self.send_json(200, payload)
+
+    def handle_instructor_student(self, student_hash: str) -> None:
+        connection = self.app.db.connect()
+        try:
+            session, _, course = self._instructor_course(connection)
+            instructor_id = session.person["id"]
+            name = student_name(connection, course["id"], instructor_id, student_hash) if course else None
+            if course is None or name is None:
+                raise APIError(404, "not_found", "No such student on your roster.")
+            payload = {
+                "course": course,
+                "name": name,
+                "assigned": [a["id"] for a in assigned_sections(connection, course["id"], instructor_id)],
+                "trail": student_trail(connection, course["id"], instructor_id, student_hash),
+            }
+        finally:
+            connection.close()
+        self.send_json(200, payload)
+
+    def handle_college_summary(self) -> None:
+        connection = self.app.db.connect()
+        try:
+            require_role(self.session(connection), "admin")
+            terms = term_totals(connection)
+            requested = self._query_param("term")
+            current = next((t for t in terms if t["term"] == requested), None) if requested else None
+            if current is None and terms:
+                current = terms[-1]
+            previous = None
+            if current is not None:
+                index = terms.index(current)
+                previous = terms[index - 1] if index > 0 else None
+            payload = {
+                "spend": prior_spend_meta(self.app.config.seed_dir),
+                "terms": terms,
+                "current": current,
+                "previous": previous,
+                "sections_live": sections_live(connection, current["term"]) if current else 0,
+                "elapsed_days": elapsed_days(current["starts_on"]) if current else 0,
+                "courses": course_totals(connection, current["term"]) if current else [],
+            }
+        finally:
+            connection.close()
+        self.send_json(200, payload)
 
     def handle_session_delete(self) -> None:
         self.send_json(200, {"ok": True}, extra_headers={"Set-Cookie": set_cookie_header(None)})
