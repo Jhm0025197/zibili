@@ -1,0 +1,24 @@
+{
+  "_comment": [
+    "What the college paid per student, per course, before Zibili.",
+    "SYNTHETIC PLACEHOLDER. Replace fee_cents with the real inclusive-access",
+    "line from the bookstore contract before anyone quotes the college view.",
+    "The college page labels this figure as an estimate until that happens."
+  ],
+  "verified": false,
+  "currency": "USD",
+  "courses": [
+    {
+      "course_id": "phil1010-2026sp",
+      "provider": "BibliU inclusive access",
+      "fee_cents": 4200,
+      "note": "Per-student course fee, Spring 2026 (synthetic placeholder)"
+    },
+    {
+      "course_id": "phil1010-2026fa",
+      "provider": "BibliU inclusive access",
+      "fee_cents": 4200,
+      "note": "Per-student course fee, Fall 2026 (synthetic placeholder)"
+    }
+  ]
+}

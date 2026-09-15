@@ -1,0 +1,50 @@
+{
+  "_comment": [
+    "Synthetic. Every person, course and fee here is made up for the v1 build.",
+    "The prior term is seeded with events; the current term starts empty and",
+    "fills up as someone reads. Nothing in this file is real institutional data."
+  ],
+  "book_id": "introduction-to-philosophy",
+  "terms": {
+    "prior": "2026SP",
+    "current": "2026FA"
+  },
+  "people": [
+    {
+      "id": "admin-okafor",
+      "role": "admin",
+      "display_name": "Dana Okafor (Provost's office)"
+    },
+    {
+      "id": "instructor-reyes",
+      "role": "instructor",
+      "display_name": "Prof. Marisol Reyes"
+    }
+  ],
+  "courses": [
+    {
+      "id": "phil1010-2026sp",
+      "code": "PHIL 1010",
+      "title": "Introduction to Philosophy",
+      "term": "2026SP",
+      "term_label": "Spring 2026",
+      "starts_on": "2026-01-20",
+      "instructor_id": "instructor-reyes",
+      "seeded_history": true
+    },
+    {
+      "id": "phil1010-2026fa",
+      "code": "PHIL 1010",
+      "title": "Introduction to Philosophy",
+      "term": "2026FA",
+      "term_label": "Fall 2026",
+      "starts_on": "2026-08-24",
+      "instructor_id": "instructor-reyes",
+      "seeded_history": false
+    }
+  ],
+  "assignments": {
+    "_comment": "Numbered sections of these chapters are what the syllabus assigns.",
+    "chapters": [1, 2, 3, 4, 5]
+  }
+}

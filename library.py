@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import json
+import logging
 import re
 import secrets
 import sqlite3
@@ -11,6 +12,8 @@ import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
+
+LOGGER = logging.getLogger("zibili.db")
 
 SCHEMA_VERSION = 2
 APP_VERSION = "0.2.0"
@@ -46,6 +49,10 @@ def default_files_dir() -> Path:
 
 def default_books_dir() -> Path:
     return Path(__file__).resolve().parent / "books"
+
+
+def default_seed_dir() -> Path:
+    return Path(__file__).resolve().parent / "seed"
 
 SCHEMA_SQL = """
 CREATE TABLE IF NOT EXISTS app_meta (
@@ -167,8 +174,12 @@ CREATE TABLE IF NOT EXISTS positions (
 
 
 class Database:
-    def __init__(self, path: str) -> None:
+    """One SQLite file. `seed_dir` (a folder with course.json) enables seeding
+    on first run; tests pass None to get an empty ledger."""
+
+    def __init__(self, path: str, seed_dir: Path | None = None) -> None:
         self.path = path
+        self.seed_dir = Path(seed_dir) if seed_dir else None
         self.initialize()
 
     def connect(self) -> sqlite3.Connection:
@@ -204,8 +215,18 @@ class Database:
                     "This Python's SQLite lacks JSON functions. Zibili needs SQLite 3.38 or newer."
                 )
             connection.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
+            self.seed(connection)
         finally:
             connection.close()
+
+    def seed(self, connection: sqlite3.Connection) -> dict[str, int]:
+        """Fill in whatever seed data is still missing. Safe to call often."""
+        if self.seed_dir is None:
+            return {"people": 0, "courses": 0, "events": 0}
+        from seed import ensure  # local import: seed.py imports ledger.py, which needs nothing from here
+
+        with self.transaction(connection):
+            return ensure(connection, self.seed_dir)
 
     @contextlib.contextmanager
     def transaction(self, connection: sqlite3.Connection) -> Iterator[None]:

@@ -55,6 +55,7 @@ class ServerTests(unittest.TestCase):
             static_dir=PROJECT_ROOT,
             files_dir=self.files_dir,
             public_base_url="http://127.0.0.1",
+            seed_dir=PROJECT_ROOT / "seed",
         )
         self.server = create_server("127.0.0.1", 0, config)
         self.port = self.server.server_address[1]
@@ -72,10 +73,21 @@ class ServerTests(unittest.TestCase):
         method: str,
         path: str,
         headers: dict[str, str] | None = None,
+        body: bytes | dict | list | None = None,
+        person: str | None = None,
     ) -> tuple[int, dict[str, str], bytes]:
+        headers = dict(headers or {})
+        if person:
+            headers["Cookie"] = f"zibili_person={person}"
+        payload: bytes | None = None
+        if isinstance(body, (dict, list)):
+            payload = json.dumps(body).encode("utf-8")
+            headers.setdefault("Content-Type", "application/json")
+        elif body is not None:
+            payload = body
         connection = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
         try:
-            connection.request(method, path, headers=headers or {})
+            connection.request(method, path, body=payload, headers=headers)
             response = connection.getresponse()
             body = response.read()
             header_map = {key.lower(): value for key, value in response.getheaders()}
@@ -130,6 +142,60 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn("attachment", headers.get("content-disposition", ""))
         self.assertIn("campus-reader.pdf", headers.get("content-disposition", ""))
+
+    def test_session_lifecycle(self) -> None:
+        status, _, body = self.request("GET", "/api/session")
+        self.assertEqual(status, 200)
+        self.assertEqual(json.loads(body), {"person": None, "course": None})
+
+        status, _, body = self.request("GET", "/api/session/people")
+        self.assertEqual(status, 200)
+        people = json.loads(body)
+        self.assertEqual(people[0]["role"], "admin")
+        self.assertEqual(people[1]["role"], "instructor")
+        self.assertEqual(len(people), 27)
+        self.assertTrue(all(set(p) == {"id", "role", "display_name"} for p in people))
+
+        status, headers, body = self.request("POST", "/api/session", body={"person_id": "stu-cho"})
+        self.assertEqual(status, 200)
+        self.assertIn("zibili_person=stu-cho", headers.get("set-cookie", ""))
+        self.assertIn("HttpOnly", headers.get("set-cookie", ""))
+        self.assertEqual(json.loads(body)["person"]["display_name"], "Jiwon Cho")
+        self.assertEqual(json.loads(body)["course"]["code"], "PHIL 1010")
+        self.assertEqual(json.loads(body)["course"]["term"], "2026FA")
+
+        status, _, body = self.request("GET", "/api/session", person="stu-cho")
+        self.assertEqual(json.loads(body)["person"]["id"], "stu-cho")
+
+        status, _, body = self.request("GET", "/api/session", person="instructor-reyes")
+        self.assertEqual(json.loads(body)["course"]["instructor_id"], "instructor-reyes")
+
+        status, _, body = self.request("GET", "/api/session", person="admin-okafor")
+        self.assertIsNone(json.loads(body)["course"])
+
+        status, _, body = self.request("GET", "/api/session", person="nobody")
+        self.assertEqual(json.loads(body)["person"], None)
+
+        status, headers, _ = self.request("DELETE", "/api/session", person="stu-cho")
+        self.assertEqual(status, 200)
+        self.assertIn("Max-Age=0", headers.get("set-cookie", ""))
+
+    def test_session_post_errors(self) -> None:
+        status, _, body = self.request("POST", "/api/session", body={"person_id": "nobody"})
+        self.assertEqual(status, 404)
+        self.assertEqual(json.loads(body)["error"]["code"], "unknown_person")
+
+        status, _, _ = self.request("POST", "/api/session", body=b"not json", headers={"Content-Type": "application/json"})
+        self.assertEqual(status, 400)
+
+        status, _, _ = self.request("POST", "/api/session", body={})
+        self.assertEqual(status, 400)
+
+        status, _, body = self.request("POST", "/api/session", body=b"x" * 300_000)
+        self.assertEqual(status, 413)
+
+        status, _, _ = self.request("POST", "/api/catalog", body={})
+        self.assertEqual(status, 404)
 
     def test_sections_route(self) -> None:
         status, headers, body = self.request("GET", "/api/books/campus-reader/sections")

@@ -1,0 +1,36 @@
+{
+  "_comment": [
+    "Synthetic students. Invented names, no relation to anyone real.",
+    "`engagement` shapes the seeded prior-term history so the instructor view",
+    "has something with texture in it: 'steady' reads most of what is set,",
+    "'burst' does it all the night before, 'fading' starts well and stops,",
+    "'quiet' barely appears. It is not a label the app ever shows."
+  ],
+  "students": [
+    { "id": "stu-abara", "display_name": "Ifeoma Abara", "engagement": "steady" },
+    { "id": "stu-alvarez", "display_name": "Rafael Alvarez", "engagement": "burst" },
+    { "id": "stu-bennett", "display_name": "Casey Bennett", "engagement": "steady" },
+    { "id": "stu-cho", "display_name": "Jiwon Cho", "engagement": "steady" },
+    { "id": "stu-dansky", "display_name": "Marek Dansky", "engagement": "fading" },
+    { "id": "stu-elhassan", "display_name": "Nour El-Hassan", "engagement": "steady" },
+    { "id": "stu-fournier", "display_name": "Camille Fournier", "engagement": "burst" },
+    { "id": "stu-gallardo", "display_name": "Tomás Gallardo", "engagement": "quiet" },
+    { "id": "stu-haddad", "display_name": "Layla Haddad", "engagement": "steady" },
+    { "id": "stu-ibarra", "display_name": "Sol Ibarra", "engagement": "fading" },
+    { "id": "stu-jansen", "display_name": "Pieter Jansen", "engagement": "steady" },
+    { "id": "stu-kaur", "display_name": "Simran Kaur", "engagement": "steady" },
+    { "id": "stu-larsen", "display_name": "Ingrid Larsen", "engagement": "burst" },
+    { "id": "stu-mbeki", "display_name": "Thabo Mbeki", "engagement": "quiet" },
+    { "id": "stu-nakamura", "display_name": "Rin Nakamura", "engagement": "steady" },
+    { "id": "stu-oyelaran", "display_name": "Bola Oyelaran", "engagement": "steady" },
+    { "id": "stu-petrova", "display_name": "Yana Petrova", "engagement": "fading" },
+    { "id": "stu-quintero", "display_name": "Diego Quintero", "engagement": "steady" },
+    { "id": "stu-rasmussen", "display_name": "Ellis Rasmussen", "engagement": "burst" },
+    { "id": "stu-silva", "display_name": "Beatriz Silva", "engagement": "steady" },
+    { "id": "stu-tanaka", "display_name": "Haruto Tanaka", "engagement": "quiet" },
+    { "id": "stu-ubaldo", "display_name": "Marisa Ubaldo", "engagement": "steady" },
+    { "id": "stu-vargas", "display_name": "Andrés Vargas", "engagement": "fading" },
+    { "id": "stu-whitfield", "display_name": "Jordan Whitfield", "engagement": "steady" },
+    { "id": "stu-zhao", "display_name": "Lian Zhao", "engagement": "steady" }
+  ]
+}

@@ -19,6 +19,13 @@ What works, what is next. Updated at the end of every phase.
 - `GET /api/books/{id}/sections` returns the chapter tree. The reader shows the current section under the toolbar and has a Contents drawer that jumps to any section. The title page lists chapters.
 - Schema is now version 2 and already contains the ledger tables (people, courses, enrollments, assignments, prior_spend, events, positions) so later phases add no DDL.
 
+## Phase 3: identity and seeding (done)
+
+- On first run the database seeds an admin, an instructor, 25 synthetic students, two terms of PHIL 1010, enrollments, and a placeholder prior-spend fee from `seed/`. Once the book's sections exist, each course gets the numbered sections of chapters 1 to 5 as assignments and the prior term gets a synthetic reading history (about 17,500 events, all marked `seeded = 1`). The current term starts empty.
+- Students appear in the ledger only as a salted 32-character hash. The salt is generated once per database.
+- Menu is the dev login picker: pick a person, no password. `POST /api/session` sets an httpOnly cookie; `GET /api/session` reports who is signed in and their course; `DELETE /api/session` signs out. The rail shows a Course tab for the instructor and a College tab for the admin.
+- The server accepts POST and DELETE with a 256 KB body cap, and every role-gated route will use `require_role` from `session.py`.
+
 ## Next
 
-Phase 3: seeded people and course, dev login picker, cookie session, role checks.
+Phase 4: the reader writes opened, dwelled, read and reread events, and remembers your page.

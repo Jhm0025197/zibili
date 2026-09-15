@@ -441,6 +441,25 @@ a.maroon-btn:hover { color: var(--libby-on-accent); }
 .title-row-format { display: flex; align-items: center; gap: 6px; font-size: 13px; margin-top: 6px !important; }
 .title-row-format svg { width: 14px; height: 14px; }
 .libby-empty { padding: 24px 0; color: var(--libby-muted); }
+.picker-group { margin: 20px 0; }
+.picker-group h3 { font-family: var(--libby-sans); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--libby-muted); margin-bottom: 6px; }
+.picker-group ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 4px 16px; }
+.picker-person {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 8px 6px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--libby-maroon);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.picker-person:hover { background: var(--libby-hover); }
+.picker-person:disabled { opacity: 0.6; cursor: wait; }
 .text-action {
   background: none;
   border: 0;

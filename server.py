@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, unquote, urlsplit
 
+from errors import APIError
 from library import (
     APP_VERSION,
     BOOK_ID_RE,
@@ -26,10 +27,12 @@ from library import (
     book_to_json,
     default_db_path,
     default_files_dir,
+    default_seed_dir,
     get_book,
     list_books,
     sections_to_json,
 )
+from session import get_person, get_session, list_people, public_person, set_cookie_header
 
 LOGGER = logging.getLogger("zibili")
 
@@ -69,14 +72,6 @@ BOOK_ITEM_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})$")
 BOOK_SECTIONS_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/sections$")
 
 
-class APIError(Exception):
-    def __init__(self, status: int, code: str, message: str) -> None:
-        super().__init__(message)
-        self.status = status
-        self.code = code
-        self.message = message
-
-
 @dataclass(frozen=True)
 class AppConfig:
     db_path: str
@@ -85,6 +80,8 @@ class AppConfig:
     public_base_url: str = "http://localhost:5174"
     max_request_threads: int = 128
     socket_timeout_seconds: float = 120.0
+    seed_dir: Path | None = None
+    max_body_bytes: int = 256 * 1024
 
     @classmethod
     def from_environment(
@@ -93,12 +90,14 @@ class AppConfig:
         static_dir: str | Path,
         files_dir: str | Path,
         public_base_url: str,
+        seed_dir: str | Path | None = None,
     ) -> AppConfig:
         return cls(
             db_path=db_path,
             static_dir=Path(static_dir).resolve(),
             files_dir=Path(files_dir).resolve(),
             public_base_url=public_base_url.rstrip("/"),
+            seed_dir=Path(seed_dir).resolve() if seed_dir else None,
             max_request_threads=max(
                 8, min(int(os.environ.get("MAX_REQUEST_THREADS", "128")), 512)
             ),
@@ -112,7 +111,7 @@ class ZibiliApp:
     def __init__(self, config: AppConfig) -> None:
         self.config = config
         self.config.files_dir.mkdir(parents=True, exist_ok=True)
-        self.db = Database(config.db_path)
+        self.db = Database(config.db_path, seed_dir=config.seed_dir)
 
 
 class ZibiliHTTPServer(ThreadingHTTPServer):
@@ -221,10 +220,16 @@ class ZibiliHandler(BaseHTTPRequestHandler):
     def do_HEAD(self) -> None:  # noqa: N802
         self._dispatch("HEAD")
 
+    def do_POST(self) -> None:  # noqa: N802
+        self._dispatch("POST")
+
+    def do_DELETE(self) -> None:  # noqa: N802
+        self._dispatch("DELETE")
+
     def do_OPTIONS(self) -> None:  # noqa: N802
         try:
             self.send_response(204)
-            self.send_header("Allow", "GET, HEAD, OPTIONS")
+            self.send_header("Allow", "GET, HEAD, POST, DELETE, OPTIONS")
             self.send_header("Content-Length", "0")
             self._security_headers()
             self.end_headers()
@@ -257,6 +262,20 @@ class ZibiliHandler(BaseHTTPRequestHandler):
         path = self.parsed_url.path
         if method in {"GET", "HEAD"} and path in {"/healthz", "/api/health"}:
             self.handle_health()
+            return
+        if path == "/api/session":
+            if method in {"GET", "HEAD"}:
+                self.handle_session_get()
+                return
+            if method == "POST":
+                self.handle_session_post()
+                return
+            if method == "DELETE":
+                self.handle_session_delete()
+                return
+            raise APIError(405, "method_not_allowed", "Use GET, POST or DELETE.")
+        if method in {"GET", "HEAD"} and path == "/api/session/people":
+            self.handle_session_people()
             return
         if method in {"GET", "HEAD"} and path == "/api/catalog":
             self.handle_catalog()
@@ -316,6 +335,77 @@ class ZibiliHandler(BaseHTTPRequestHandler):
             error.status,
             {"error": {"code": error.code, "message": error.message}},
         )
+
+    def read_json_body(self) -> Any:
+        """Read and parse the request body. Always drains it so keep-alive stays in sync."""
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError as exc:
+            raise APIError(400, "bad_request", "Content-Length is not a number.") from exc
+        if length < 0:
+            raise APIError(400, "bad_request", "Content-Length is negative.")
+        limit = self.app.config.max_body_bytes
+        if length > limit:
+            remaining = length
+            while remaining > 0:
+                chunk = self.rfile.read(min(64 * 1024, remaining))
+                if not chunk:
+                    break
+                remaining -= len(chunk)
+            self.close_connection = True
+            raise APIError(413, "too_large", f"Request body over {limit} bytes.")
+        raw = self.rfile.read(length) if length else b""
+        if not raw:
+            raise APIError(400, "bad_request", "Request body is empty.")
+        try:
+            return json.loads(raw.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise APIError(400, "bad_request", "Request body is not valid JSON.") from exc
+
+    def session(self, connection: sqlite3.Connection):
+        return get_session(connection, self.headers.get("Cookie"))
+
+    def handle_session_get(self) -> None:
+        connection = self.app.db.connect()
+        try:
+            session = self.session(connection)
+        finally:
+            connection.close()
+        self.send_json(200, session.to_json() if session else {"person": None, "course": None})
+
+    def handle_session_people(self) -> None:
+        connection = self.app.db.connect()
+        try:
+            people = list_people(connection)
+        finally:
+            connection.close()
+        self.send_json(200, people)
+
+    def handle_session_post(self) -> None:
+        body = self.read_json_body()
+        person_id = body.get("person_id") if isinstance(body, dict) else None
+        if not isinstance(person_id, str) or not person_id:
+            raise APIError(400, "bad_request", "person_id is required.")
+        connection = self.app.db.connect()
+        try:
+            person = get_person(connection, person_id)
+            if person is None:
+                raise APIError(
+                    404,
+                    "unknown_person",
+                    "No such person. If the database is new, run python ingest.py add and restart the server.",
+                )
+            session = get_session(connection, f"{set_cookie_header(person_id).split(';', 1)[0]}")
+        finally:
+            connection.close()
+        self.send_json(
+            200,
+            session.to_json() if session else {"person": public_person(person), "course": None},
+            extra_headers={"Set-Cookie": set_cookie_header(person_id)},
+        )
+
+    def handle_session_delete(self) -> None:
+        self.send_json(200, {"ok": True}, extra_headers={"Set-Cookie": set_cookie_header(None)})
 
     def handle_health(self) -> None:
         connection = self.app.db.connect()
@@ -553,6 +643,7 @@ def create_server(
             static_dir=project_dir,
             files_dir=os.environ.get("ZIBILI_FILES_DIR", str(default_files_dir())),
             public_base_url=f"http://{host}:{port}",
+            seed_dir=default_seed_dir(),
         )
     return ZibiliHTTPServer((host, port), ZibiliApp(config))
 
@@ -564,6 +655,7 @@ def main() -> None:
     parser.add_argument("--db", default=os.environ.get("ZIBILI_DB"))
     parser.add_argument("--files-dir", default=os.environ.get("ZIBILI_FILES_DIR"))
     parser.add_argument("--static", default=None)
+    parser.add_argument("--seed-dir", default=os.environ.get("ZIBILI_SEED_DIR", str(default_seed_dir())))
     args = parser.parse_args()
 
     project_dir = Path(__file__).resolve().parent
@@ -572,6 +664,7 @@ def main() -> None:
         static_dir=args.static or str(project_dir),
         files_dir=args.files_dir or str(default_files_dir()),
         public_base_url=f"http://{args.host}:{args.port}",
+        seed_dir=args.seed_dir,
     )
     logging.basicConfig(
         level=os.environ.get("LOG_LEVEL", "INFO").upper(),

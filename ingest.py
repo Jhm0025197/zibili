@@ -18,6 +18,7 @@ from library import (
     default_books_dir,
     default_db_path,
     default_files_dir,
+    default_seed_dir,
     slugify,
     utc_now,
 )
@@ -301,11 +302,12 @@ def ingest_paths(
     force: bool = False,
     linearize: bool = True,
     id_map_path: Path | None = None,
+    seed_dir: Path | None = None,
 ) -> dict[str, int]:
     files_dir.mkdir(parents=True, exist_ok=True)
     id_map_path = id_map_path or default_id_map_path()
     id_map = load_id_map(id_map_path)
-    database = Database(str(db_path))
+    database = Database(str(db_path), seed_dir=seed_dir)
     added = skipped = failed = 0
     connection = database.connect()
     try:
@@ -335,6 +337,8 @@ def ingest_paths(
                 failed += 1
                 LOGGER.exception("failed %s", pdf_path)
         save_id_map(id_map_path, id_map)
+        # Assignments and prior-term history need sections, which now exist.
+        database.seed(connection)
     finally:
         connection.close()
     return {"added": added, "skipped": skipped, "failed": failed}
@@ -360,6 +364,7 @@ def main() -> None:
     parser.add_argument("--db", default=str(default_db_path()))
     parser.add_argument("--files-dir", default=str(default_files_dir()))
     parser.add_argument("--id-map", default=str(default_id_map_path()))
+    parser.add_argument("--seed-dir", default=str(default_seed_dir()))
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--no-linearize", action="store_true")
     args = parser.parse_args()
@@ -379,6 +384,7 @@ def main() -> None:
         force=args.force,
         linearize=not args.no_linearize,
         id_map_path=Path(args.id_map),
+        seed_dir=Path(args.seed_dir),
     )
     print(f"added {stats['added']}, skipped {stats['skipped']}, failed {stats['failed']}")
     if stats["failed"]:

@@ -1,21 +1,30 @@
 import { icons } from './icons.js'
 import { bindCovers } from './util.js'
+import { firstName, session } from './session.js'
 
 // App shell: side rail on wide screens, tab bar on narrow ones, one <main>.
 // Pages call renderLibby(html, options) once and then bind their handlers.
 
-export function renderLibby(mainHTML, { title, backHref, rightHTML = '', active = 'library', tabs = [] } = {}) {
+function roleTabs() {
+  const role = session.person?.role
+  if (role === 'instructor') return [{ id: 'course', href: 'instructor.html', icon: icons.course, label: 'Course' }]
+  if (role === 'admin') return [{ id: 'college', href: 'college.html', icon: icons.college, label: 'College' }]
+  return []
+}
+
+export function renderLibby(mainHTML, { title, backHref, rightHTML = '', active = 'library' } = {}) {
   const tab = (id, href, icon, label) =>
     `<a href="${href}" class="libby-rail-item libby-tab ${active === id ? 'active' : ''}" ${
       active === id ? 'aria-current="page"' : ''
     }>${icon}<span>${label}</span></a>`
 
+  const menuLabel = session.person ? firstName() : 'Menu'
   const nav = [
     tab('library', 'index.html', icons.building, 'Library'),
     tab('shelf', 'shelf.html', icons.shelf, 'Shelf'),
     tab('search', 'list.html?focus=search', icons.search, 'Search'),
-    ...tabs.map((t) => tab(t.id, t.href, t.icon, t.label)),
-    tab('menu', 'menu.html', icons.menu, 'Menu'),
+    ...roleTabs().map((t) => tab(t.id, t.href, t.icon, t.label)),
+    tab('menu', 'menu.html', icons.menu, menuLabel),
   ].join('')
 
   document.body.innerHTML = `
