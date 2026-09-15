@@ -20,7 +20,7 @@ One line per thing that is out of scope for SLC v1. Anything here is a deliberat
 - Real prior-spend figure: `seed/prior-spend.json` is a placeholder and the college view labels it an estimate until `verified` is true.
 - LTI 1.3 launch from Canvas; SSO.
 - Real LRS export (xAPI): events are shaped for it but nothing emits statements.
-- AI chat sidecar, TTS, format wheel, render library.
+- Format renderers and the render library: the wheel (Read · Listen · Summary · Infographic · Story · Cards · Quiz · Ask) is in the reader and every format except Read says it is not in v1. No verb is logged for those taps; add a `requested` verb if demand data is ever wanted. The AI chat sidecar (Ask) and TTS (Listen) sit behind the same wheel.
 - Program/department tier in the college drill-down.
 - Postgres migration: the schema is Postgres-shaped but runs on SQLite.
 - Offline (service worker) support and self-hosted fonts: Google Fonts is the one runtime network call.

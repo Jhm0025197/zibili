@@ -53,6 +53,11 @@ What works, what is next. Updated at the end of every phase.
 - `npm run smoke` walks sixteen page-and-role combinations, desktop and mobile, screenshots each, and fails on any page or HTTP error.
 - README, backlog, and `docs/decisions/0001-pdf-sections-not-chunks.md` describe the build as it is.
 
+## Phase 8: continuous reader and the format wheel (done)
+
+- The reader is one long scroll: a placeholder per page sized before anything is drawn, pages rendered as they come into view, at most twelve kept rendered. The page number, section line, URL, and saved position follow the scroll. Prev, Next, the page box, arrow keys, and the Contents drawer still jump. Zoom keeps the page. A fast fling logs one `opened` for where you stop, not one per section passed.
+- The format wheel (Read · Listen · Summary · Infographic · Story · Cards · Quiz · Ask) sits under the toolbar. Read is current. Each other format opens a sheet that says in one sentence what it would do and that it is not in v1. Nothing is logged for those taps.
+
 ## Done condition, checked
 
 1. Ingest twice, zero ID churn: yes. `books/id-map.json` is byte-identical after a re-ingest and after `--force`.
@@ -70,7 +75,8 @@ What works, what is next. Updated at the end of every phase.
 - The fee in `seed/prior-spend.json` is a placeholder; the college view says so until `verified` is set.
 - Page numbers are physical indices, not the book's printed page labels.
 - Google Fonts is the one runtime network call. Offline, the app falls back to system fonts.
+- The format wheel is an interface only. Every format except Read says so.
 
 ## Next
 
-In leverage order, each on its own branch: LTI 1.3 launch from a Canvas sandbox, full-text search over page text, printed page labels, a second seeded course on the Business Law book.
+In leverage order, each on its own branch: LTI 1.3 launch from a Canvas sandbox, full-text search over page text, printed page labels, a second seeded course on the Business Law book, then the format renderers with Quiz first.

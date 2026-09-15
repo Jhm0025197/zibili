@@ -5,7 +5,7 @@
 
 Needs the server running with the seeded database and `pip install
 playwright`. Screenshots and report.json land in data/smoke/ (gitignored).
-Exits 1 on any page error or unexpected HTTP error.
+Exits 1 on any page error, unexpected HTTP error, or failed step.
 """
 
 from __future__ import annotations
@@ -25,17 +25,94 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "smoke"
 BASE = os.environ.get("ZIBILI_URL", "http://127.0.0.1:5174").rstrip("/")
 BOOK = "introduction-to-philosophy"
+CANVAS = ".reader-page canvas"
+PAGE_INPUT = "[data-page-input]"
+
+
+def scroll_to_page(page, number: int) -> None:
+    page.evaluate(
+        "(n) => document.querySelector(`.reader-page[data-page='${n}']`).scrollIntoView({block: 'start', behavior: 'instant'})",
+        number,
+    )
+
+
+def wait_for_page(page, number: int) -> None:
+    page.wait_for_function("(n) => document.querySelector('[data-page-input]').value === String(n)", arg=number, timeout=15000)
+
+
+def act_scroll(page, notes: list[str]) -> bool:
+    scroll_to_page(page, 30)
+    wait_for_page(page, 30)
+    page.wait_for_url("**page=30**", timeout=5000)
+    page.wait_for_selector(".reader-page[data-page='30'] canvas", timeout=15000)
+    count = page.evaluate("document.querySelectorAll('.reader-page canvas').length")
+    notes.append(f"rendered canvases after scrolling: {count}")
+    return count <= 12
+
+
+def act_contents(page, notes: list[str]) -> bool:
+    outline = page.request.get(f"{BASE}/api/books/{BOOK}/sections").json()
+    target = next(s for c in outline["chapters"] for s in c["sections"] if s["number"] == "2.1")
+    page.click("[data-contents]")
+    page.wait_for_selector(".sheet--toc")
+    page.click(f".sheet--toc [data-goto='{target['start_page']}']")
+    wait_for_page(page, target["start_page"])
+    page.wait_for_function("document.querySelector('[data-crumb]').textContent.startsWith('2.1')", timeout=5000)
+    notes.append(f"contents jumped to page {target['start_page']} and the crumb reads {page.inner_text('[data-crumb]')!r}")
+    return True
+
+
+def act_format(page, notes: list[str]) -> bool:
+    posted = []
+    handler = lambda r: posted.append(r.url) if r.method == "POST" and "/api/events" in r.url else None  # noqa: E731
+    page.on("request", handler)
+    page.click(".format-wheel [data-format='listen']")
+    page.wait_for_selector(".sheet")
+    text = page.inner_text(".sheet")
+    page.keyboard.press("Escape")
+    page.wait_for_selector(".sheet-scrim", state="detached", timeout=5000)
+    focused = page.evaluate("document.activeElement && document.activeElement.dataset.format")
+    page.wait_for_timeout(1500)
+    page.remove_listener("request", handler)
+    notes.append(f"format sheet: {'Not in v1' in text}, focus back on {focused!r}, events posted: {len(posted)}")
+    return "Not in v1" in text and focused == "listen" and not posted
+
+
+def act_reload(page, notes: list[str]) -> bool:
+    scroll_to_page(page, 40)
+    wait_for_page(page, 40)
+    page.wait_for_url("**page=40**", timeout=5000)
+    page.reload(wait_until="networkidle")
+    page.wait_for_selector(".reader-page[data-page='40'] canvas", timeout=20000)
+    value = page.input_value(PAGE_INPUT)
+    notes.append(f"after reload the page box reads {value}")
+    return value == "40"
+
+
+def act_wheel(page, notes: list[str]) -> bool:
+    before = int(page.input_value(PAGE_INPUT))
+    page.mouse.move(200, 500)
+    page.mouse.wheel(0, 3000)
+    page.wait_for_timeout(1200)
+    after = int(page.input_value(PAGE_INPUT))
+    notes.append(f"mouse wheel moved the page from {before} to {after}")
+    return after > before
+
 
 STEPS = [
-    # (name, person or None, path, selector to wait for, text that must appear)
+    # (name, person or None, path, selector to wait for, text that must appear, optional action)
     ("home-guest", None, "/index.html", ".shelf-card", "Your library"),
     ("list", None, "/list.html?list=all", ".libby-item", "All titles"),
     ("search", None, "/list.html?q=PHI1010", ".libby-item", "Introduction to Philosophy"),
     ("title", None, f"/title.html?id={BOOK}", "[data-chapters]:not([hidden])", "Chapters"),
-    ("reader-guest", None, f"/read.html?id={BOOK}&page=20", ".reader-stage canvas", "Reading as a guest"),
+    ("reader-guest", None, f"/read.html?id={BOOK}&page=20", CANVAS, "Reading as a guest"),
+    ("reader-scroll", None, f"/read.html?id={BOOK}&page=20", ".reader-page[data-page='20'] canvas", "of 421", act_scroll),
+    ("reader-format", None, f"/read.html?id={BOOK}&page=20", CANVAS, "Listen", act_format),
+    ("reader-reload", None, f"/read.html?id={BOOK}&page=20", CANVAS, "of 421", act_reload),
     ("menu-picker", None, "/menu.html", ".picker-person", "Prof. Marisol Reyes"),
     ("home-student", "stu-cho", "/index.html", ".shelf-card", "Your library"),
-    ("reader-student", "stu-cho", f"/read.html?id={BOOK}&page=30", ".reader-stage canvas", "1.2"),
+    ("reader-student", "stu-cho", f"/read.html?id={BOOK}&page=30", CANVAS, "1.2"),
+    ("reader-contents", "stu-cho", f"/read.html?id={BOOK}&page=30", CANVAS, "1.2", act_contents),
     ("shelf-student", "stu-cho", "/shelf.html", ".chip-row", "Reading"),
     ("instructor-gate", "stu-cho", "/instructor.html", ".empty-state", "signed in as"),
     ("instructor-fall", "instructor-reyes", "/instructor.html", ".dash-head", "Fall 2026"),
@@ -43,7 +120,8 @@ STEPS = [
     ("college-gate", "instructor-reyes", "/college.html", ".empty-state", "administration"),
     ("college", "admin-okafor", "/college.html", "table.data", "Term by term"),
     ("mobile-home", None, "/index.html", ".shelf-card", "Your library"),
-    ("mobile-reader", None, f"/read.html?id={BOOK}&page=20", ".reader-stage canvas", "of 421"),
+    ("mobile-reader", None, f"/read.html?id={BOOK}&page=20", CANVAS, "of 421"),
+    ("mobile-scroll", None, f"/read.html?id={BOOK}&page=20", CANVAS, "of 421", act_wheel),
 ]
 
 
@@ -75,7 +153,9 @@ def main() -> int:
                 else None,
             )
             context.page = page  # type: ignore[attr-defined]
-        for name, person, path, wait_for, expect in STEPS:
+        for step in STEPS:
+            name, person, path, wait_for, expect = step[:5]
+            act = step[5] if len(step) > 5 else None
             context = mobile if name.startswith("mobile") else desktop
             page = context.page  # type: ignore[attr-defined]
             if person:
@@ -86,12 +166,13 @@ def main() -> int:
             try:
                 page.wait_for_selector(wait_for, timeout=20000)
                 page.wait_for_timeout(300)
-                body = page.inner_text("body")
-                ok = expect in body
+                ok = expect in page.inner_text("body")
+                if act is not None:
+                    ok = act(page, report["notes"]) and ok
             except Exception as exc:  # noqa: BLE001
                 ok = False
                 report["notes"].append(f"{name}: {exc}")
-            page.screenshot(path=str(OUT / f"{name}.png"), full_page=True)
+            page.screenshot(path=str(OUT / f"{name}.png"), full_page="reader" not in name and "scroll" not in name)
             status = "ok  " if ok else "FAIL"
             if not ok:
                 failed = True
@@ -102,6 +183,9 @@ def main() -> int:
     if report["page_errors"] or report["http_errors"] or report["console"]:
         failed = True
     (OUT / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    for note in report["notes"]:
+        if not note.startswith(("ok  ", "FAIL")):
+            print("   ", note)
     print("page errors:", report["page_errors"])
     print("http errors:", report["http_errors"])
     print("console errors:", report["console"])

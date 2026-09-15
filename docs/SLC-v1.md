@@ -8,7 +8,7 @@ Internal replacement for BibliU. One test book, one course, three views, zero ru
 
 A student opens the library page, sees the book, and can either **download** the original or **read** it. Reading opens the page-based PDF reader. Every section a student reads writes a real event. The professor view shows those events per student. The college view shows the money and engagement roll-up. All three views ship in the same app, on the same data, with no API keys required to run.
 
-Not in v1: AI renders, TTS, LTI, the format wheel, markdown chunking. Stubbed where cheap, otherwise one line in `docs/backlog.md`.
+Not in v1: AI renders, TTS, LTI, the format wheel's renderers (the wheel itself is present), markdown chunking. Stubbed where cheap, otherwise one line in `docs/backlog.md`.
 
 ---
 
@@ -34,7 +34,7 @@ Page numbers are 1-based physical page indices, the same numbers PDF.js uses.
 
 **Library.** Home shelves, search, title page with cover, description, license, course code. Two buttons: *Read* opens the reader at the last position, *Download* returns the original file.
 
-**Reader.** PDF.js page reader: prev/next, zoom, page input, Contents drawer from the outline, position memory, keyboard nav. Logs `opened`, `read`, `dwelled`, `reread` with the section ID and page.
+**Reader.** PDF.js continuous-scroll reader: every page in one document, rendered as it comes into view, with prev/next, zoom, page input, a Contents drawer from the outline, the format wheel, position memory, and keyboard nav. Logs `opened`, `read`, `dwelled`, `reread` with the section ID and page.
 
 **Professor view.** One course, one term. Roster table: student, last active, sections opened, % of assigned read, time on the book. Click a student for their section-by-section trail. Class rollup: most and least read sections, assigned sections nobody opened, dwell outliers. Data comes from the real ledger joined to the roster, scoped to this instructor's course.
 

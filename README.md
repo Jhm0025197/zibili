@@ -31,7 +31,7 @@ Signed-out visitors can read and download but nothing is recorded. All people, t
 ## The four views
 
 - **Library** (`index.html`, `list.html`, `title.html`): shelves, search by title, author, subject, or course code, and a title page with chapters, Read, Download, and Tag.
-- **Reader** (`read.html`): PDF.js page reader with a Contents drawer from the book's outline, position memory, and keyboard paging. For a signed-in student it logs `opened`, `reread`, `dwelled`, and `read` per section.
+- **Reader** (`read.html`): PDF.js continuous-scroll reader with a Contents drawer from the book's outline, the format wheel (Read works; the other seven say they are not in v1), position memory, and keyboard paging. For a signed-in student it logs `opened`, `reread`, `dwelled`, and `read` per section.
 - **Course** (`instructor.html`): roster with last active, sections opened, percent of assigned read, and time on the book. Click a student for their trail. Most and least read sections, untouched assignments, dwell outliers.
 - **College** (`college.html`): dollars displaced (labelled an estimate until the fee in `seed/prior-spend.json` is verified), students active, sections live, and term-over-term change.
 
