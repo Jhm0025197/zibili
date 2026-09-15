@@ -38,10 +38,12 @@ class IngestTests(unittest.TestCase):
 
     def test_ingest_is_idempotent(self) -> None:
         first = ingest_paths(
-            [self.pdf], db_path=self.db_path, files_dir=self.files_dir, linearize=False
+            [self.pdf], db_path=self.db_path, files_dir=self.files_dir, linearize=False,
+            id_map_path=self.root / "id-map.json",
         )
         second = ingest_paths(
-            [self.pdf], db_path=self.db_path, files_dir=self.files_dir, linearize=False
+            [self.pdf], db_path=self.db_path, files_dir=self.files_dir, linearize=False,
+            id_map_path=self.root / "id-map.json",
         )
         self.assertEqual(first["added"], 1)
         self.assertEqual(second["skipped"], 1)
@@ -65,7 +67,7 @@ class IngestTests(unittest.TestCase):
             version = connection.execute("PRAGMA user_version").fetchone()[0]
         finally:
             connection.close()
-        self.assertEqual(version, 1)
+        self.assertEqual(version, 2)
 
 
 if __name__ == "__main__":

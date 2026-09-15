@@ -1,0 +1,1135 @@
+{
+  "books": {
+    "business-law-i-essentials": {
+      "sections": {
+        "10|administrative-law": {
+          "id": "business-law-i-essentials-ch10-s01",
+          "section": 1,
+          "title": "Administrative Law"
+        },
+        "10|assessment-questions": {
+          "id": "business-law-i-essentials-ch10-s05",
+          "section": 5,
+          "title": "Assessment Questions"
+        },
+        "10|chapter-outline": {
+          "id": "business-law-i-essentials-ch10-s03",
+          "section": 3,
+          "title": "Chapter Outline"
+        },
+        "10|endnotes": {
+          "id": "business-law-i-essentials-ch10-s06",
+          "section": 6,
+          "title": "Endnotes"
+        },
+        "10|introduction": {
+          "id": "business-law-i-essentials-ch10-s04",
+          "section": 4,
+          "title": "Introduction"
+        },
+        "10|regulatory-agencies": {
+          "id": "business-law-i-essentials-ch10-s02",
+          "section": 2,
+          "title": "Regulatory Agencies"
+        },
+        "11|antitrust-laws": {
+          "id": "business-law-i-essentials-ch11-s02",
+          "section": 2,
+          "title": "Antitrust Laws"
+        },
+        "11|assessment-questions": {
+          "id": "business-law-i-essentials-ch11-s05",
+          "section": 5,
+          "title": "Assessment Questions"
+        },
+        "11|chapter-outline": {
+          "id": "business-law-i-essentials-ch11-s03",
+          "section": 3,
+          "title": "Chapter Outline"
+        },
+        "11|endnotes": {
+          "id": "business-law-i-essentials-ch11-s06",
+          "section": 6,
+          "title": "Endnotes"
+        },
+        "11|history-of-antitrust-law": {
+          "id": "business-law-i-essentials-ch11-s01",
+          "section": 1,
+          "title": "History of Antitrust Law"
+        },
+        "11|introduction": {
+          "id": "business-law-i-essentials-ch11-s04",
+          "section": 4,
+          "title": "Introduction"
+        },
+        "12|assessment-questions": {
+          "id": "business-law-i-essentials-ch12-s05",
+          "section": 5,
+          "title": "Assessment Questions"
+        },
+        "12|chapter-outline": {
+          "id": "business-law-i-essentials-ch12-s03",
+          "section": 3,
+          "title": "Chapter Outline"
+        },
+        "12|endnotes": {
+          "id": "business-law-i-essentials-ch12-s06",
+          "section": 6,
+          "title": "Endnotes"
+        },
+        "12|introduction": {
+          "id": "business-law-i-essentials-ch12-s04",
+          "section": 4,
+          "title": "Introduction"
+        },
+        "12|the-federal-trade-commission": {
+          "id": "business-law-i-essentials-ch12-s02",
+          "section": 2,
+          "title": "The Federal Trade Commission"
+        },
+        "12|unfair-trade-practices": {
+          "id": "business-law-i-essentials-ch12-s01",
+          "section": 1,
+          "title": "Unfair Trade Practices"
+        },
+        "13|assessment-questions": {
+          "id": "business-law-i-essentials-ch13-s05",
+          "section": 5,
+          "title": "Assessment Questions"
+        },
+        "13|chapter-outline": {
+          "id": "business-law-i-essentials-ch13-s03",
+          "section": 3,
+          "title": "Chapter Outline"
+        },
+        "13|endnotes": {
+          "id": "business-law-i-essentials-ch13-s06",
+          "section": 6,
+          "title": "Endnotes"
+        },
+        "13|introduction": {
+          "id": "business-law-i-essentials-ch13-s04",
+          "section": 4,
+          "title": "Introduction"
+        },
+        "13|introduction-to-international-law": {
+          "id": "business-law-i-essentials-ch13-s01",
+          "section": 1,
+          "title": "Introduction to International Law"
+        },
+        "13|sources-and-practice-of-international-law": {
+          "id": "business-law-i-essentials-ch13-s02",
+          "section": 2,
+          "title": "Sources and Practice of International Law"
+        },
+        "14|assessment-questions": {
+          "id": "business-law-i-essentials-ch14-s05",
+          "section": 5,
+          "title": "Assessment Questions"
+        },
+        "14|chapter-outline": {
+          "id": "business-law-i-essentials-ch14-s03",
+          "section": 3,
+          "title": "Chapter Outline"
+        },
+        "14|endnotes": {
+          "id": "business-law-i-essentials-ch14-s06",
+          "section": 6,
+          "title": "Endnotes"
+        },
+        "14|introduction": {
+          "id": "business-law-i-essentials-ch14-s04",
+          "section": 4,
+          "title": "Introduction"
+        },
+        "14|liability-under-the-securities-act": {
+          "id": "business-law-i-essentials-ch14-s01",
+          "section": 1,
+          "title": "Liability Under the Securities Act"
+        },
+        "14|the-framework-of-securities-regulation": {
+          "id": "business-law-i-essentials-ch14-s02",
+          "section": 2,
+          "title": "The Framework of Securities Regulation"
+        },
+        "1|assessment-questions": {
+          "id": "business-law-i-essentials-ch01-s06",
+          "section": 6,
+          "title": "Assessment Questions"
+        },
+        "1|basic-american-legal-principles": {
+          "id": "business-law-i-essentials-ch01-s01",
+          "section": 1,
+          "title": "Basic American Legal Principles"
+        },
+        "1|chapter-outline": {
+          "id": "business-law-i-essentials-ch01-s04",
+          "section": 4,
+          "title": "Chapter Outline"
+        },
+        "1|endnotes": {
+          "id": "business-law-i-essentials-ch01-s07",
+          "section": 7,
+          "title": "Endnotes"
+        },
+        "1|important-business-laws-and-regulations": {
+          "id": "business-law-i-essentials-ch01-s03",
+          "section": 3,
+          "title": "Important Business Laws and Regulations"
+        },
+        "1|introduction": {
+          "id": "business-law-i-essentials-ch01-s05",
+          "section": 5,
+          "title": "Introduction"
+        },
+        "1|sources-and-types-of-law": {
+          "id": "business-law-i-essentials-ch01-s02",
+          "section": 2,
+          "title": "Sources and Types of Law"
+        },
+        "2|arbitration": {
+          "id": "business-law-i-essentials-ch02-s03",
+          "section": 3,
+          "title": "Arbitration"
+        },
+        "2|assessment-questions": {
+          "id": "business-law-i-essentials-ch02-s06",
+          "section": 6,
+          "title": "Assessment Questions"
+        },
+        "2|chapter-outline": {
+          "id": "business-law-i-essentials-ch02-s04",
+          "section": 4,
+          "title": "Chapter Outline"
+        },
+        "2|endnotes": {
+          "id": "business-law-i-essentials-ch02-s07",
+          "section": 7,
+          "title": "Endnotes"
+        },
+        "2|introduction": {
+          "id": "business-law-i-essentials-ch02-s05",
+          "section": 5,
+          "title": "Introduction"
+        },
+        "2|mediation": {
+          "id": "business-law-i-essentials-ch02-s02",
+          "section": 2,
+          "title": "Mediation"
+        },
+        "2|negotiation": {
+          "id": "business-law-i-essentials-ch02-s01",
+          "section": 1,
+          "title": "Negotiation"
+        },
+        "3|assessment-questions": {
+          "id": "business-law-i-essentials-ch03-s05",
+          "section": 5,
+          "title": "Assessment Questions"
+        },
+        "3|business-ethics": {
+          "id": "business-law-i-essentials-ch03-s01",
+          "section": 1,
+          "title": "Business Ethics"
+        },
+        "3|chapter-outline": {
+          "id": "business-law-i-essentials-ch03-s03",
+          "section": 3,
+          "title": "Chapter Outline"
+        },
+        "3|endnotes": {
+          "id": "business-law-i-essentials-ch03-s06",
+          "section": 6,
+          "title": "Endnotes"
+        },
+        "3|introduction": {
+          "id": "business-law-i-essentials-ch03-s04",
+          "section": 4,
+          "title": "Introduction"
+        },
+        "3|social-responsibility": {
+          "id": "business-law-i-essentials-ch03-s02",
+          "section": 2,
+          "title": "Social Responsibility"
+        },
+        "4|assessment-questions": {
+          "id": "business-law-i-essentials-ch04-s05",
+          "section": 5,
+          "title": "Assessment Questions"
+        },
+        "4|chapter-outline": {
+          "id": "business-law-i-essentials-ch04-s03",
+          "section": 3,
+          "title": "Chapter Outline"
+        },
+        "4|commerce-clause": {
+          "id": "business-law-i-essentials-ch04-s01",
+          "section": 1,
+          "title": "Commerce Clause"
+        },
+        "4|constitutional-protections": {
+          "id": "business-law-i-essentials-ch04-s02",
+          "section": 2,
+          "title": "Constitutional Protections"
+        },
+        "4|endnotes": {
+          "id": "business-law-i-essentials-ch04-s06",
+          "section": 6,
+          "title": "Endnotes"
+        },
+        "4|introduction": {
+          "id": "business-law-i-essentials-ch04-s04",
+          "section": 4,
+          "title": "Introduction"
+        },
+        "5|assessment-questions": {
+          "id": "business-law-i-essentials-ch05-s05",
+          "section": 5,
+          "title": "Assessment Questions"
+        },
+        "5|chapter-outline": {
+          "id": "business-law-i-essentials-ch05-s03",
+          "section": 3,
+          "title": "Chapter Outline"
+        },
+        "5|civil-vs-criminal-liability": {
+          "id": "business-law-i-essentials-ch05-s02",
+          "section": 2,
+          "title": "Civil vs. Criminal Liability"
+        },
+        "5|common-business-crimes": {
+          "id": "business-law-i-essentials-ch05-s01",
+          "section": 1,
+          "title": "Common Business Crimes"
+        },
+        "5|endnotes": {
+          "id": "business-law-i-essentials-ch05-s06",
+          "section": 6,
+          "title": "Endnotes"
+        },
+        "5|introduction": {
+          "id": "business-law-i-essentials-ch05-s04",
+          "section": 4,
+          "title": "Introduction"
+        },
+        "6|assessment-questions": {
+          "id": "business-law-i-essentials-ch06-s05",
+          "section": 5,
+          "title": "Assessment Questions"
+        },
+        "6|chapter-outline": {
+          "id": "business-law-i-essentials-ch06-s03",
+          "section": 3,
+          "title": "Chapter Outline"
+        },
+        "6|endnotes": {
+          "id": "business-law-i-essentials-ch06-s06",
+          "section": 6,
+          "title": "Endnotes"
+        },
+        "6|intentional-torts-and-negligence": {
+          "id": "business-law-i-essentials-ch06-s01",
+          "section": 1,
+          "title": "Intentional Torts and Negligence"
+        },
+        "6|introduction": {
+          "id": "business-law-i-essentials-ch06-s04",
+          "section": 4,
+          "title": "Introduction"
+        },
+        "6|product-and-strict-liability": {
+          "id": "business-law-i-essentials-ch06-s02",
+          "section": 2,
+          "title": "Product and Strict Liability"
+        },
+        "7|agreement-consideration-and-promissory-estoppel": {
+          "id": "business-law-i-essentials-ch07-s01",
+          "section": 1,
+          "title": "Agreement, Consideration, and Promissory Estoppel"
+        },
+        "7|assessment-questions": {
+          "id": "business-law-i-essentials-ch07-s06",
+          "section": 6,
+          "title": "Assessment Questions"
+        },
+        "7|breach-of-contract-and-remedies": {
+          "id": "business-law-i-essentials-ch07-s03",
+          "section": 3,
+          "title": "Breach of Contract and Remedies"
+        },
+        "7|capacity-and-legality": {
+          "id": "business-law-i-essentials-ch07-s02",
+          "section": 2,
+          "title": "Capacity and Legality"
+        },
+        "7|chapter-outline": {
+          "id": "business-law-i-essentials-ch07-s04",
+          "section": 4,
+          "title": "Chapter Outline"
+        },
+        "7|endnotes": {
+          "id": "business-law-i-essentials-ch07-s07",
+          "section": 7,
+          "title": "Endnotes"
+        },
+        "7|introduction": {
+          "id": "business-law-i-essentials-ch07-s05",
+          "section": 5,
+          "title": "Introduction"
+        },
+        "8|assessment-questions": {
+          "id": "business-law-i-essentials-ch08-s05",
+          "section": 5,
+          "title": "Assessment Questions"
+        },
+        "8|chapter-outline": {
+          "id": "business-law-i-essentials-ch08-s03",
+          "section": 3,
+          "title": "Chapter Outline"
+        },
+        "8|endnotes": {
+          "id": "business-law-i-essentials-ch08-s06",
+          "section": 6,
+          "title": "Endnotes"
+        },
+        "8|introduction": {
+          "id": "business-law-i-essentials-ch08-s04",
+          "section": 4,
+          "title": "Introduction"
+        },
+        "8|the-nature-and-origins-of-sales-contracts": {
+          "id": "business-law-i-essentials-ch08-s01",
+          "section": 1,
+          "title": "The Nature and Origins of Sales Contracts"
+        },
+        "8|warranties-and-sales-contracts": {
+          "id": "business-law-i-essentials-ch08-s02",
+          "section": 2,
+          "title": "Warranties and Sales Contracts"
+        },
+        "9|assessment-questions": {
+          "id": "business-law-i-essentials-ch09-s06",
+          "section": 6,
+          "title": "Assessment Questions"
+        },
+        "9|chapter-outline": {
+          "id": "business-law-i-essentials-ch09-s04",
+          "section": 4,
+          "title": "Chapter Outline"
+        },
+        "9|employment-worker-protection-and-immigration-law": {
+          "id": "business-law-i-essentials-ch09-s01",
+          "section": 1,
+          "title": "Employment, Worker Protection, and Immigration Law"
+        },
+        "9|endnotes": {
+          "id": "business-law-i-essentials-ch09-s07",
+          "section": 7,
+          "title": "Endnotes"
+        },
+        "9|equal-opportunity-in-employment": {
+          "id": "business-law-i-essentials-ch09-s03",
+          "section": 3,
+          "title": "Equal Opportunity in Employment"
+        },
+        "9|introduction": {
+          "id": "business-law-i-essentials-ch09-s05",
+          "section": 5,
+          "title": "Introduction"
+        },
+        "9|labor-law": {
+          "id": "business-law-i-essentials-ch09-s02",
+          "section": 2,
+          "title": "Labor Law"
+        }
+      },
+      "tombstoned": []
+    },
+    "introduction-to-philosophy": {
+      "sections": {
+        "10|business-ethics-and-emerging-technology": {
+          "id": "introduction-to-philosophy-ch10-s03",
+          "section": 3,
+          "title": "Business Ethics and Emerging Technology"
+        },
+        "10|chapter-outline": {
+          "id": "introduction-to-philosophy-ch10-s04",
+          "section": 4,
+          "title": "Chapter Outline"
+        },
+        "10|environmental-ethics": {
+          "id": "introduction-to-philosophy-ch10-s02",
+          "section": 2,
+          "title": "Environmental Ethics"
+        },
+        "10|further-reading": {
+          "id": "introduction-to-philosophy-ch10-s10",
+          "section": 10,
+          "title": "Further Reading"
+        },
+        "10|introduction": {
+          "id": "introduction-to-philosophy-ch10-s05",
+          "section": 5,
+          "title": "Introduction"
+        },
+        "10|key-terms": {
+          "id": "introduction-to-philosophy-ch10-s07",
+          "section": 7,
+          "title": "Key Terms"
+        },
+        "10|references": {
+          "id": "introduction-to-philosophy-ch10-s08",
+          "section": 8,
+          "title": "References"
+        },
+        "10|review-questions": {
+          "id": "introduction-to-philosophy-ch10-s09",
+          "section": 9,
+          "title": "Review Questions"
+        },
+        "10|summary": {
+          "id": "introduction-to-philosophy-ch10-s06",
+          "section": 6,
+          "title": "Summary"
+        },
+        "10|the-challenge-of-bioethics": {
+          "id": "introduction-to-philosophy-ch10-s01",
+          "section": 1,
+          "title": "The Challenge of Bioethics"
+        },
+        "11|chapter-outline": {
+          "id": "introduction-to-philosophy-ch11-s05",
+          "section": 5,
+          "title": "Chapter Outline"
+        },
+        "11|forms-of-government": {
+          "id": "introduction-to-philosophy-ch11-s02",
+          "section": 2,
+          "title": "Forms of Government"
+        },
+        "11|further-reading": {
+          "id": "introduction-to-philosophy-ch11-s11",
+          "section": 11,
+          "title": "Further Reading"
+        },
+        "11|historical-perspectives-on-government": {
+          "id": "introduction-to-philosophy-ch11-s01",
+          "section": 1,
+          "title": "Historical Perspectives on Government"
+        },
+        "11|introduction": {
+          "id": "introduction-to-philosophy-ch11-s06",
+          "section": 6,
+          "title": "Introduction"
+        },
+        "11|key-terms": {
+          "id": "introduction-to-philosophy-ch11-s08",
+          "section": 8,
+          "title": "Key Terms"
+        },
+        "11|political-ideologies": {
+          "id": "introduction-to-philosophy-ch11-s04",
+          "section": 4,
+          "title": "Political Ideologies"
+        },
+        "11|political-legitimacy-and-duty": {
+          "id": "introduction-to-philosophy-ch11-s03",
+          "section": 3,
+          "title": "Political Legitimacy and Duty"
+        },
+        "11|references": {
+          "id": "introduction-to-philosophy-ch11-s09",
+          "section": 9,
+          "title": "References"
+        },
+        "11|review-questions": {
+          "id": "introduction-to-philosophy-ch11-s10",
+          "section": 10,
+          "title": "Review Questions"
+        },
+        "11|summary": {
+          "id": "introduction-to-philosophy-ch11-s07",
+          "section": 7,
+          "title": "Summary"
+        },
+        "12|chapter-outline": {
+          "id": "introduction-to-philosophy-ch12-s06",
+          "section": 6,
+          "title": "Chapter Outline"
+        },
+        "12|continental-philosophy-s-challenge-to-enlightenment-theories": {
+          "id": "introduction-to-philosophy-ch12-s03",
+          "section": 3,
+          "title": "Continental Philosophy’s Challenge to Enlightenment Theories"
+        },
+        "12|enlightenment-social-theory": {
+          "id": "introduction-to-philosophy-ch12-s01",
+          "section": 1,
+          "title": "Enlightenment Social Theory"
+        },
+        "12|introduction": {
+          "id": "introduction-to-philosophy-ch12-s07",
+          "section": 7,
+          "title": "Introduction"
+        },
+        "12|key-terms": {
+          "id": "introduction-to-philosophy-ch12-s09",
+          "section": 9,
+          "title": "Key Terms"
+        },
+        "12|postmodernism": {
+          "id": "introduction-to-philosophy-ch12-s05",
+          "section": 5,
+          "title": "Postmodernism"
+        },
+        "12|references": {
+          "id": "introduction-to-philosophy-ch12-s10",
+          "section": 10,
+          "title": "References"
+        },
+        "12|review-questions": {
+          "id": "introduction-to-philosophy-ch12-s11",
+          "section": 11,
+          "title": "Review Questions"
+        },
+        "12|summary": {
+          "id": "introduction-to-philosophy-ch12-s08",
+          "section": 8,
+          "title": "Summary"
+        },
+        "12|the-frankfurt-school": {
+          "id": "introduction-to-philosophy-ch12-s04",
+          "section": 4,
+          "title": "The Frankfurt School"
+        },
+        "12|the-marxist-solution": {
+          "id": "introduction-to-philosophy-ch12-s02",
+          "section": 2,
+          "title": "The Marxist Solution"
+        },
+        "1|an-overview-of-contemporary-philosophy": {
+          "id": "introduction-to-philosophy-ch01-s04",
+          "section": 4,
+          "title": "An Overview of Contemporary Philosophy"
+        },
+        "1|chapter-outline": {
+          "id": "introduction-to-philosophy-ch01-s05",
+          "section": 5,
+          "title": "Chapter Outline"
+        },
+        "1|further-reading": {
+          "id": "introduction-to-philosophy-ch01-s11",
+          "section": 11,
+          "title": "Further Reading"
+        },
+        "1|how-do-philosophers-arrive-at-truth": {
+          "id": "introduction-to-philosophy-ch01-s02",
+          "section": 2,
+          "title": "How Do Philosophers Arrive at Truth?"
+        },
+        "1|introduction": {
+          "id": "introduction-to-philosophy-ch01-s06",
+          "section": 6,
+          "title": "Introduction"
+        },
+        "1|key-terms": {
+          "id": "introduction-to-philosophy-ch01-s08",
+          "section": 8,
+          "title": "Key Terms"
+        },
+        "1|references": {
+          "id": "introduction-to-philosophy-ch01-s09",
+          "section": 9,
+          "title": "References"
+        },
+        "1|review-questions": {
+          "id": "introduction-to-philosophy-ch01-s10",
+          "section": 10,
+          "title": "Review Questions"
+        },
+        "1|socrates-as-a-paradigmatic-historical-philosopher": {
+          "id": "introduction-to-philosophy-ch01-s03",
+          "section": 3,
+          "title": "Socrates as a Paradigmatic Historical Philosopher"
+        },
+        "1|summary": {
+          "id": "introduction-to-philosophy-ch01-s07",
+          "section": 7,
+          "title": "Summary"
+        },
+        "1|what-is-philosophy": {
+          "id": "introduction-to-philosophy-ch01-s01",
+          "section": 1,
+          "title": "What Is Philosophy?"
+        },
+        "2|chapter-outline": {
+          "id": "introduction-to-philosophy-ch02-s07",
+          "section": 7,
+          "title": "Chapter Outline"
+        },
+        "2|developing-good-habits-of-mind": {
+          "id": "introduction-to-philosophy-ch02-s03",
+          "section": 3,
+          "title": "Developing Good Habits of Mind"
+        },
+        "2|further-reading": {
+          "id": "introduction-to-philosophy-ch02-s13",
+          "section": 13,
+          "title": "Further Reading"
+        },
+        "2|gathering-information-evaluating-sources-and-understanding-evidence": {
+          "id": "introduction-to-philosophy-ch02-s04",
+          "section": 4,
+          "title": "Gathering Information, Evaluating Sources, and Understanding Evidence"
+        },
+        "2|introduction": {
+          "id": "introduction-to-philosophy-ch02-s08",
+          "section": 8,
+          "title": "Introduction"
+        },
+        "2|key-terms": {
+          "id": "introduction-to-philosophy-ch02-s10",
+          "section": 10,
+          "title": "Key Terms"
+        },
+        "2|overcoming-cognitive-biases-and-engaging-in-critical-reflection": {
+          "id": "introduction-to-philosophy-ch02-s02",
+          "section": 2,
+          "title": "Overcoming Cognitive Biases and Engaging in Critical Reflection"
+        },
+        "2|reading-philosophy": {
+          "id": "introduction-to-philosophy-ch02-s05",
+          "section": 5,
+          "title": "Reading Philosophy"
+        },
+        "2|references": {
+          "id": "introduction-to-philosophy-ch02-s11",
+          "section": 11,
+          "title": "References"
+        },
+        "2|review-questions": {
+          "id": "introduction-to-philosophy-ch02-s12",
+          "section": 12,
+          "title": "Review Questions"
+        },
+        "2|summary": {
+          "id": "introduction-to-philosophy-ch02-s09",
+          "section": 9,
+          "title": "Summary"
+        },
+        "2|the-brain-is-an-inference-machine": {
+          "id": "introduction-to-philosophy-ch02-s01",
+          "section": 1,
+          "title": "The Brain Is an Inference Machine"
+        },
+        "2|writing-philosophy-papers": {
+          "id": "introduction-to-philosophy-ch02-s06",
+          "section": 6,
+          "title": "Writing Philosophy Papers"
+        },
+        "3|chapter-outline": {
+          "id": "introduction-to-philosophy-ch03-s04",
+          "section": 4,
+          "title": "Chapter Outline"
+        },
+        "3|classical-chinese-philosophy": {
+          "id": "introduction-to-philosophy-ch03-s03",
+          "section": 3,
+          "title": "Classical Chinese Philosophy"
+        },
+        "3|classical-indian-philosophy": {
+          "id": "introduction-to-philosophy-ch03-s02",
+          "section": 2,
+          "title": "Classical Indian Philosophy"
+        },
+        "3|further-reading": {
+          "id": "introduction-to-philosophy-ch03-s10",
+          "section": 10,
+          "title": "Further Reading"
+        },
+        "3|indigenous-philosophy": {
+          "id": "introduction-to-philosophy-ch03-s01",
+          "section": 1,
+          "title": "Indigenous Philosophy"
+        },
+        "3|introduction": {
+          "id": "introduction-to-philosophy-ch03-s05",
+          "section": 5,
+          "title": "Introduction"
+        },
+        "3|key-terms": {
+          "id": "introduction-to-philosophy-ch03-s07",
+          "section": 7,
+          "title": "Key Terms"
+        },
+        "3|references": {
+          "id": "introduction-to-philosophy-ch03-s08",
+          "section": 8,
+          "title": "References"
+        },
+        "3|review-questions": {
+          "id": "introduction-to-philosophy-ch03-s09",
+          "section": 9,
+          "title": "Review Questions"
+        },
+        "3|summary": {
+          "id": "introduction-to-philosophy-ch03-s06",
+          "section": 6,
+          "title": "Summary"
+        },
+        "4|chapter-outline": {
+          "id": "introduction-to-philosophy-ch04-s04",
+          "section": 4,
+          "title": "Chapter Outline"
+        },
+        "4|classical-philosophy": {
+          "id": "introduction-to-philosophy-ch04-s02",
+          "section": 2,
+          "title": "Classical Philosophy"
+        },
+        "4|further-reading": {
+          "id": "introduction-to-philosophy-ch04-s10",
+          "section": 10,
+          "title": "Further Reading"
+        },
+        "4|historiography-and-the-history-of-philosophy": {
+          "id": "introduction-to-philosophy-ch04-s01",
+          "section": 1,
+          "title": "Historiography and the History of Philosophy"
+        },
+        "4|introduction": {
+          "id": "introduction-to-philosophy-ch04-s05",
+          "section": 5,
+          "title": "Introduction"
+        },
+        "4|jewish-christian-and-islamic-philosophy": {
+          "id": "introduction-to-philosophy-ch04-s03",
+          "section": 3,
+          "title": "Jewish, Christian, and Islamic Philosophy"
+        },
+        "4|key-terms": {
+          "id": "introduction-to-philosophy-ch04-s07",
+          "section": 7,
+          "title": "Key Terms"
+        },
+        "4|references": {
+          "id": "introduction-to-philosophy-ch04-s08",
+          "section": 8,
+          "title": "References"
+        },
+        "4|review-questions": {
+          "id": "introduction-to-philosophy-ch04-s09",
+          "section": 9,
+          "title": "Review Questions"
+        },
+        "4|summary": {
+          "id": "introduction-to-philosophy-ch04-s06",
+          "section": 6,
+          "title": "Summary"
+        },
+        "5|arguments": {
+          "id": "introduction-to-philosophy-ch05-s03",
+          "section": 3,
+          "title": "Arguments"
+        },
+        "5|chapter-outline": {
+          "id": "introduction-to-philosophy-ch05-s06",
+          "section": 6,
+          "title": "Chapter Outline"
+        },
+        "5|further-reading": {
+          "id": "introduction-to-philosophy-ch05-s12",
+          "section": 12,
+          "title": "Further Reading"
+        },
+        "5|informal-fallacies": {
+          "id": "introduction-to-philosophy-ch05-s05",
+          "section": 5,
+          "title": "Informal Fallacies"
+        },
+        "5|introduction": {
+          "id": "introduction-to-philosophy-ch05-s07",
+          "section": 7,
+          "title": "Introduction"
+        },
+        "5|key-terms": {
+          "id": "introduction-to-philosophy-ch05-s09",
+          "section": 9,
+          "title": "Key Terms"
+        },
+        "5|logical-statements": {
+          "id": "introduction-to-philosophy-ch05-s02",
+          "section": 2,
+          "title": "Logical Statements"
+        },
+        "5|philosophical-methods-for-discovering-truth": {
+          "id": "introduction-to-philosophy-ch05-s01",
+          "section": 1,
+          "title": "Philosophical Methods for Discovering Truth"
+        },
+        "5|references": {
+          "id": "introduction-to-philosophy-ch05-s10",
+          "section": 10,
+          "title": "References"
+        },
+        "5|review-questions": {
+          "id": "introduction-to-philosophy-ch05-s11",
+          "section": 11,
+          "title": "Review Questions"
+        },
+        "5|summary": {
+          "id": "introduction-to-philosophy-ch05-s08",
+          "section": 8,
+          "title": "Summary"
+        },
+        "5|types-of-inferences": {
+          "id": "introduction-to-philosophy-ch05-s04",
+          "section": 4,
+          "title": "Types of Inferences"
+        },
+        "6|chapter-outline": {
+          "id": "introduction-to-philosophy-ch06-s05",
+          "section": 5,
+          "title": "Chapter Outline"
+        },
+        "6|cosmology-and-the-existence-of-god": {
+          "id": "introduction-to-philosophy-ch06-s03",
+          "section": 3,
+          "title": "Cosmology and the Existence of God"
+        },
+        "6|free-will": {
+          "id": "introduction-to-philosophy-ch06-s04",
+          "section": 4,
+          "title": "Free Will"
+        },
+        "6|further-reading": {
+          "id": "introduction-to-philosophy-ch06-s11",
+          "section": 11,
+          "title": "Further Reading"
+        },
+        "6|introduction": {
+          "id": "introduction-to-philosophy-ch06-s06",
+          "section": 6,
+          "title": "Introduction"
+        },
+        "6|key-terms": {
+          "id": "introduction-to-philosophy-ch06-s08",
+          "section": 8,
+          "title": "Key Terms"
+        },
+        "6|references": {
+          "id": "introduction-to-philosophy-ch06-s09",
+          "section": 9,
+          "title": "References"
+        },
+        "6|review-questions": {
+          "id": "introduction-to-philosophy-ch06-s10",
+          "section": 10,
+          "title": "Review Questions"
+        },
+        "6|self-and-identity": {
+          "id": "introduction-to-philosophy-ch06-s02",
+          "section": 2,
+          "title": "Self and Identity"
+        },
+        "6|substance": {
+          "id": "introduction-to-philosophy-ch06-s01",
+          "section": 1,
+          "title": "Substance"
+        },
+        "6|summary": {
+          "id": "introduction-to-philosophy-ch06-s07",
+          "section": 7,
+          "title": "Summary"
+        },
+        "7|applied-epistemology": {
+          "id": "introduction-to-philosophy-ch07-s05",
+          "section": 5,
+          "title": "Applied Epistemology"
+        },
+        "7|chapter-outline": {
+          "id": "introduction-to-philosophy-ch07-s06",
+          "section": 6,
+          "title": "Chapter Outline"
+        },
+        "7|further-reading": {
+          "id": "introduction-to-philosophy-ch07-s12",
+          "section": 12,
+          "title": "Further Reading"
+        },
+        "7|introduction": {
+          "id": "introduction-to-philosophy-ch07-s07",
+          "section": 7,
+          "title": "Introduction"
+        },
+        "7|justification": {
+          "id": "introduction-to-philosophy-ch07-s03",
+          "section": 3,
+          "title": "Justification"
+        },
+        "7|key-terms": {
+          "id": "introduction-to-philosophy-ch07-s09",
+          "section": 9,
+          "title": "Key Terms"
+        },
+        "7|knowledge": {
+          "id": "introduction-to-philosophy-ch07-s02",
+          "section": 2,
+          "title": "Knowledge"
+        },
+        "7|references": {
+          "id": "introduction-to-philosophy-ch07-s10",
+          "section": 10,
+          "title": "References"
+        },
+        "7|review-questions": {
+          "id": "introduction-to-philosophy-ch07-s11",
+          "section": 11,
+          "title": "Review Questions"
+        },
+        "7|skepticism": {
+          "id": "introduction-to-philosophy-ch07-s04",
+          "section": 4,
+          "title": "Skepticism"
+        },
+        "7|summary": {
+          "id": "introduction-to-philosophy-ch07-s08",
+          "section": 8,
+          "title": "Summary"
+        },
+        "7|what-epistemology-studies": {
+          "id": "introduction-to-philosophy-ch07-s01",
+          "section": 1,
+          "title": "What Epistemology Studies"
+        },
+        "8|aesthetics": {
+          "id": "introduction-to-philosophy-ch08-s05",
+          "section": 5,
+          "title": "Aesthetics"
+        },
+        "8|basic-questions-about-values": {
+          "id": "introduction-to-philosophy-ch08-s02",
+          "section": 2,
+          "title": "Basic Questions about Values"
+        },
+        "8|chapter-outline": {
+          "id": "introduction-to-philosophy-ch08-s06",
+          "section": 6,
+          "title": "Chapter Outline"
+        },
+        "8|further-reading": {
+          "id": "introduction-to-philosophy-ch08-s12",
+          "section": 12,
+          "title": "Further Reading"
+        },
+        "8|introduction": {
+          "id": "introduction-to-philosophy-ch08-s07",
+          "section": 7,
+          "title": "Introduction"
+        },
+        "8|key-terms": {
+          "id": "introduction-to-philosophy-ch08-s09",
+          "section": 9,
+          "title": "Key Terms"
+        },
+        "8|metaethics": {
+          "id": "introduction-to-philosophy-ch08-s03",
+          "section": 3,
+          "title": "Metaethics"
+        },
+        "8|references": {
+          "id": "introduction-to-philosophy-ch08-s10",
+          "section": 10,
+          "title": "References"
+        },
+        "8|review-questions": {
+          "id": "introduction-to-philosophy-ch08-s11",
+          "section": 11,
+          "title": "Review Questions"
+        },
+        "8|summary": {
+          "id": "introduction-to-philosophy-ch08-s08",
+          "section": 8,
+          "title": "Summary"
+        },
+        "8|the-fact-value-distinction": {
+          "id": "introduction-to-philosophy-ch08-s01",
+          "section": 1,
+          "title": "The Fact-Value Distinction"
+        },
+        "8|well-being": {
+          "id": "introduction-to-philosophy-ch08-s04",
+          "section": 4,
+          "title": "Well-Being"
+        },
+        "9|chapter-outline": {
+          "id": "introduction-to-philosophy-ch09-s07",
+          "section": 7,
+          "title": "Chapter Outline"
+        },
+        "9|consequentialism": {
+          "id": "introduction-to-philosophy-ch09-s02",
+          "section": 2,
+          "title": "Consequentialism"
+        },
+        "9|daoism": {
+          "id": "introduction-to-philosophy-ch09-s05",
+          "section": 5,
+          "title": "Daoism"
+        },
+        "9|deontology": {
+          "id": "introduction-to-philosophy-ch09-s03",
+          "section": 3,
+          "title": "Deontology"
+        },
+        "9|feminist-theories-of-ethics": {
+          "id": "introduction-to-philosophy-ch09-s06",
+          "section": 6,
+          "title": "Feminist Theories of Ethics"
+        },
+        "9|further-reading": {
+          "id": "introduction-to-philosophy-ch09-s13",
+          "section": 13,
+          "title": "Further Reading"
+        },
+        "9|introduction": {
+          "id": "introduction-to-philosophy-ch09-s08",
+          "section": 8,
+          "title": "Introduction"
+        },
+        "9|key-terms": {
+          "id": "introduction-to-philosophy-ch09-s10",
+          "section": 10,
+          "title": "Key Terms"
+        },
+        "9|references": {
+          "id": "introduction-to-philosophy-ch09-s11",
+          "section": 11,
+          "title": "References"
+        },
+        "9|requirements-of-a-normative-moral-theory": {
+          "id": "introduction-to-philosophy-ch09-s01",
+          "section": 1,
+          "title": "Requirements of a Normative Moral Theory"
+        },
+        "9|review-questions": {
+          "id": "introduction-to-philosophy-ch09-s12",
+          "section": 12,
+          "title": "Review Questions"
+        },
+        "9|summary": {
+          "id": "introduction-to-philosophy-ch09-s09",
+          "section": 9,
+          "title": "Summary"
+        },
+        "9|virtue-ethics": {
+          "id": "introduction-to-philosophy-ch09-s04",
+          "section": 4,
+          "title": "Virtue Ethics"
+        }
+      },
+      "tombstoned": []
+    }
+  },
+  "version": 1
+}

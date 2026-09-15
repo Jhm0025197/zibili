@@ -49,6 +49,7 @@ function paint() {
         .map((p) => `<p>${escapeHtml(p)}</p>`)
         .join('')}</div>
       ${book.description.length > 400 ? '<button type="button" class="more-btn" aria-expanded="false">more</button>' : ''}
+      ${readable ? '<section class="chapters" aria-labelledby="chapters-heading" data-chapters hidden><h3 id="chapters-heading">Chapters</h3><ol class="chapter-list"></ol></section>' : ''}
       <section class="about-block" aria-labelledby="about-heading">
         <h3 id="about-heading">About this book</h3>
         <dl>
@@ -110,5 +111,24 @@ function paint() {
     flash(on ? 'Tagged. Find it on your Shelf.' : 'Tag removed')
   })
 
+  if (readable) loadChapters()
   bindCovers()
+}
+
+async function loadChapters() {
+  const section = document.querySelector('[data-chapters]')
+  try {
+    const response = await fetch(`/api/books/${encodeURIComponent(book.id)}/sections`, { headers: { Accept: 'application/json' } })
+    if (!response.ok) return
+    const outline = await response.json()
+    if (!outline.chapters.length || outline.outline === 'none') return
+    section.querySelector('ol').innerHTML = outline.chapters
+      .map(
+        (c) => `<li><a href="${readHref(book.id, c.start_page)}">${c.number ? `${c.number}. ` : ''}${escapeHtml(c.title)}</a><span class="chapter-meta">${c.sections.length} section${c.sections.length === 1 ? '' : 's'} · p. ${c.start_page}</span></li>`,
+      )
+      .join('')
+    section.hidden = false
+  } catch {
+    // The chapter list is a convenience; the Read button still works.
+  }
 }

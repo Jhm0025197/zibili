@@ -28,6 +28,7 @@ from library import (
     default_files_dir,
     get_book,
     list_books,
+    sections_to_json,
 )
 
 LOGGER = logging.getLogger("zibili")
@@ -65,6 +66,7 @@ PUBLIC_SUFFIXES = {
 BOOK_FILE_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/file$")
 BOOK_COVER_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/cover$")
 BOOK_ITEM_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})$")
+BOOK_SECTIONS_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/sections$")
 
 
 class APIError(Exception):
@@ -267,6 +269,10 @@ class ZibiliHandler(BaseHTTPRequestHandler):
         if method in {"GET", "HEAD"} and pdf:
             self.handle_file(pdf.group(1), head_only=method == "HEAD")
             return
+        sections = BOOK_SECTIONS_RE.match(path)
+        if method in {"GET", "HEAD"} and sections:
+            self.handle_sections(sections.group(1))
+            return
         item = BOOK_ITEM_RE.match(path)
         if method in {"GET", "HEAD"} and item:
             self.handle_book(item.group(1))
@@ -356,6 +362,27 @@ class ZibiliHandler(BaseHTTPRequestHandler):
         payload = book_to_json(row)
         payload["similar"] = [book["id"] for book in books if book["id"] != book_id][:8]
         self.send_json(200, payload, cache_control="no-cache")
+
+    def handle_sections(self, book_id: str) -> None:
+        if not BOOK_ID_RE.fullmatch(book_id):
+            raise APIError(404, "not_found", "Book not found.")
+        connection = self.app.db.connect()
+        try:
+            if get_book(connection, book_id) is None:
+                raise APIError(404, "not_found", "Book not found.")
+            payload = sections_to_json(connection, book_id)
+            revision = self.app.db.revision(connection)
+        finally:
+            connection.close()
+        etag = f'"sections-{book_id}-{revision}"'
+        if self.headers.get("If-None-Match") == etag:
+            self.send_response(304)
+            self.send_header("ETag", etag)
+            self.send_header("Content-Length", "0")
+            self._security_headers()
+            self.end_headers()
+            return
+        self.send_json(200, payload, extra_headers={"ETag": etag}, cache_control="no-cache")
 
     def handle_cover(self, book_id: str, head_only: bool) -> None:
         if not BOOK_ID_RE.fullmatch(book_id):

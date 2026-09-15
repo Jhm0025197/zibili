@@ -5,14 +5,15 @@ from __future__ import annotations
 import contextlib
 import json
 import re
+import secrets
 import sqlite3
 import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
-SCHEMA_VERSION = 1
-APP_VERSION = "0.1.0"
+SCHEMA_VERSION = 2
+APP_VERSION = "0.2.0"
 
 BOOK_SELECT = """
 id, sha256, title, author, publisher, released, language, isbn13, description,
@@ -46,6 +47,124 @@ def default_files_dir() -> Path:
 def default_books_dir() -> Path:
     return Path(__file__).resolve().parent / "books"
 
+SCHEMA_SQL = """
+CREATE TABLE IF NOT EXISTS app_meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS books (
+    id TEXT PRIMARY KEY,
+    sha256 TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    author TEXT NOT NULL DEFAULT '',
+    publisher TEXT,
+    released TEXT,
+    language TEXT NOT NULL DEFAULT 'English',
+    isbn13 TEXT,
+    description TEXT NOT NULL DEFAULT '',
+    quote TEXT,
+    subjects TEXT NOT NULL DEFAULT '[]',
+    lists TEXT NOT NULL DEFAULT '["new","available","popular"]',
+    course_codes TEXT NOT NULL DEFAULT '[]',
+    audience TEXT NOT NULL DEFAULT 'adults',
+    color TEXT NOT NULL DEFAULT '#194257',
+    license TEXT,
+    page_count INTEGER NOT NULL,
+    cover_png BLOB,
+    file_path TEXT NOT NULL,
+    file_size INTEGER NOT NULL,
+    linearized INTEGER NOT NULL DEFAULT 0,
+    ingested_at TEXT NOT NULL
+);
+
+-- One row per section of the PDF outline. IDs are permanent: see ingest.py
+-- and books/id-map.json. Pages are 1-based physical indices, the numbers
+-- PDF.js uses.
+CREATE TABLE IF NOT EXISTS sections (
+    id TEXT PRIMARY KEY,
+    book_id TEXT NOT NULL,
+    chapter INTEGER NOT NULL,
+    section INTEGER NOT NULL,
+    number TEXT,
+    title TEXT NOT NULL,
+    chapter_title TEXT NOT NULL,
+    start_page INTEGER NOT NULL,
+    end_page INTEGER NOT NULL,
+    words INTEGER NOT NULL DEFAULT 0,
+    position INTEGER NOT NULL,
+    tombstoned INTEGER NOT NULL DEFAULT 0,
+    UNIQUE (book_id, chapter, section)
+);
+CREATE INDEX IF NOT EXISTS sections_book_page ON sections (book_id, start_page);
+
+-- Ledger. Written for SQLite, shaped for Postgres. `student_hash` is the only
+-- student identifier that ever reaches `events`; the hash -> name mapping
+-- lives in `people` and is only joined by instructor-scoped queries.
+CREATE TABLE IF NOT EXISTS people (
+    id TEXT PRIMARY KEY,
+    role TEXT NOT NULL CHECK (role IN ('student', 'instructor', 'admin')),
+    display_name TEXT NOT NULL,
+    student_hash TEXT UNIQUE,
+    created_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS courses (
+    id TEXT PRIMARY KEY,
+    code TEXT NOT NULL,
+    title TEXT NOT NULL,
+    term TEXT NOT NULL,
+    term_label TEXT NOT NULL,
+    starts_on TEXT NOT NULL,
+    instructor_id TEXT NOT NULL REFERENCES people (id),
+    book_id TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS enrollments (
+    course_id TEXT NOT NULL REFERENCES courses (id),
+    student_hash TEXT NOT NULL,
+    enrolled_at TEXT NOT NULL,
+    PRIMARY KEY (course_id, student_hash)
+);
+CREATE TABLE IF NOT EXISTS assignments (
+    course_id TEXT NOT NULL REFERENCES courses (id),
+    chunk_id TEXT NOT NULL,
+    due_at TEXT,
+    assigned_at TEXT NOT NULL,
+    PRIMARY KEY (course_id, chunk_id)
+);
+CREATE TABLE IF NOT EXISTS prior_spend (
+    course_id TEXT PRIMARY KEY REFERENCES courses (id),
+    provider TEXT NOT NULL,
+    fee_cents INTEGER NOT NULL,
+    note TEXT
+);
+CREATE TABLE IF NOT EXISTS events (
+    id TEXT PRIMARY KEY,
+    student_hash TEXT NOT NULL,
+    course_id TEXT NOT NULL,
+    instructor_id TEXT NOT NULL,
+    term TEXT NOT NULL,
+    book_id TEXT NOT NULL,
+    chunk_ids TEXT NOT NULL,
+    render_id TEXT,
+    verb TEXT NOT NULL,
+    payload TEXT NOT NULL DEFAULT '{}',
+    occurred_at TEXT NOT NULL,
+    received_at TEXT NOT NULL,
+    seeded INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS events_course_time ON events (course_id, occurred_at);
+CREATE INDEX IF NOT EXISTS events_student_time ON events (student_hash, occurred_at);
+CREATE INDEX IF NOT EXISTS events_verb ON events (course_id, verb);
+CREATE TABLE IF NOT EXISTS positions (
+    student_hash TEXT NOT NULL,
+    book_id TEXT NOT NULL,
+    page INTEGER NOT NULL,
+    section_id TEXT,
+    updated_at TEXT NOT NULL,
+    PRIMARY KEY (student_hash, book_id)
+);
+"""
+
 
 class Database:
     def __init__(self, path: str) -> None:
@@ -71,41 +190,19 @@ class Database:
         connection = self.connect()
         try:
             connection.execute("PRAGMA journal_mode = WAL")
-            connection.executescript(
-                """
-                CREATE TABLE IF NOT EXISTS app_meta (
-                    key TEXT PRIMARY KEY,
-                    value TEXT NOT NULL
-                );
-                CREATE TABLE IF NOT EXISTS books (
-                    id TEXT PRIMARY KEY,
-                    sha256 TEXT NOT NULL UNIQUE,
-                    title TEXT NOT NULL,
-                    author TEXT NOT NULL DEFAULT '',
-                    publisher TEXT,
-                    released TEXT,
-                    language TEXT NOT NULL DEFAULT 'English',
-                    isbn13 TEXT,
-                    description TEXT NOT NULL DEFAULT '',
-                    quote TEXT,
-                    subjects TEXT NOT NULL DEFAULT '[]',
-                    lists TEXT NOT NULL DEFAULT '["new","available","popular"]',
-                    course_codes TEXT NOT NULL DEFAULT '[]',
-                    audience TEXT NOT NULL DEFAULT 'adults',
-                    color TEXT NOT NULL DEFAULT '#194257',
-                    license TEXT,
-                    page_count INTEGER NOT NULL,
-                    cover_png BLOB,
-                    file_path TEXT NOT NULL,
-                    file_size INTEGER NOT NULL,
-                    linearized INTEGER NOT NULL DEFAULT 0,
-                    ingested_at TEXT NOT NULL
-                );
-                """
-            )
+            connection.executescript(SCHEMA_SQL)
             connection.execute(
                 "INSERT OR IGNORE INTO app_meta(key, value) VALUES ('revision', '0')"
             )
+            connection.execute(
+                "INSERT OR IGNORE INTO app_meta(key, value) VALUES ('student_hash_salt', ?)",
+                (secrets.token_hex(32),),
+            )
+            probe = connection.execute("SELECT json_extract('{\"a\":1}', '$.a')").fetchone()[0]
+            if probe != 1:
+                raise RuntimeError(
+                    "This Python's SQLite lacks JSON functions. Zibili needs SQLite 3.38 or newer."
+                )
             connection.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
         finally:
             connection.close()
@@ -190,3 +287,56 @@ def get_book(connection: sqlite3.Connection, book_id: str) -> sqlite3.Row | None
 def book_count(connection: sqlite3.Connection) -> int:
     row = connection.execute("SELECT COUNT(*) AS n FROM books").fetchone()
     return int(row["n"] if row else 0)
+
+
+def list_sections(connection: sqlite3.Connection, book_id: str) -> list[sqlite3.Row]:
+    return connection.execute(
+        """
+        SELECT id, book_id, chapter, section, number, title, chapter_title,
+               start_page, end_page, words, position, tombstoned
+        FROM sections WHERE book_id = ? ORDER BY position
+        """,
+        (book_id,),
+    ).fetchall()
+
+
+def sections_to_json(connection: sqlite3.Connection, book_id: str) -> dict[str, Any]:
+    rows = list_sections(connection, book_id)
+    status_row = connection.execute(
+        "SELECT value FROM app_meta WHERE key = ?", (f"outline:{book_id}",)
+    ).fetchone()
+    omitted_row = connection.execute(
+        "SELECT value FROM app_meta WHERE key = ?", (f"outline_omitted:{book_id}",)
+    ).fetchone()
+    chapters: list[dict[str, Any]] = []
+    by_chapter: dict[int, dict[str, Any]] = {}
+    for row in rows:
+        if row["tombstoned"]:
+            continue
+        chapter = by_chapter.get(row["chapter"])
+        if chapter is None:
+            chapter = {
+                "id": f"ch{row['chapter']:02d}",
+                "number": row["chapter"],
+                "title": row["chapter_title"],
+                "start_page": row["start_page"],
+                "sections": [],
+            }
+            by_chapter[row["chapter"]] = chapter
+            chapters.append(chapter)
+        chapter["sections"].append(
+            {
+                "id": row["id"],
+                "number": row["number"],
+                "title": row["title"],
+                "start_page": row["start_page"],
+                "end_page": row["end_page"],
+                "words": row["words"],
+            }
+        )
+    return {
+        "book_id": book_id,
+        "outline": status_row["value"] if status_row else ("ok" if rows else "none"),
+        "chapters": chapters,
+        "omitted": _json_list(omitted_row["value"] if omitted_row else "[]"),
+    }

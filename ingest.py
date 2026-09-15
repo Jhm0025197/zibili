@@ -1,4 +1,4 @@
-"""Turn PDFs in books/ into catalog rows and linearized files under data/."""
+"""Turn PDFs in books/ into catalog rows, outline sections and served files under data/."""
 
 from __future__ import annotations
 
@@ -21,6 +21,7 @@ from library import (
     slugify,
     utc_now,
 )
+from sections import build_outline, load_id_map, save_id_map
 
 LOGGER = logging.getLogger("zibili.ingest")
 
@@ -125,6 +126,71 @@ def write_served_pdf(doc: pymupdf.Document, source: Path, dest: Path, linearize:
     return is_linearized(dest)
 
 
+def default_id_map_path() -> Path:
+    return default_books_dir() / "id-map.json"
+
+
+def word_counter(doc: pymupdf.Document):
+    """Word count per page range, extracting each page's text at most once."""
+    cache: dict[int, int] = {}
+
+    def count(start_page: int, end_page: int) -> int:
+        total = 0
+        for page_number in range(start_page, end_page + 1):
+            if page_number not in cache:
+                index = page_number - 1
+                if 0 <= index < doc.page_count:
+                    cache[page_number] = len(doc[index].get_text("words"))
+                else:
+                    cache[page_number] = 0
+            total += cache[page_number]
+        return total
+
+    return count
+
+
+def write_sections(connection, doc: pymupdf.Document, book_id: str, id_map: dict) -> None:
+    outline = build_outline(doc.get_toc(), doc.page_count, book_id, id_map, word_counter(doc))
+    connection.execute("DELETE FROM sections WHERE book_id = ?", (book_id,))
+    connection.executemany(
+        """
+        INSERT INTO sections(
+            id, book_id, chapter, section, number, title, chapter_title,
+            start_page, end_page, words, position, tombstoned
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+        """,
+        [section.row(book_id) for section in outline.sections],
+    )
+    connection.execute(
+        "INSERT OR REPLACE INTO app_meta(key, value) VALUES (?, ?)",
+        (f"outline:{book_id}", outline.status),
+    )
+    connection.execute(
+        "INSERT OR REPLACE INTO app_meta(key, value) VALUES (?, ?)",
+        (f"outline_omitted:{book_id}", dump_json(outline.omitted)),
+    )
+    live = [s for s in outline.sections if not s.tombstoned]
+    LOGGER.info(
+        "%s: outline %s, %d sections in %d chapters; ids %d minted, %d reused, %d tombstoned",
+        book_id,
+        outline.status,
+        len(live),
+        len({s.chapter for s in live}),
+        outline.minted,
+        outline.reused,
+        outline.tombstoned,
+    )
+    if outline.minted == 0 and outline.tombstoned == 0:
+        LOGGER.info("%s: no ID churn, re-ingest was stable", book_id)
+    if outline.status != "ok":
+        LOGGER.warning(
+            "%s: the PDF outline is %s; sections are %s",
+            book_id,
+            "missing" if outline.status == "none" else "one level deep",
+            "the whole book" if outline.status == "none" else "one per chapter",
+        )
+
+
 def unique_id(connection, base: str, digest: str) -> str:
     candidate = base
     row = connection.execute("SELECT sha256 FROM books WHERE id = ?", (candidate,)).fetchone()
@@ -140,13 +206,25 @@ def ingest_one(
     *,
     force: bool,
     linearize: bool,
+    id_map: dict | None = None,
 ) -> str:
+    id_map = id_map if id_map is not None else {"version": 1, "books": {}}
     digest = sha256_file(pdf_path)
     existing = connection.execute(
         "SELECT id, file_path FROM books WHERE sha256 = ?", (digest,)
     ).fetchone()
     if existing and not force:
-        return "skip"
+        have = connection.execute(
+            "SELECT COUNT(*) FROM sections WHERE book_id = ?", (existing["id"],)
+        ).fetchone()[0]
+        if have:
+            return "skip"
+        doc = pymupdf.open(pdf_path)
+        try:
+            write_sections(connection, doc, existing["id"], id_map)
+        finally:
+            doc.close()
+        return "backfill"
 
     sidecar = load_sidecar(pdf_path)
     doc = pymupdf.open(pdf_path)
@@ -161,8 +239,11 @@ def ingest_one(
         dest = files_dir / f"{book_id}.pdf"
         linearized = write_served_pdf(doc, pdf_path, dest, linearize)
         page_count = doc.page_count
+        toc_doc = doc
+        doc = None  # sections are written after the book row, below
     finally:
-        doc.close()
+        if doc is not None:
+            doc.close()
 
     file_size = dest.stat().st_size
     subjects = sidecar.get("subjects") or []
@@ -205,6 +286,10 @@ def ingest_one(
             utc_now(),
         ),
     )
+    try:
+        write_sections(connection, toc_doc, book_id, id_map)
+    finally:
+        toc_doc.close()
     return "add"
 
 
@@ -215,8 +300,11 @@ def ingest_paths(
     files_dir: Path,
     force: bool = False,
     linearize: bool = True,
+    id_map_path: Path | None = None,
 ) -> dict[str, int]:
     files_dir.mkdir(parents=True, exist_ok=True)
+    id_map_path = id_map_path or default_id_map_path()
+    id_map = load_id_map(id_map_path)
     database = Database(str(db_path))
     added = skipped = failed = 0
     connection = database.connect()
@@ -225,11 +313,20 @@ def ingest_paths(
             try:
                 with database.transaction(connection):
                     result = ingest_one(
-                        connection, pdf_path, files_dir, force=force, linearize=linearize
+                        connection,
+                        pdf_path,
+                        files_dir,
+                        force=force,
+                        linearize=linearize,
+                        id_map=id_map,
                     )
                 if result == "skip":
                     skipped += 1
                     LOGGER.info("skipped %s (unchanged)", pdf_path.name)
+                elif result == "backfill":
+                    skipped += 1
+                    LOGGER.info("skipped %s (unchanged); added its sections", pdf_path.name)
+                    database.bump_revision(connection)
                 else:
                     added += 1
                     LOGGER.info("ingested %s", pdf_path.name)
@@ -237,6 +334,7 @@ def ingest_paths(
             except Exception:
                 failed += 1
                 LOGGER.exception("failed %s", pdf_path)
+        save_id_map(id_map_path, id_map)
     finally:
         connection.close()
     return {"added": added, "skipped": skipped, "failed": failed}
@@ -261,6 +359,7 @@ def main() -> None:
     parser.add_argument("--books-dir", default=str(default_books_dir()))
     parser.add_argument("--db", default=str(default_db_path()))
     parser.add_argument("--files-dir", default=str(default_files_dir()))
+    parser.add_argument("--id-map", default=str(default_id_map_path()))
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--no-linearize", action="store_true")
     args = parser.parse_args()
@@ -279,6 +378,7 @@ def main() -> None:
         files_dir=Path(args.files_dir),
         force=args.force,
         linearize=not args.no_linearize,
+        id_map_path=Path(args.id_map),
     )
     print(f"added {stats['added']}, skipped {stats['skipped']}, failed {stats['failed']}")
     if stats["failed"]:

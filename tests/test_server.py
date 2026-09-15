@@ -43,7 +43,13 @@ class ServerTests(unittest.TestCase):
         self.files_dir = root / "files"
         pdf = root / "sample.pdf"
         write_pdf(pdf, "Campus Reader")
-        ingest_paths([pdf], db_path=self.db_path, files_dir=self.files_dir, linearize=False)
+        ingest_paths(
+            [pdf],
+            db_path=self.db_path,
+            files_dir=self.files_dir,
+            linearize=False,
+            id_map_path=root / "id-map.json",
+        )
         config = AppConfig(
             db_path=str(self.db_path),
             static_dir=PROJECT_ROOT,
@@ -124,6 +130,18 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn("attachment", headers.get("content-disposition", ""))
         self.assertIn("campus-reader.pdf", headers.get("content-disposition", ""))
+
+    def test_sections_route(self) -> None:
+        status, headers, body = self.request("GET", "/api/books/campus-reader/sections")
+        self.assertEqual(status, 200)
+        outline = json.loads(body)
+        self.assertEqual(outline["book_id"], "campus-reader")
+        self.assertEqual(outline["outline"], "none")
+        self.assertEqual(outline["chapters"][0]["sections"][0]["id"], "campus-reader-ch01-s01")
+        self.assertIn("etag", headers)
+
+        status, _, _ = self.request("GET", "/api/books/nope/sections")
+        self.assertEqual(status, 404)
 
     def test_empty_catalog_is_an_empty_list(self) -> None:
         empty_db = Path(self.temporary.name) / "empty.db"

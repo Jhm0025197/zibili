@@ -502,6 +502,41 @@ a.maroon-btn:hover { color: var(--libby-on-accent); }
   color: var(--libby-ink);
 }
 .reader-spacer { flex: 1; }
+.reader-crumb {
+  margin: 0;
+  padding: 6px 16px;
+  font-size: 14px;
+  color: var(--libby-muted);
+  background: var(--libby-paper);
+  border-bottom: 1px solid var(--libby-line);
+}
+.reader-crumb[hidden] { display: none; }
+.sheet--toc { max-height: min(80vh, 720px); overflow: auto; text-align: left; }
+.sheet--toc .sheet-kicker { text-align: center; }
+.toc-chapter h3 { font-size: 17px; margin: 18px 0 6px; }
+.toc-chapter ul { list-style: none; margin: 0; padding: 0; }
+.toc-chapter button {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 7px 8px;
+  font-size: 15px;
+  color: var(--libby-ink);
+  cursor: pointer;
+  border-radius: 8px;
+}
+.toc-chapter button:hover { background: var(--libby-hover); }
+.toc-chapter button.is-current { background: rgba(140, 47, 59, 0.12); color: var(--libby-maroon); font-weight: 600; }
+.toc-number { color: var(--libby-muted); min-width: 2.6em; }
+.toc-page { margin-left: auto; color: var(--libby-muted); font-size: 13px; white-space: nowrap; }
+.chapters { margin: 24px 0; }
+.chapter-list { margin: 0; padding-left: 1.2em; }
+.chapter-list li { margin: 0 0 6px; }
+.chapter-meta { color: var(--libby-muted); font-size: 14px; margin-left: 8px; }
 .reader-stage {
   flex: 1;
   overflow: auto;
