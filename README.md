@@ -23,7 +23,7 @@ There is no password. Open **Menu** and pick a seeded person:
 | Person | Sees |
 |---|---|
 | Any of the 25 students | Library, reader, shelf. Their reading is recorded. |
-| Prof. Marisol Reyes | Everything a student sees, plus **Course**: the roster and who read what. |
+| Prof. Marisol Reyes | The **course window** at `/course`: the roster and who read what. Its own shell, served only to an instructor; students never see it. |
 | Dana Okafor | The **college window** at `/admin`: dollars displaced and engagement per term. Its own shell, served only to an admin; students never see it. |
 
 Signed-out visitors can read and download but nothing is recorded. All people, the course, and the prior term's reading history are synthetic, from `seed/`.
@@ -32,7 +32,7 @@ Signed-out visitors can read and download but nothing is recorded. All people, t
 
 - **Library** (`index.html`, `list.html`, `title.html`): shelves, search by title, author, subject, or course code, and a title page with chapters, Read, Download, and Tag.
 - **Reader** (`read.html`): PDF.js continuous-scroll reader with a Contents drawer from the book's outline, a pop-up format wheel (Read works; the other seven say they are not in v1), Reading tools (text size, page colour, theme, reading ruler, focus mode), position memory, and keyboard paging. For a signed-in student it logs `opened`, `reread`, `dwelled`, and `read` per section.
-- **Course** (`instructor.html`): roster with last active, sections opened, percent of assigned read, and time on the book. Click a student for their trail. Most and least read sections, untouched assignments, dwell outliers.
+- **Course** (`/course`, a separate window served only to a signed-in instructor): roster with last active, sections opened, percent of assigned read, and time on the book. Click a student for their trail. Most and least read sections, untouched assignments, dwell outliers.
 - **College** (`/admin`, a separate window served only to a signed-in admin): dollars displaced (labelled an estimate until the fee in `seed/prior-spend.json` is verified), students active, sections live, and term-over-term change.
 
 ## How it fits together

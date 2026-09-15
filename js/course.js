@@ -1,17 +1,26 @@
-import { renderLibby } from './chrome.js'
+import { icons } from './icons.js'
 import { emptyState, formatDuration, formatRelative, percent, statTile } from './format.js'
 import { session } from './session.js'
 import { escapeHtml, qs, readHref } from './util.js'
+import { renderWindow } from './window.js'
 
-// The professor view. One course, one term, real rows. Everything here is
+// The professor window. One course, one term, real rows. Everything here is
 // the ledger joined to the roster for this instructor's own course. There is
 // no cross-course data here and no reading profiles anywhere.
 
 const courseParam = qs('course')
 const studentParam = qs('student')
 
-function frame(html, title = 'Course') {
-  renderLibby(`<div class="dash">${html}</div>`, { title, backHref: studentParam ? `instructor.html?course=${encodeURIComponent(courseParam)}` : 'index.html', active: 'course' })
+function frame(html) {
+  renderWindow(`<div class="dash">${html}</div>`, { sub: 'Course view', icon: icons.course })
+}
+
+function courseHref(courseId, studentHash = null) {
+  const params = new URLSearchParams()
+  if (courseId) params.set('course', courseId)
+  if (studentHash) params.set('student', studentHash)
+  const query = params.toString()
+  return query ? `course?${query}` : 'course'
 }
 
 async function api(path) {
@@ -32,7 +41,7 @@ function sectionLabel(row) {
 
 function sectionLink(bookId, row) {
   if (!row.start_page) return sectionLabel(row)
-  return `<a href="${readHref(bookId, row.start_page)}">${sectionLabel(row)}</a>`
+  return `<a href="${readHref(bookId, row.start_page)}" target="_blank" rel="noopener">${sectionLabel(row)}</a>`
 }
 
 function termNav(courses, current) {
@@ -40,23 +49,17 @@ function termNav(courses, current) {
   return `<nav class="term-nav" aria-label="Term">
     ${courses
       .map(
-        (c) => `<a href="instructor.html?course=${encodeURIComponent(c.id)}" class="pill ${c.id === current.id ? 'is-on' : ''}" ${
-          c.id === current.id ? 'aria-current="page"' : ''
-        }>${escapeHtml(c.term_label)}</a>`,
+        (c) => `<a href="${courseHref(c.id)}" class="pill ${c.id === current.id ? 'is-on' : ''}" ${c.id === current.id ? 'aria-current="page"' : ''}>${escapeHtml(c.term_label)}</a>`,
       )
       .join('')}
   </nav>`
 }
 
-if (!session.person) {
-  frame(emptyState('This page is for the instructor of a course.', '<p>Choose <strong>Prof. Marisol Reyes</strong> in <a href="menu.html">Menu</a> to see it.</p>'))
-} else if (session.person.role !== 'instructor') {
+if (session.person?.role !== 'instructor') {
   frame(
     emptyState(
-      `You are signed in as ${escapeHtml(session.person.display_name)}.`,
-      session.person.role === 'admin'
-        ? '<p>The professor view is scoped to one instructor’s own course. Use the <a href="college.html">college view</a>, or choose the instructor in <a href="menu.html">Menu</a>.</p>'
-        : '<p>This page is for the instructor of a course. Choose the instructor in <a href="menu.html">Menu</a> to see it.</p>',
+      'This window is for the instructor of a course.',
+      '<p>Your session has ended or you are signed in as someone else. <a href="menu.html">Sign in from the library</a> as Prof. Marisol Reyes to come back.</p>',
     ),
   )
 } else if (studentParam) {
@@ -98,7 +101,7 @@ async function renderRoster() {
 
   const header = `<header class="dash-head">
     <p class="dash-kicker">${escapeHtml(course.code)} · ${escapeHtml(course.term_label)}</p>
-    <h2>${escapeHtml(course.title)}</h2>
+    <h1>${escapeHtml(course.title)}</h1>
     <p class="dash-lede">${course.enrolled} students, ${assignedTotal} sections set as reading. A section counts as read when a student reached the end of it and stayed at least a quarter of its estimated reading time.</p>
     ${termNav(courses, course)}
   </header>`
@@ -108,7 +111,7 @@ async function renderRoster() {
       header +
         emptyState(
           `Nobody has opened the book in ${escapeHtml(course.term_label)} yet.`,
-          '<p>This is the real count, not a placeholder. As soon as a student opens a section it will appear here on the next reload.</p><p>To try it: pick a student in <a href="menu.html">Menu</a>, read a few sections, then come back.</p>',
+          '<p>This is the real count, not a placeholder. As soon as a student opens a section it will appear here on the next reload.</p><p>To try it: open the library in another window, sign in as a student, read a few sections, then come back.</p>',
         ),
     )
     return
@@ -135,7 +138,7 @@ async function renderRoster() {
       </section>
 
       <section aria-labelledby="roster-heading" class="dash-section">
-        <h3 id="roster-heading">Roster</h3>
+        <h2 id="roster-heading">Roster</h2>
         <div class="card table-wrap">
           <table class="data">
             <caption class="sr-only">Reading activity for each student in ${escapeHtml(course.code)}, ${escapeHtml(course.term_label)}</caption>
@@ -145,7 +148,7 @@ async function renderRoster() {
                 .map((s) => {
                   const share = assignedTotal ? s.assigned_read / assignedTotal : 0
                   return `<tr>
-                    <th scope="row"><a href="instructor.html?course=${encodeURIComponent(course.id)}&student=${encodeURIComponent(s.student_hash)}">${escapeHtml(s.display_name)}</a></th>
+                    <th scope="row"><a href="${courseHref(course.id, s.student_hash)}">${escapeHtml(s.display_name)}</a></th>
                     <td class="tabular ${s.last_active ? '' : 'muted'}">${formatRelative(s.last_active)}</td>
                     <td class="tabular">${s.sections_opened}</td>
                     <td class="meter-cell"><span class="tabular small">${s.assigned_read} of ${assignedTotal} · ${percent(share)}</span><span class="meter" role="img" aria-label="${Math.round(share * 100)} percent of assigned reading"><span style="width:${Math.round(share * 100)}%"></span></span></td>
@@ -159,7 +162,7 @@ async function renderRoster() {
       </section>
 
       <section aria-labelledby="rollup-heading" class="dash-section">
-        <h3 id="rollup-heading">Which sections landed</h3>
+        <h2 id="rollup-heading">Which sections landed</h2>
         <div class="card-grid">
           ${sectionList('Most read', mostRead)}
           ${sectionList('Least read', leastRead)}
@@ -177,12 +180,12 @@ async function renderRoster() {
       ${
         outliers.length
           ? `<section aria-labelledby="outliers-heading" class="dash-section">
-              <h3 id="outliers-heading">Worth a conversation</h3>
+              <h2 id="outliers-heading">Worth a conversation</h2>
               <p class="muted dash-note">Time on the book well away from the class median of ${formatDuration(median)}. Long is not necessarily bad and short is not necessarily bad. It is a prompt to ask, not a verdict.</p>
               <ul class="plain-list outlier-list">
                 ${outliers
                   .map(
-                    (s) => `<li class="card card--row"><a href="instructor.html?course=${encodeURIComponent(course.id)}&student=${encodeURIComponent(s.student_hash)}">${escapeHtml(s.display_name)}</a><span class="muted small tabular">${formatDuration(s.dwell_seconds)} · ${s.dwell_seconds > median ? 'well above' : 'well below'} median</span></li>`,
+                    (s) => `<li class="card card--row"><a href="${courseHref(course.id, s.student_hash)}">${escapeHtml(s.display_name)}</a><span class="muted small tabular">${formatDuration(s.dwell_seconds)} · ${s.dwell_seconds > median ? 'well above' : 'well below'} median</span></li>`,
                   )
                   .join('')}
               </ul>
@@ -193,7 +196,7 @@ async function renderRoster() {
 }
 
 async function renderStudent() {
-  frame('<p class="libby-empty">Loading…</p>', 'Student')
+  frame('<p class="libby-empty">Loading…</p>')
   let data
   try {
     data = await api(
@@ -203,9 +206,8 @@ async function renderStudent() {
     frame(
       emptyState(
         error.status === 404 ? 'No such student on your roster.' : 'Could not load this student.',
-        `<p>${escapeHtml(error.message)} <a href="instructor.html">Back to the roster</a>.</p>`,
+        `<p>${escapeHtml(error.message)} <a href="course">Back to the roster</a>.</p>`,
       ),
-      'Student',
     )
     return
   }
@@ -215,9 +217,9 @@ async function renderStudent() {
   const finishedAssigned = trail.filter((row) => row.read > 0 && assignedIds.has(row.chunk_id))
   const lastActive = trail[0]?.last_active || null
 
-  const header = `<p class="small"><a href="instructor.html?course=${encodeURIComponent(course.id)}">← ${escapeHtml(course.code)} roster</a></p>
+  const header = `<p class="small"><a href="${courseHref(course.id)}">← ${escapeHtml(course.code)} roster</a></p>
     <header class="dash-head">
-      <h2>${escapeHtml(name)}</h2>
+      <h1>${escapeHtml(name)}</h1>
       <p class="dash-lede">${escapeHtml(course.code)} · ${escapeHtml(course.term_label)}</p>
     </header>`
 
@@ -228,7 +230,6 @@ async function renderStudent() {
           `${escapeHtml(name)} has not opened the book this term.`,
           '<p>Nothing has been recorded, so there is nothing to show. This is the real state, not a loading placeholder.</p>',
         ),
-      'Student',
     )
     return
   }
@@ -242,7 +243,7 @@ async function renderStudent() {
         ${statTile({ label: 'Time on the book', value: formatDuration(dwell) })}
       </section>
       <section class="dash-section" aria-labelledby="trail-heading">
-        <h3 id="trail-heading">Section by section</h3>
+        <h2 id="trail-heading">Section by section</h2>
         <div class="card table-wrap">
           <table class="data">
             <caption class="sr-only">Every section ${escapeHtml(name)} opened, most recent first</caption>
@@ -264,6 +265,5 @@ async function renderStudent() {
           </table>
         </div>
       </section>`,
-    'Student',
   )
 }

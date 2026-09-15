@@ -5,11 +5,9 @@ import { firstName, session } from './session.js'
 // App shell: side rail on wide screens, tab bar on narrow ones, one <main>.
 // Pages call renderLibby(html, options) once and then bind their handlers.
 
+// The course and college windows are separate on purpose: they are not
+// linked from the student app. Staff reach them from Menu.
 function roleTabs() {
-  const role = session.person?.role
-  if (role === 'instructor') return [{ id: 'course', href: 'instructor.html', icon: icons.course, label: 'Course' }]
-  // The college window is separate on purpose: it is not linked from the
-  // student app. An admin reaches it from Menu.
   return []
 }
 

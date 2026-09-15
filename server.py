@@ -79,7 +79,6 @@ PUBLIC_ROOT_FILES = {
     "shelf.html",
     "menu.html",
     "read.html",
-    "instructor.html",
     "favicon.ico",
     "favicon.svg",
     "favicon.png",
@@ -99,6 +98,13 @@ PUBLIC_SUFFIXES = {
     ".html",
     ".json",
     ".map",
+}
+# Staff windows: served only to the named role, otherwise a plain not-found.
+GATED_PAGES = {
+    "/admin": ("admin.html", "admin"),
+    "/admin.html": ("admin.html", "admin"),
+    "/course": ("course.html", "instructor"),
+    "/course.html": ("course.html", "instructor"),
 }
 BOOK_FILE_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/file$")
 BOOK_COVER_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/cover$")
@@ -356,8 +362,9 @@ class ZibiliHandler(BaseHTTPRequestHandler):
             return
         if path.startswith("/api/"):
             raise APIError(404, "not_found", "API route not found.")
-        if method in {"GET", "HEAD"} and path in {"/admin", "/admin.html"}:
-            self.handle_admin_page(head_only=method == "HEAD")
+        if method in {"GET", "HEAD"} and path in GATED_PAGES:
+            file_name, role = GATED_PAGES[path]
+            self.handle_gated_page(file_name, role, head_only=method == "HEAD")
             return
         if method in {"GET", "HEAD"}:
             self.handle_static(head_only=method == "HEAD")
@@ -772,18 +779,18 @@ class ZibiliHandler(BaseHTTPRequestHandler):
                 self.wfile.write(chunk)
                 remaining -= len(chunk)
 
-    def handle_admin_page(self, head_only: bool) -> None:
-        """The college window. Served only to a signed-in admin; everyone else
-        gets the same not-found as a file that does not exist."""
+    def handle_gated_page(self, file_name: str, role: str, head_only: bool) -> None:
+        """A staff window. Served only to a signed-in person with the role;
+        everyone else gets the same not-found as a file that does not exist."""
         connection = self.app.db.connect()
         try:
             session = self.session(connection)
         finally:
             connection.close()
-        if session is None or session.role != "admin":
+        if session is None or session.role != role:
             self.send_not_found_page()
             return
-        candidate = (self.app.config.static_dir / "admin.html").resolve()
+        candidate = (self.app.config.static_dir / file_name).resolve()
         if not candidate.is_file():
             raise APIError(404, "not_found", "File not found.")
         self.send_file(candidate, head_only)

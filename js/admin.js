@@ -1,7 +1,8 @@
 import { icons } from './icons.js'
 import { emptyState, formatDuration, money, statTile } from './format.js'
-import { session, signOut } from './session.js'
+import { session } from './session.js'
 import { escapeHtml, qs } from './util.js'
+import { renderWindow } from './window.js'
 
 // The college window. Its own shell, not the library's: no Library, Shelf
 // or Search, no student-facing chrome. The server only serves this page to a
@@ -14,24 +15,7 @@ import { escapeHtml, qs } from './util.js'
 const termParam = qs('term')
 
 function shell(mainHTML) {
-  const person = session.person
-  document.body.innerHTML = `
-    <a class="skip" href="#main">Skip to content</a>
-    <div class="admin">
-      <header class="admin-top">
-        <div class="admin-brand">${icons.college}<span>Zibili</span><span class="admin-brand-sub">College view</span></div>
-        <div class="admin-who">
-          ${person ? `<span>${escapeHtml(person.display_name)}</span>` : ''}
-          <a href="index.html" target="_blank" rel="noopener">Open the library</a>
-          ${person ? '<button type="button" class="text-action" data-signout>Sign out</button>' : ''}
-        </div>
-      </header>
-      <main id="main" tabindex="-1" class="dash admin-main">${mainHTML}</main>
-    </div>`
-  document.querySelector('[data-signout]')?.addEventListener('click', async () => {
-    await signOut()
-    location.href = 'index.html'
-  })
+  renderWindow(mainHTML, { sub: 'College view', icon: icons.college })
 }
 
 function delta(current, previous) {

@@ -35,10 +35,10 @@ What works, what is next. Updated at the end of every phase.
 
 ## Phase 5: the professor view (done)
 
-- `instructor.html` shows the signed-in instructor's course: four totals, the roster (student, last active, sections opened, assigned read with a meter, time on the book), the most and least read assigned sections, assigned sections nobody has opened, and students whose time on the book is far from the class median. A term switcher moves between Spring 2026 (seeded history) and Fall 2026 (empty until someone reads).
+- The professor view lives in its own window at `/course` (`course.html`, `js/course.js`), served only to a signed-in instructor and not linked from the student app; an instructor reaches it from Menu. It shows the signed-in instructor's course: four totals, the roster (student, last active, sections opened, assigned read with a meter, time on the book), the most and least read assigned sections, assigned sections nobody has opened, and students whose time on the book is far from the class median. A term switcher moves between Spring 2026 (seeded history) and Fall 2026 (empty until someone reads).
 - Clicking a student opens their section-by-section trail.
 - Every query behind it takes the instructor's id and filters the course by it in SQL; the roster query is the only place a hash becomes a name. Students and admins see an honest message instead.
-- Routes: `GET /api/instructor/roster`, `GET /api/instructor/students/{hash}`, both gated by `require_role("instructor")`.
+- Routes: `GET /api/instructor/roster`, `GET /api/instructor/students/{hash}`, both gated by `require_role("instructor")`. Section links open the reader in a new tab so the window stays put.
 
 ## Phase 6: the college view (done)
 

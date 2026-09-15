@@ -10,7 +10,7 @@ function signedInView() {
   const person = session.person
   const course = session.course
   const links = []
-  if (person.role === 'instructor') links.push('<li><a href="instructor.html">Your course</a></li>')
+  if (person.role === 'instructor') links.push('<li><a href="course">Open your course view</a> <span class="title-row-format">A separate window; students never see it.</span></li>')
   if (person.role === 'admin') links.push('<li><a href="admin">Open the college view</a> <span class="title-row-format">A separate window; students never see it.</span></li>')
   return `<ul class="title-list">
     <li>
@@ -79,7 +79,7 @@ if (!session.person) {
           try {
             const result = await signIn(btn.dataset.person)
             flash(`Signed in as ${result.person.display_name}`)
-            const next = result.person.role === 'instructor' ? 'instructor.html' : result.person.role === 'admin' ? 'admin' : 'index.html'
+            const next = result.person.role === 'instructor' ? 'course' : result.person.role === 'admin' ? 'admin' : 'index.html'
             location.href = next
           } catch (error) {
             btn.disabled = false
