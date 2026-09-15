@@ -530,6 +530,25 @@ a.maroon-btn:hover { color: var(--libby-on-accent); }
   border-bottom: 1px solid var(--libby-line);
 }
 .reader-crumb[hidden] { display: none; }
+.reader-note {
+  margin: 0;
+  padding: 6px 16px;
+  font-size: 13px;
+  color: var(--libby-muted);
+  background: var(--libby-paper-2);
+  border-bottom: 1px solid var(--libby-line);
+}
+.shelf-card { position: relative; }
+.shelf-card-note {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
 .sheet--toc { max-height: min(80vh, 720px); overflow: auto; text-align: left; }
 .sheet--toc .sheet-kicker { text-align: center; }
 .toc-chapter h3 { font-size: 17px; margin: 18px 0 6px; }

@@ -2,13 +2,27 @@ import * as pdfjsLib from '../vendor/pdfjs/pdf.mjs'
 import { getBook } from './data.js'
 import { icons } from './icons.js'
 import { openSheet, renderLibby } from './chrome.js'
+import { flush, logEvent } from './ledger.js'
+import { session } from './session.js'
 import { downloadHref, escapeHtml, qs, titleHref } from './util.js'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL('../vendor/pdfjs/pdf.worker.mjs', import.meta.url).href
 
+// Four verbs, and each one means something a professor could defend:
+//   opened   the section was displayed
+//   reread   the section was displayed and this student had opened it before
+//   dwelled  fifteen seconds of attention, only while the tab is visible
+//   read     they reached the last page of the section and spent at least a
+//            quarter of the estimated reading time on it
+const DWELL_TICK_MS = 15000
+const WORDS_PER_MINUTE = 220
+const READ_FRACTION = 0.25
+
 const id = qs('id')
 const book = getBook(id)
 const requestedPage = Math.max(0, Number(qs('page') || '0') || 0)
+const canLog = Boolean(session.person && session.person.role === 'student' && session.course)
+const guestKey = book ? `zibili-pos-${book.id}` : ''
 
 if (!book || !book.pdf) {
   renderLibby(
@@ -19,11 +33,9 @@ if (!book || !book.pdf) {
   paint()
 }
 
-async function loadSections() {
+async function fetchJson(url) {
   try {
-    const response = await fetch(`/api/books/${encodeURIComponent(book.id)}/sections`, {
-      headers: { Accept: 'application/json' },
-    })
+    const response = await fetch(url, { headers: { Accept: 'application/json' } })
     if (!response.ok) return null
     return await response.json()
   } catch {
@@ -31,15 +43,39 @@ async function loadSections() {
   }
 }
 
-function paint() {
-  const startPage = requestedPage || 1
+function guestPosition() {
+  try {
+    const value = Number(localStorage.getItem(guestKey))
+    return value > 0 ? value : 0
+  } catch {
+    return 0
+  }
+}
+
+function rememberGuestPosition(page) {
+  try {
+    localStorage.setItem(guestKey, String(page))
+  } catch {
+    // Storage disabled. Nothing to remember.
+  }
+}
+
+function readerNote() {
+  if (canLog) return ''
+  if (!session.person) {
+    return `<p class="reader-note">Reading as a guest. Your place isn’t saved between devices. <a href="menu.html">Sign in from Menu</a> to keep it.</p>`
+  }
+  return `<p class="reader-note">Signed in as ${escapeHtml(session.person.role)}. Reading isn’t recorded for you.</p>`
+}
+
+async function paint() {
   renderLibby(
     `<div class="reader">
       <div class="reader-toolbar" role="toolbar" aria-label="Reader">
         <button type="button" class="reader-btn" data-contents aria-label="Contents" aria-haspopup="dialog">${icons.list}</button>
         <button type="button" class="reader-btn" data-prev aria-label="Previous page">${icons.back}</button>
         <label class="reader-page">
-          <input type="number" min="1" value="${startPage}" data-page aria-label="Page">
+          <input type="number" min="1" value="${requestedPage || 1}" data-page aria-label="Page">
           <span data-of>of …</span>
         </label>
         <button type="button" class="reader-btn reader-btn-next" data-next aria-label="Next page">${icons.back}</button>
@@ -48,6 +84,7 @@ function paint() {
         <button type="button" class="reader-btn" data-zoom-in aria-label="Zoom in">+</button>
       </div>
       <p class="reader-crumb" data-crumb aria-live="polite" hidden></p>
+      ${readerNote()}
       <div class="reader-stage"><p class="reader-status">Opening ${escapeHtml(book.title)}…</p></div>
     </div>`,
     {
@@ -62,11 +99,15 @@ function paint() {
   const ofLabel = document.querySelector('[data-of]')
   const crumb = document.querySelector('[data-crumb]')
   let pdf = null
-  let pageNumber = startPage
+  let pageNumber = 1
   let zoom = 1
   let renderToken = 0
   let outline = null
   let flat = []
+
+  // Tracker state for the section on screen.
+  const openedBefore = new Set()
+  let current = null // { section, dwell, reachedEnd, readSent }
 
   document.querySelector('[data-prev]').addEventListener('click', () => showPage(pageNumber - 1))
   document.querySelector('[data-next]').addEventListener('click', () => showPage(pageNumber + 1))
@@ -88,11 +129,16 @@ function paint() {
     if (event.key === 'ArrowLeft' || event.key === 'PageUp') showPage(pageNumber - 1)
   })
 
-  loadSections().then((data) => {
-    outline = data
-    flat = outline ? outline.chapters.flatMap((c) => c.sections.map((s) => ({ ...s, chapter: c }))) : []
-    updateCrumb()
-  })
+  const [sections, progress] = await Promise.all([
+    fetchJson(`/api/books/${encodeURIComponent(book.id)}/sections`),
+    canLog ? fetchJson(`/api/books/${encodeURIComponent(book.id)}/progress`) : Promise.resolve(null),
+  ])
+  outline = sections
+  flat = outline ? outline.chapters.flatMap((c) => c.sections.map((s) => ({ ...s, chapter: c }))) : []
+  for (const sectionId of progress?.opened || []) openedBefore.add(sectionId)
+  pageNumber = requestedPage || progress?.position?.page || (canLog ? 0 : guestPosition()) || 1
+  pageInput.value = String(pageNumber)
+  updateCrumb()
 
   pdfjsLib
     .getDocument({
@@ -110,6 +156,68 @@ function paint() {
     .catch((error) => {
       stage.innerHTML = `<p class="reader-status">Could not open this PDF. ${escapeHtml(error.message || '')}</p>`
     })
+
+  if (canLog) {
+    setInterval(() => {
+      if (document.visibilityState !== 'visible' || !current) return
+      current.dwell += DWELL_TICK_MS / 1000
+      logEvent({
+        ...eventBase(current.section),
+        verb: 'dwelled',
+        payload: { ...sectionPayload(current.section), page: pageNumber, seconds: DWELL_TICK_MS / 1000 },
+      })
+      maybeRead()
+    }, DWELL_TICK_MS)
+    window.addEventListener('pagehide', () => flush(true))
+  }
+
+  function eventBase(section) {
+    return { book_id: book.id, chunk_ids: [section.id] }
+  }
+
+  function sectionPayload(section) {
+    return { chapter: section.chapter.number, section: section.number, words: section.words }
+  }
+
+  function readingSeconds(words) {
+    return Math.max(30, Math.round((words / WORDS_PER_MINUTE) * 60))
+  }
+
+  function maybeRead() {
+    if (!current || current.readSent || !current.reachedEnd) return
+    const threshold = Math.max(10, Math.round(readingSeconds(current.section.words) * READ_FRACTION))
+    if (current.dwell < threshold) return
+    current.readSent = true
+    logEvent({
+      ...eventBase(current.section),
+      verb: 'read',
+      payload: { ...sectionPayload(current.section), page: pageNumber, seconds: current.dwell, threshold },
+    })
+  }
+
+  function track(page) {
+    if (!canLog) {
+      rememberGuestPosition(page)
+      return
+    }
+    const section = sectionFor(page)
+    if (!section) {
+      current = null
+      return
+    }
+    if (!current || current.section.id !== section.id) {
+      current = { section, dwell: 0, reachedEnd: false, readSent: false }
+      logEvent({ ...eventBase(section), verb: 'opened', payload: { ...sectionPayload(section), page } })
+      if (openedBefore.has(section.id)) {
+        logEvent({ ...eventBase(section), verb: 'reread', payload: { ...sectionPayload(section), page } })
+      }
+      openedBefore.add(section.id)
+    }
+    if (page >= section.end_page) {
+      current.reachedEnd = true
+      maybeRead()
+    }
+  }
 
   function sectionFor(page) {
     return flat.find((s) => page >= s.start_page && page <= s.end_page) || null
@@ -134,12 +242,12 @@ function paint() {
       openSheet(
         `<button class="sheet-close" type="button" aria-label="Close">${icons.close}</button>
          <p class="sheet-kicker">Contents</p>
-         <p class="libby-empty">${outline ? 'This PDF has no chapter outline.' : 'Contents are still loading.'}</p>`,
+         <p class="libby-empty">${outline ? 'This PDF has no chapter outline.' : 'Contents are not available right now.'}</p>`,
         { label: 'Contents' },
       )
       return
     }
-    const current = sectionFor(pageNumber)
+    const here = sectionFor(pageNumber)
     const html = outline.chapters
       .map(
         (chapter) => `<section class="toc-chapter">
@@ -148,7 +256,7 @@ function paint() {
             ${chapter.sections
               .map(
                 (s) => `<li><button type="button" data-goto="${s.start_page}" ${
-                  current && current.id === s.id ? 'aria-current="true" class="is-current"' : ''
+                  here && here.id === s.id ? 'aria-current="true" class="is-current"' : ''
                 }>${s.number ? `<span class="toc-number">${escapeHtml(s.number)}</span>` : ''}${escapeHtml(s.title)}<span class="toc-page">p. ${s.start_page}</span></button></li>`,
               )
               .join('')}
@@ -198,5 +306,6 @@ function paint() {
     url.searchParams.set('id', book.id)
     url.searchParams.set('page', String(pageNumber))
     history.replaceState(null, '', url)
+    track(pageNumber)
   }
 }

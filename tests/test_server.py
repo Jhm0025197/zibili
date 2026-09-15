@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import http.client
 import json
+import sqlite3
 import tempfile
 import threading
 import unittest
@@ -196,6 +197,60 @@ class ServerTests(unittest.TestCase):
 
         status, _, _ = self.request("POST", "/api/catalog", body={})
         self.assertEqual(status, 404)
+
+    def test_events_and_progress(self) -> None:
+        batch = {
+            "events": [
+                {"verb": "opened", "book_id": "campus-reader", "chunk_ids": ["campus-reader-ch01-s01"], "payload": {"page": 1}},
+                {"verb": "dwelled", "book_id": "campus-reader", "chunk_ids": ["campus-reader-ch01-s01"], "payload": {"page": 1, "seconds": 15}},
+                {"verb": "read", "book_id": "campus-reader", "chunk_ids": ["campus-reader-ch01-s01"], "payload": {"page": 1, "seconds": 15}},
+            ]
+        }
+        status, _, _ = self.request("POST", "/api/events", body=batch)
+        self.assertEqual(status, 401)
+
+        status, _, body = self.request("POST", "/api/events", body=batch, person="instructor-reyes")
+        self.assertEqual(status, 409)
+        self.assertEqual(json.loads(body)["error"]["code"], "not_enrolled")
+
+        status, _, body = self.request("POST", "/api/events", body=batch, person="stu-cho")
+        self.assertEqual(status, 202)
+        self.assertEqual(json.loads(body), {"written": 3})
+
+        bad = {"events": [{"verb": "skimmed", "book_id": "campus-reader", "chunk_ids": ["x"]}]}
+        status, _, body = self.request("POST", "/api/events", body=bad, person="stu-cho")
+        self.assertEqual(status, 422)
+        self.assertIn("unknown verb", json.loads(body)["error"]["message"])
+
+        status, _, body = self.request("GET", "/api/books/campus-reader/progress", person="stu-cho")
+        self.assertEqual(status, 200)
+        progress = json.loads(body)
+        self.assertEqual(progress["position"]["page"], 1)
+        self.assertEqual(progress["position"]["section_id"], "campus-reader-ch01-s01")
+        self.assertEqual(progress["opened"], ["campus-reader-ch01-s01"])
+
+        status, _, _ = self.request("GET", "/api/books/campus-reader/progress")
+        self.assertEqual(status, 401)
+
+        status, _, body = self.request("GET", "/api/me/positions", person="stu-cho")
+        self.assertEqual(status, 200)
+        rows = json.loads(body)
+        self.assertEqual(rows[0]["title"], "Campus Reader")
+        self.assertEqual(rows[0]["page"], 1)
+
+        status, _, body = self.request("GET", "/api/me/positions", person="admin-okafor")
+        self.assertEqual(json.loads(body), [])
+
+        connection = sqlite3.connect(self.db_path)
+        try:
+            leaked = connection.execute("SELECT COUNT(*) FROM events WHERE student_hash LIKE '%stu-%'").fetchone()[0]
+            hashes = connection.execute("SELECT DISTINCT LENGTH(student_hash) FROM events").fetchall()
+            course = connection.execute("SELECT DISTINCT course_id, term FROM events WHERE seeded = 0").fetchall()
+        finally:
+            connection.close()
+        self.assertEqual(leaked, 0)
+        self.assertEqual(hashes, [(32,)])
+        self.assertEqual(course, [("phil1010-2026fa", "2026FA")])
 
     def test_sections_route(self) -> None:
         status, headers, body = self.request("GET", "/api/books/campus-reader/sections")

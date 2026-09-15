@@ -1,6 +1,7 @@
-import { BOOKS, CATALOG_STATUS, catalogNotice, searchBooks, sortBooks } from './data.js'
+import { BOOKS, CATALOG_STATUS, catalogNotice, getBook, searchBooks, sortBooks } from './data.js'
 import { renderLibby } from './chrome.js'
-import { bindCovers, coverHTML, escapeHtml, titleHref } from './util.js'
+import { session } from './session.js'
+import { bindCovers, coverHTML, escapeHtml, readHref, titleHref } from './util.js'
 
 function shelf(title, href, books) {
   if (!books.length) return ''
@@ -36,6 +37,7 @@ const body =
       <a href="#subjects">subjects</a>
     </div>
 
+    <div data-continue></div>
     ${shelf('All titles', 'list.html?list=all', all)}
     ${shelf('Newly added', 'list.html?list=new', added)}
 
@@ -57,3 +59,35 @@ renderLibby(
 )
 
 bindCovers()
+
+if (CATALOG_STATUS === 'ok' && session.person?.role === 'student') loadContinue()
+
+async function loadContinue() {
+  try {
+    const response = await fetch('/api/me/positions', { headers: { Accept: 'application/json' } })
+    if (!response.ok) return
+    const rows = (await response.json()).filter((row) => getBook(row.book_id)).slice(0, 12)
+    if (!rows.length) return
+    const slot = document.querySelector('[data-continue]')
+    slot.outerHTML = `<section class="home-shelf" aria-labelledby="shelf-continue">
+      <div class="shelf-head">
+        <h2 id="shelf-continue"><a href="shelf.html">Continue reading</a></h2>
+        <a href="shelf.html">see all</a>
+      </div>
+      <div class="shelf-rail">
+        ${rows
+          .map((row) => {
+            const book = getBook(row.book_id)
+            return `<a href="${readHref(book.id, row.page)}" class="shelf-card" aria-label="${escapeHtml(book.title)}, page ${row.page}">
+              ${coverHTML(book)}
+              <span class="shelf-card-note">p. ${row.page}</span>
+            </a>`
+          })
+          .join('')}
+      </div>
+    </section>`
+    bindCovers()
+  } catch {
+    // The shelf is a convenience; the library still works without it.
+  }
+}

@@ -253,6 +253,34 @@ def read_position(connection: sqlite3.Connection, student_hash_value: str, book_
     return {"page": row["page"], "section_id": row["section_id"], "updated_at": row["updated_at"]}
 
 
+def my_positions(connection: sqlite3.Connection, student_hash_value: str) -> list[dict[str, Any]]:
+    rows = connection.execute(
+        """
+        SELECT p.book_id, b.title, p.page, p.section_id, p.updated_at,
+               s.number AS section_number, s.title AS section_title, b.page_count
+        FROM positions p
+        JOIN books b ON b.id = p.book_id
+        LEFT JOIN sections s ON s.id = p.section_id
+        WHERE p.student_hash = ?
+        ORDER BY p.updated_at DESC
+        """,
+        (student_hash_value,),
+    ).fetchall()
+    return [
+        {
+            "book_id": row["book_id"],
+            "title": row["title"],
+            "page": row["page"],
+            "page_count": row["page_count"],
+            "section_id": row["section_id"],
+            "section_number": row["section_number"],
+            "section_title": row["section_title"],
+            "updated_at": row["updated_at"],
+        }
+        for row in rows
+    ]
+
+
 def opened_sections(connection: sqlite3.Connection, student_hash_value: str, book_id: str) -> list[str]:
     rows = connection.execute(
         """

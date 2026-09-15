@@ -19,6 +19,17 @@ from typing import Any
 from urllib.parse import parse_qs, unquote, urlsplit
 
 from errors import APIError
+from ledger import (
+    EventContext,
+    InvalidEvent,
+    latest_position_in,
+    my_positions,
+    opened_sections,
+    read_position,
+    upsert_position,
+    validate_batch,
+    write_events,
+)
 from library import (
     APP_VERSION,
     BOOK_ID_RE,
@@ -32,7 +43,14 @@ from library import (
     list_books,
     sections_to_json,
 )
-from session import get_person, get_session, list_people, public_person, set_cookie_header
+from session import (
+    get_person,
+    get_session,
+    list_people,
+    public_person,
+    require_session,
+    set_cookie_header,
+)
 
 LOGGER = logging.getLogger("zibili")
 
@@ -70,6 +88,7 @@ BOOK_FILE_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/file$")
 BOOK_COVER_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/cover$")
 BOOK_ITEM_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})$")
 BOOK_SECTIONS_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/sections$")
+BOOK_PROGRESS_RE = re.compile(r"^/api/books/([a-z0-9][a-z0-9-]{0,79})/progress$")
 
 
 @dataclass(frozen=True)
@@ -277,6 +296,18 @@ class ZibiliHandler(BaseHTTPRequestHandler):
         if method in {"GET", "HEAD"} and path == "/api/session/people":
             self.handle_session_people()
             return
+        if path == "/api/events":
+            if method == "POST":
+                self.handle_events_post()
+                return
+            raise APIError(405, "method_not_allowed", "POST a batch of events.")
+        if method in {"GET", "HEAD"} and path == "/api/me/positions":
+            self.handle_my_positions()
+            return
+        progress = BOOK_PROGRESS_RE.match(path)
+        if method in {"GET", "HEAD"} and progress:
+            self.handle_progress(progress.group(1))
+            return
         if method in {"GET", "HEAD"} and path == "/api/catalog":
             self.handle_catalog()
             return
@@ -403,6 +434,62 @@ class ZibiliHandler(BaseHTTPRequestHandler):
             session.to_json() if session else {"person": public_person(person), "course": None},
             extra_headers={"Set-Cookie": set_cookie_header(person_id)},
         )
+
+    def handle_events_post(self) -> None:
+        body = self.read_json_body()
+        connection = self.app.db.connect()
+        try:
+            session = require_session(self.session(connection))
+            if session.hash is None or session.course is None:
+                raise APIError(
+                    409,
+                    "not_enrolled",
+                    "Reading is only recorded for students enrolled in a course.",
+                )
+            try:
+                events = validate_batch(body)
+            except InvalidEvent as exc:
+                raise APIError(422, "invalid_event", str(exc)) from exc
+            context = EventContext(
+                student_hash=session.hash,
+                course_id=session.course["id"],
+                instructor_id=session.course["instructor_id"],
+                term=session.course["term"],
+            )
+            with self.app.db.transaction(connection):
+                written = write_events(connection, events, context)
+                position = latest_position_in(events)
+                if position:
+                    upsert_position(connection, session.hash, *position)
+        finally:
+            connection.close()
+        self.send_json(202, {"written": written})
+
+    def handle_progress(self, book_id: str) -> None:
+        if not BOOK_ID_RE.fullmatch(book_id):
+            raise APIError(404, "not_found", "Book not found.")
+        connection = self.app.db.connect()
+        try:
+            session = require_session(self.session(connection))
+            if session.hash is None:
+                payload = {"position": None, "opened": []}
+            else:
+                payload = {
+                    "position": read_position(connection, session.hash, book_id),
+                    "opened": opened_sections(connection, session.hash, book_id),
+                }
+        finally:
+            connection.close()
+        self.send_json(200, payload)
+
+    def handle_my_positions(self) -> None:
+        connection = self.app.db.connect()
+        try:
+            session = require_session(self.session(connection))
+            rows = my_positions(connection, session.hash) if session.hash else []
+        finally:
+            connection.close()
+        self.send_json(200, rows)
 
     def handle_session_delete(self) -> None:
         self.send_json(200, {"ok": True}, extra_headers={"Set-Cookie": set_cookie_header(None)})

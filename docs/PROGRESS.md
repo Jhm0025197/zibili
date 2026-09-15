@@ -26,6 +26,13 @@ What works, what is next. Updated at the end of every phase.
 - Menu is the dev login picker: pick a person, no password. `POST /api/session` sets an httpOnly cookie; `GET /api/session` reports who is signed in and their course; `DELETE /api/session` signs out. The rail shows a Course tab for the instructor and a College tab for the admin.
 - The server accepts POST and DELETE with a 256 KB body cap, and every role-gated route will use `require_role` from `session.py`.
 
+## Phase 4: the reader writes the ledger (done)
+
+- A signed-in student's reader logs `opened` when a section comes on screen, `reread` if they had opened it before, `dwelled` every 15 seconds while the tab is visible, and `read` once they reach the section's last page having spent at least a quarter of the estimated reading time on it. Events carry the section ID and page.
+- Events batch in the browser (4 seconds or 20 events) and post fire-and-forget to `POST /api/events`; the queue goes out through `sendBeacon` when the tab hides. A failed post drops events and never stalls the reader.
+- The server attaches identity from the session, validates every event, writes the batch in one transaction, and updates the student's position from the newest event carrying a page. Guests keep their page in localStorage; instructors and admins see a note that reading is not recorded.
+- Reopening a book lands on the last page. The shelf's Reading tab, the home page's Continue reading shelf, and the title page's Continue button all read from `GET /api/me/positions` and `GET /api/books/{id}/progress`.
+
 ## Next
 
-Phase 4: the reader writes opened, dwelled, read and reread events, and remembers your page.
+Phase 5: the professor view.

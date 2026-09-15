@@ -1,6 +1,7 @@
 import { getBook, relatedBooks } from './data.js'
 import { icons } from './icons.js'
 import { renderLibby } from './chrome.js'
+import { session } from './session.js'
 import { flash, lib } from './state.js'
 import { bindCovers, coverHTML, downloadHref, escapeHtml, hasPdf, qs, readHref, titleHref } from './util.js'
 
@@ -112,7 +113,23 @@ function paint() {
   })
 
   if (readable) loadChapters()
+  if (readable && session.person?.role === 'student') loadContinue()
   bindCovers()
+}
+
+async function loadContinue() {
+  try {
+    const response = await fetch(`/api/books/${encodeURIComponent(book.id)}/progress`, { headers: { Accept: 'application/json' } })
+    if (!response.ok) return
+    const progress = await response.json()
+    const page = progress?.position?.page
+    if (!page || page <= 1) return
+    const primary = document.querySelector('[data-primary]')
+    primary.href = readHref(book.id, page)
+    primary.querySelector('span').textContent = `Continue · page ${page}`
+  } catch {
+    // Read still opens the book from the start.
+  }
 }
 
 async function loadChapters() {
