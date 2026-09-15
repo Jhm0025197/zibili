@@ -80,7 +80,6 @@ PUBLIC_ROOT_FILES = {
     "menu.html",
     "read.html",
     "instructor.html",
-    "college.html",
     "favicon.ico",
     "favicon.svg",
     "favicon.png",
@@ -357,6 +356,9 @@ class ZibiliHandler(BaseHTTPRequestHandler):
             return
         if path.startswith("/api/"):
             raise APIError(404, "not_found", "API route not found.")
+        if method in {"GET", "HEAD"} and path in {"/admin", "/admin.html"}:
+            self.handle_admin_page(head_only=method == "HEAD")
+            return
         if method in {"GET", "HEAD"}:
             self.handle_static(head_only=method == "HEAD")
             return
@@ -770,6 +772,38 @@ class ZibiliHandler(BaseHTTPRequestHandler):
                 self.wfile.write(chunk)
                 remaining -= len(chunk)
 
+    def handle_admin_page(self, head_only: bool) -> None:
+        """The college window. Served only to a signed-in admin; everyone else
+        gets the same not-found as a file that does not exist."""
+        connection = self.app.db.connect()
+        try:
+            session = self.session(connection)
+        finally:
+            connection.close()
+        if session is None or session.role != "admin":
+            self.send_not_found_page()
+            return
+        candidate = (self.app.config.static_dir / "admin.html").resolve()
+        if not candidate.is_file():
+            raise APIError(404, "not_found", "File not found.")
+        self.send_file(candidate, head_only)
+
+    def send_not_found_page(self) -> None:
+        body = (
+            "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Not found</title>"
+            "<link rel=\"stylesheet\" href=\"css/styles.css\"></head><body>"
+            "<main class=\"libby-notice\" style=\"padding:48px 24px\"><h2>Not found</h2>"
+            "<p>There is nothing at this address. <a href=\"index.html\">Back to the library</a>.</p></main></body></html>"
+        ).encode("utf-8")
+        self.send_response(404)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self._security_headers()
+        self.end_headers()
+        if self.command != "HEAD":
+            self.wfile.write(body)
+
     def handle_static(self, head_only: bool) -> None:
         root = self.app.config.static_dir
         raw_path = unquote(self.parsed_url.path)
@@ -794,6 +828,9 @@ class ZibiliHandler(BaseHTTPRequestHandler):
             raise APIError(404, "not_found", "File not found.") from exc
         if not candidate.is_file():
             raise APIError(404, "not_found", "File not found.")
+        self.send_file(candidate, head_only)
+
+    def send_file(self, candidate: Path, head_only: bool) -> None:
         stat = candidate.stat()
         etag = f'"{stat.st_mtime_ns:x}-{stat.st_size:x}"'
         if self.headers.get("If-None-Match") == etag:

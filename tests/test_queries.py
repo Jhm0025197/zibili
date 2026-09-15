@@ -221,6 +221,32 @@ class DashboardRouteTests(unittest.TestCase):
         others = [r for r in body["roster"] if r["display_name"] != "Jiwon Cho"]
         self.assertTrue(all(r["sections_opened"] == 0 for r in others))
 
+    def test_admin_window_is_served_only_to_admins(self) -> None:
+        for person in (None, "stu-cho", INSTRUCTOR):
+            for path in ("/admin", "/admin.html"):
+                headers = {"Cookie": f"zibili_person={person}"} if person else {}
+                connection = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
+                try:
+                    connection.request("GET", path, headers=headers)
+                    response = connection.getresponse()
+                    body = response.read()
+                finally:
+                    connection.close()
+                self.assertEqual(response.status, 404, (person, path))
+                self.assertIn(b"Not found", body)
+                self.assertNotIn(b"js/admin.js", body)
+        connection = http.client.HTTPConnection("127.0.0.1", self.port, timeout=10)
+        try:
+            connection.request("GET", "/admin", headers={"Cookie": "zibili_person=admin-okafor"})
+            response = connection.getresponse()
+            body = response.read()
+        finally:
+            connection.close()
+        self.assertEqual(response.status, 200)
+        self.assertIn(b"js/admin.js", body)
+        # The old address is gone for everyone.
+        self.assertEqual(self.get("/college.html", "admin-okafor")[0], 404)
+
     def test_college_summary(self) -> None:
         self.assertEqual(self.get("/api/college/summary")[0], 401)
         self.assertEqual(self.get("/api/college/summary", INSTRUCTOR)[0], 403)

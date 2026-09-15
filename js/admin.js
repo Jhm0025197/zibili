@@ -1,18 +1,37 @@
-import { renderLibby } from './chrome.js'
+import { icons } from './icons.js'
 import { emptyState, formatDuration, money, statTile } from './format.js'
-import { session } from './session.js'
+import { session, signOut } from './session.js'
 import { escapeHtml, qs } from './util.js'
 
-// The college view. Four numbers and a drill-down by course. Aggregates
-// only: this page never asks for a name or a hash, and the queries behind
-// it cannot return one. A term that has barely started is labelled as such
-// rather than compared flat against a completed one, and the dollar figure
-// says out loud whether its inputs have been verified.
+// The college window. Its own shell, not the library's: no Library, Shelf
+// or Search, no student-facing chrome. The server only serves this page to a
+// signed-in admin, so anyone else never sees it; the check here is a
+// courtesy for a session that expired while the tab was open.
+//
+// Four numbers and a drill-down by course. Aggregates only: this page never
+// asks for a name or a hash, and the queries behind it cannot return one.
 
 const termParam = qs('term')
 
-function frame(html) {
-  renderLibby(`<div class="dash">${html}</div>`, { title: 'College', backHref: 'index.html', active: 'college' })
+function shell(mainHTML) {
+  const person = session.person
+  document.body.innerHTML = `
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="admin">
+      <header class="admin-top">
+        <div class="admin-brand">${icons.college}<span>Zibili</span><span class="admin-brand-sub">College view</span></div>
+        <div class="admin-who">
+          ${person ? `<span>${escapeHtml(person.display_name)}</span>` : ''}
+          <a href="index.html" target="_blank" rel="noopener">Open the library</a>
+          ${person ? '<button type="button" class="text-action" data-signout>Sign out</button>' : ''}
+        </div>
+      </header>
+      <main id="main" tabindex="-1" class="dash admin-main">${mainHTML}</main>
+    </div>`
+  document.querySelector('[data-signout]')?.addEventListener('click', async () => {
+    await signOut()
+    location.href = 'index.html'
+  })
 }
 
 function delta(current, previous) {
@@ -23,21 +42,14 @@ function delta(current, previous) {
   return `${change > 0 ? '+' : ''}${change}%`
 }
 
-if (!session.person) {
-  frame(emptyState('This page is for the administration.', '<p>Choose <strong>Dana Okafor</strong> in <a href="menu.html">Menu</a> to see it.</p>'))
-} else if (session.person.role !== 'admin') {
-  frame(
-    emptyState(
-      `You are signed in as ${escapeHtml(session.person.display_name)}.`,
-      '<p>The college view is for the administration. Choose Dana Okafor in <a href="menu.html">Menu</a> to see it.</p>',
-    ),
-  )
+if (session.person?.role !== 'admin') {
+  shell(emptyState('This window is for the administration.', '<p>Your session has ended or you are signed in as someone else. <a href="menu.html">Sign in from the library</a> as Dana Okafor to come back.</p>'))
 } else {
   render()
 }
 
 async function render() {
-  frame('<p class="libby-empty">Loading…</p>')
+  shell('<p class="libby-empty">Loading…</p>')
   let data
   try {
     const response = await fetch(`/api/college/summary${termParam ? `?term=${encodeURIComponent(termParam)}` : ''}`, {
@@ -47,26 +59,26 @@ async function render() {
     if (!response.ok) throw new Error(body?.error?.message || `Request failed (${response.status})`)
     data = body
   } catch (error) {
-    frame(emptyState('Could not load the college view.', `<p>${escapeHtml(error.message)}</p>`))
+    shell(emptyState('Could not load the college view.', `<p>${escapeHtml(error.message)}</p>`))
     return
   }
   const { spend, terms, current, previous, sections_live: sectionsLive, elapsed_days: elapsedDays, courses } = data
   if (!current) {
-    frame(emptyState('No terms are set up yet.', '<p>Seed data lives in <code>seed/course.json</code>.</p>'))
+    shell(emptyState('No terms are set up yet.', '<p>Seed data lives in <code>seed/course.json</code>.</p>'))
     return
   }
   const fee = courses.find((c) => c.fee_cents)?.fee_cents
   const youngTerm = elapsedDays < 21
 
-  frame(`
+  shell(`
     <header class="dash-head">
-      <h2>${escapeHtml(current.term_label)}</h2>
+      <h1>${escapeHtml(current.term_label)}</h1>
       <p class="dash-lede">What the college stopped paying, and what students are doing with what replaced it. Every figure below is computed from rows in the ledger; nothing is estimated except where it says so.</p>
       ${
         terms.length > 1
           ? `<nav class="term-nav" aria-label="Term">${terms
               .map(
-                (t) => `<a href="college.html?term=${encodeURIComponent(t.term)}" class="pill ${t.term === current.term ? 'is-on' : ''}" ${
+                (t) => `<a href="admin?term=${encodeURIComponent(t.term)}" class="pill ${t.term === current.term ? 'is-on' : ''}" ${
                   t.term === current.term ? 'aria-current="page"' : ''
                 }>${escapeHtml(t.term_label)}</a>`,
               )
@@ -103,7 +115,7 @@ async function render() {
     }
 
     <section aria-labelledby="terms-heading" class="dash-section">
-      <h3 id="terms-heading">Term by term</h3>
+      <h2 id="terms-heading">Term by term</h2>
       <div class="card table-wrap">
         <table class="data">
           <caption class="sr-only">Totals for every term on Zibili</caption>
@@ -112,7 +124,7 @@ async function render() {
             ${terms
               .map(
                 (t) => `<tr class="${t.term === current.term ? 'is-current' : ''}">
-                  <th scope="row"><a href="college.html?term=${encodeURIComponent(t.term)}">${escapeHtml(t.term_label)}</a></th>
+                  <th scope="row"><a href="admin?term=${encodeURIComponent(t.term)}">${escapeHtml(t.term_label)}</a></th>
                   <td class="tabular">${t.courses}</td>
                   <td class="tabular">${t.students_enrolled}</td>
                   <td class="tabular">${t.students_active}</td>
@@ -128,7 +140,7 @@ async function render() {
     </section>
 
     <section aria-labelledby="courses-heading" class="dash-section">
-      <h3 id="courses-heading">${escapeHtml(current.term_label)} by course</h3>
+      <h2 id="courses-heading">${escapeHtml(current.term_label)} by course</h2>
       ${
         courses.length === 0
           ? emptyState(`No courses ran in ${escapeHtml(current.term_label)}.`, '<p>Nothing to break down.</p>')
@@ -159,7 +171,7 @@ async function render() {
         spend.verified
           ? 'Those fees have been checked against the bookstore contract.'
           : 'Those fees are a synthetic placeholder and have not been checked against the bookstore contract, so this figure is an estimate and is labelled as one.'
-      } This page never sees an individual student.</p>
+      } This window never sees an individual student.</p>
     </section>
   `)
 }

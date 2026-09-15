@@ -160,8 +160,8 @@ STEPS = [
     ("instructor-gate", "stu-cho", "/instructor.html", ".empty-state", "signed in as"),
     ("instructor-fall", "instructor-reyes", "/instructor.html", ".dash-head", "Fall 2026"),
     ("instructor-spring", "instructor-reyes", "/instructor.html?course=phil1010-2026sp", "table.data", "Roster"),
-    ("college-gate", "instructor-reyes", "/college.html", ".empty-state", "administration"),
-    ("college", "admin-okafor", "/college.html", "table.data", "Term by term"),
+    ("college-gate", "instructor-reyes", "/admin", ".libby-notice", "Not found"),
+    ("college", "admin-okafor", "/admin", "table.data", "Term by term"),
     ("mobile-home", None, "/index.html", ".shelf-card", "Your library"),
     ("mobile-reader", None, f"/read.html?id={BOOK}&page=20", CANVAS, "of 421"),
     ("mobile-scroll", None, f"/read.html?id={BOOK}&page=20", CANVAS, "of 421", act_wheel),
@@ -205,6 +205,7 @@ def main() -> int:
                 page.request.post(f"{BASE}/api/session", data={"person_id": person})
             else:
                 page.request.delete(f"{BASE}/api/session")
+            marks = {key: len(report[key]) for key in ("console", "page_errors", "http_errors")}
             page.goto(f"{BASE}{path}", wait_until="networkidle", timeout=30000)
             try:
                 page.wait_for_selector(wait_for, timeout=20000)
@@ -215,6 +216,10 @@ def main() -> int:
             except Exception as exc:  # noqa: BLE001
                 ok = False
                 report["notes"].append(f"{name}: {exc}")
+            if expect == "Not found":
+                # A page that is meant to 404 is not an error; drop what it logged.
+                for key, mark in marks.items():
+                    del report[key][mark:]
             page.screenshot(path=str(OUT / f"{name}.png"), full_page="reader" not in name and "scroll" not in name)
             status = "ok  " if ok else "FAIL"
             if not ok:

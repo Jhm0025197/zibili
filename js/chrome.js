@@ -8,7 +8,8 @@ import { firstName, session } from './session.js'
 function roleTabs() {
   const role = session.person?.role
   if (role === 'instructor') return [{ id: 'course', href: 'instructor.html', icon: icons.course, label: 'Course' }]
-  if (role === 'admin') return [{ id: 'college', href: 'college.html', icon: icons.college, label: 'College' }]
+  // The college window is separate on purpose: it is not linked from the
+  // student app. An admin reaches it from Menu.
   return []
 }
 

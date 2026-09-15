@@ -6,7 +6,7 @@ Internal replacement for BibliU. One test book, one course, three views, zero ru
 
 ## What "complete" means
 
-A student opens the library page, sees the book, and can either **download** the original or **read** it. Reading opens the page-based PDF reader. Every section a student reads writes a real event. The professor view shows those events per student. The college view shows the money and engagement roll-up. All three views ship in the same app, on the same data, with no API keys required to run.
+A student opens the library page, sees the book, and can either **download** the original or **read** it. Reading opens the page-based PDF reader. Every section a student reads writes a real event. The professor view shows those events per student. The college view shows the money and engagement roll-up in its own window, served only to an admin. All three views run on the same server and the same data, with no API keys required to run.
 
 Not in v1: AI renders, TTS, LTI, the format wheel's renderers (the wheel itself is present), markdown chunking. Stubbed where cheap, otherwise one line in `docs/backlog.md`.
 

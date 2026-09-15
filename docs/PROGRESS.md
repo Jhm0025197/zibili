@@ -42,7 +42,7 @@ What works, what is next. Updated at the end of every phase.
 
 ## Phase 6: the college view (done)
 
-- `college.html`, admin only: dollars displaced (labelled an estimate until `seed/prior-spend.json` says `verified: true`), students active, sections live, and change since the previous term with a caveat while the current term is under three weeks old. A term-by-term table and a by-course table follow.
+- The college view lives in its own window at `/admin` (`admin.html`, `js/admin.js`) with its own shell: no Library, Shelf or Search, nothing student-facing. The server serves that page only to a signed-in admin; everyone else, signed out or not, gets the same not-found as a file that does not exist. It is not linked from the student app; an admin reaches it from Menu. Dollars displaced (labelled an estimate until `seed/prior-spend.json` says `verified: true`), students active, sections live, and change since the previous term with a caveat while the current term is under three weeks old. A term-by-term table and a by-course table follow.
 - `GET /api/college/summary` returns aggregates only. A test asserts the response contains no student hash and no student name.
 
 ## Phase 7: accessibility, dark mode, tooling, docs (done)

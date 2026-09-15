@@ -32,7 +32,7 @@ PAGES = [
     ("library", "/index.html", "stu-cho"),
     ("reader", "/read.html?id=introduction-to-philosophy&page=30", "stu-cho"),
     ("instructor", "/instructor.html?course=phil1010-2026sp", "instructor-reyes"),
-    ("college", "/college.html", "admin-okafor"),
+    ("college", "/admin", "admin-okafor"),
 ]
 TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]
 FAIL_ON = {"critical", "serious"}

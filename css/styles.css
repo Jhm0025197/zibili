@@ -493,6 +493,28 @@ a.maroon-btn:hover { color: var(--libby-on-accent); }
 .title-row-format { display: flex; align-items: center; gap: 6px; font-size: 13px; margin-top: 6px !important; }
 .title-row-format svg { width: 14px; height: 14px; }
 .libby-empty { padding: 24px 0; color: var(--libby-muted); }
+/* The college window: its own shell. */
+.admin { min-height: 100vh; background: var(--libby-paper); }
+.admin-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: var(--libby-rail);
+  border-bottom: 1px solid var(--libby-line);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.admin-brand { display: flex; align-items: center; gap: 10px; font-family: var(--libby-serif); font-size: 20px; font-weight: 600; }
+.admin-brand svg { width: 24px; height: 24px; color: var(--libby-maroon); }
+.admin-brand-sub { font-family: var(--libby-sans); font-size: 14px; font-weight: 400; color: var(--libby-ink); opacity: 0.85; }
+.admin-who { display: flex; align-items: center; gap: 16px; font-size: 14px; color: var(--libby-ink); flex-wrap: wrap; }
+.admin-main { padding-top: 28px; }
+.admin-main h1 { font-size: clamp(26px, 4vw, 34px); margin: 0 0 8px; }
+.admin-main .dash-section h2 { font-size: 20px; margin: 0 0 12px; }
+
 /* Dashboards */
 .dash { width: min(1040px, calc(100% - 40px)); margin: 0 auto; padding: 8px 0 96px; min-width: 0; }
 .dash-head { margin: 0 0 24px; }
