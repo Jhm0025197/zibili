@@ -1,0 +1,6 @@
+# Runtime and ingest. Python 3.11 or newer.
+pymupdf>=1.24
+
+# Optional: scripts/axe.py and scripts/smoke.py drive an installed Edge or
+# Chrome through Playwright. Not needed to run the server.
+# playwright>=1.45

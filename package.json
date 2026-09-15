@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "python server.py --host 127.0.0.1 --port 5174",
-    "ingest": "python ingest.py add"
+    "ingest": "python ingest.py add",
+    "test": "python -m unittest discover -s tests -v"
   }
 }

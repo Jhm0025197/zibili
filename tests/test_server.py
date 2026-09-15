@@ -90,8 +90,9 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(len(catalog), 1)
         book = catalog[0]
         self.assertEqual(book["id"], "campus-reader")
-        self.assertEqual(book["formats"][0]["type"], "ebook")
-        self.assertTrue(book["formats"][0]["available"])
+        self.assertNotIn("formats", book)
+        self.assertNotIn("rating", book)
+        self.assertTrue(book["ingested_at"].endswith("Z"))
         self.assertTrue(book["pdf"].endswith("/file"))
         self.assertTrue(book["cover"].endswith("/cover"))
         self.assertIn("etag", headers)
@@ -124,10 +125,39 @@ class ServerTests(unittest.TestCase):
         self.assertIn("attachment", headers.get("content-disposition", ""))
         self.assertIn("campus-reader.pdf", headers.get("content-disposition", ""))
 
+    def test_empty_catalog_is_an_empty_list(self) -> None:
+        empty_db = Path(self.temporary.name) / "empty.db"
+        config = AppConfig(
+            db_path=str(empty_db),
+            static_dir=PROJECT_ROOT,
+            files_dir=self.files_dir,
+            public_base_url="http://127.0.0.1",
+        )
+        server = create_server("127.0.0.1", 0, config)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            connection = http.client.HTTPConnection("127.0.0.1", server.server_address[1], timeout=10)
+            connection.request("GET", "/api/catalog")
+            response = connection.getresponse()
+            body = json.loads(response.read())
+            connection.close()
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=2)
+        self.assertEqual(response.status, 200)
+        self.assertEqual(body, [])
+
     def test_static_allowlist(self) -> None:
         status, _, body = self.request("GET", "/")
         self.assertEqual(status, 200)
         self.assertIn(b"js/home.js", body)
+        self.assertIn(b"libby-loading", body)
+
+        status, headers, _ = self.request("GET", "/favicon.svg")
+        self.assertEqual(status, 200)
+        self.assertIn("svg", headers.get("content-type", ""))
 
         for path in ("/server.py", "/data/zibili.db", "/books/sample.pdf", "/ingest.py"):
             status, _, _ = self.request("GET", path)

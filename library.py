@@ -150,15 +150,11 @@ def book_to_json(row: sqlite3.Row) -> dict[str, Any]:
         "id": book_id,
         "title": row["title"],
         "author": row["author"],
-        "isbn": row["isbn13"] or "",
         "isbn13": row["isbn13"] or "",
         "cover": f"/api/books/{book_id}/cover",
         "color": row["color"] or "#194257",
-        "rating": 0,
-        "ratingsCount": 0,
         "audience": row["audience"] or "adults",
         "lists": _json_list(row["lists"]),
-        "series": None,
         "description": row["description"] or "",
         "quote": row["quote"] or "",
         "subjects": _json_list(row["subjects"]),
@@ -166,20 +162,11 @@ def book_to_json(row: sqlite3.Row) -> dict[str, Any]:
         "released": row["released"] or "",
         "pages": row["page_count"],
         "language": row["language"] or "English",
-        "formats": [
-            {
-                "type": "ebook",
-                "available": True,
-                "copies": 1,
-                "holds": 0,
-                "wait": None,
-                "duration": None,
-            }
-        ],
         "similar": [],
         "pdf": f"/api/books/{book_id}/file",
         "license": row["license"] or "",
         "course_codes": _json_list(row["course_codes"]),
+        "ingested_at": row["ingested_at"],
     }
 
 

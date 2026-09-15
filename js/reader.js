@@ -12,7 +12,7 @@ const startPage = Math.max(1, Number(qs('page') || '1') || 1)
 
 if (!book || !book.pdf) {
   renderLibby(
-    `<div class="libby-empty"><p>We couldn’t find a file for that title.</p><a href="index.html">Keep browsing</a></div>`,
+    `<div class="libby-empty"><p>We couldn’t find a file for that title.</p><a href="index.html">Back to the library</a></div>`,
     { title: 'Read', backHref: id ? titleHref(id) : 'index.html' },
   )
 } else {
@@ -25,7 +25,7 @@ function paint() {
       <div class="reader-toolbar">
         <button type="button" class="reader-btn" data-prev aria-label="Previous page">${icons.back}</button>
         <label class="reader-page">
-          <input type="number" min="1" value="${startPage}" data-page>
+          <input type="number" min="1" value="${startPage}" data-page aria-label="Page">
           <span data-of>of …</span>
         </label>
         <button type="button" class="reader-btn reader-btn-next" data-next aria-label="Next page">${icons.back}</button>
@@ -62,6 +62,9 @@ function paint() {
   })
   pageInput.addEventListener('change', () => showPage(Number(pageInput.value) || 1))
   document.addEventListener('keydown', (event) => {
+    if (event.altKey || event.ctrlKey || event.metaKey) return
+    if (event.target.closest('input, textarea, select, [contenteditable]')) return
+    if (document.querySelector('.sheet-scrim')) return
     if (event.key === 'ArrowRight' || event.key === 'PageDown') showPage(pageNumber + 1)
     if (event.key === 'ArrowLeft' || event.key === 'PageUp') showPage(pageNumber - 1)
   })
@@ -98,6 +101,9 @@ function paint() {
     canvas.width = Math.floor(viewport.width)
     canvas.height = Math.floor(viewport.height)
     canvas.style.width = `${Math.floor(viewport.width)}px`
+    canvas.style.height = `${Math.floor(viewport.height)}px`
+    canvas.setAttribute('role', 'img')
+    canvas.setAttribute('aria-label', `Page ${pageNumber} of ${pdf.numPages}`)
     await page.render({ canvasContext: context, viewport }).promise
     if (token !== renderToken) return
     stage.replaceChildren(canvas)
