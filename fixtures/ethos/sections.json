@@ -1,0 +1,117 @@
+[
+  {
+    "id": "d055204a-e591-59d3-a3bb-64091504fb7c",
+    "code": "10001",
+    "number": "001",
+    "titles": [
+      {
+        "type": {
+          "category": "short"
+        },
+        "value": "Intro to Philosophy"
+      }
+    ],
+    "academicPeriod": {
+      "id": "fda43315-a885-5a6a-b7d7-f9f2d70d5561"
+    },
+    "course": {
+      "id": "0136a615-0f84-569a-bf65-58fe274f71f4"
+    },
+    "status": {
+      "category": "open"
+    },
+    "startOn": "2026-08-24T00:00:00Z"
+  },
+  {
+    "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3",
+    "code": "10002",
+    "number": "002",
+    "titles": [
+      {
+        "type": {
+          "category": "short"
+        },
+        "value": "Intro to Philosophy"
+      }
+    ],
+    "academicPeriod": {
+      "id": "fda43315-a885-5a6a-b7d7-f9f2d70d5561"
+    },
+    "course": {
+      "id": "0136a615-0f84-569a-bf65-58fe274f71f4"
+    },
+    "status": {
+      "category": "open"
+    },
+    "startOn": "2026-08-24T00:00:00Z"
+  },
+  {
+    "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1",
+    "code": "10003",
+    "number": "001",
+    "titles": [
+      {
+        "type": {
+          "category": "short"
+        },
+        "value": "Business Law I"
+      }
+    ],
+    "academicPeriod": {
+      "id": "fda43315-a885-5a6a-b7d7-f9f2d70d5561"
+    },
+    "course": {
+      "id": "c6df38bf-e002-5a74-9ff0-96b8387328b8"
+    },
+    "status": {
+      "category": "open"
+    },
+    "startOn": "2026-08-24T00:00:00Z"
+  },
+  {
+    "id": "a7f5017d-6650-5421-ad72-0aebc485418d",
+    "code": "10004",
+    "number": "001",
+    "titles": [
+      {
+        "type": {
+          "category": "short"
+        },
+        "value": "Composition I"
+      }
+    ],
+    "academicPeriod": {
+      "id": "fda43315-a885-5a6a-b7d7-f9f2d70d5561"
+    },
+    "course": {
+      "id": "74ec7c04-85b2-51aa-928b-36d241931ccd"
+    },
+    "status": {
+      "category": "open"
+    },
+    "startOn": "2026-08-24T00:00:00Z"
+  },
+  {
+    "id": "3af7c0d6-247c-5ec9-9652-284f226d888a",
+    "code": "20001",
+    "number": "001",
+    "titles": [
+      {
+        "type": {
+          "category": "short"
+        },
+        "value": "Intro to Philosophy"
+      }
+    ],
+    "academicPeriod": {
+      "id": "56ee2622-cacc-54eb-902a-bd96a1116041"
+    },
+    "course": {
+      "id": "0136a615-0f84-569a-bf65-58fe274f71f4"
+    },
+    "status": {
+      "category": "open"
+    },
+    "startOn": "2027-01-11T00:00:00Z"
+  }
+]

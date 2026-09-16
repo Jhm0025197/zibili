@@ -59,6 +59,13 @@ What works, what is next. Updated at the end of every phase.
 - The format wheel (Read · Listen · Summary · Infographic · Story · Cards · Quiz · Ask) opens from a round button at the bottom right as a dial: the eight formats around a ring, the name of the one you are on in the centre. Arrow keys walk the ring, Escape closes it. Read is current. Each other format opens a sheet that says in one sentence what it would do and that it is not in v1. Nothing is logged for those taps.
 - Next to it, Reading tools: text size, page colour (normal, sepia, dark page), theme (system, light, dark), a reading ruler that follows the pointer, and a focus mode that hides the navigation. Settings stay in this browser, apply before first paint on every page, and are never sent anywhere.
 
+## Phase 9: Banner sync (done)
+
+- `python sync.py` pulls terms, sections, instructors, registrations, and people from the Ellucian Ethos Integration API, or from a folder of Ethos-shaped JSON (`fixtures/ethos`), into the same tables the app reads. Idempotent; drops become `dropped`, never deleted; seeded rows untouched. Nothing runs at request time.
+- Schema v3 adds `course_books` and the Banner columns (Banner ID, email, CRN, subject, number, section, enrollment status, source) with in-place migration, so an existing database opens without a rebuild.
+- Books attach to sections through the sidecar `course_codes`. Students get a shelf per enrolled section on the home page; instructors get every section they teach in the course window; reading events are attributed to the latest active section that uses the book.
+- Live Ethos access needs an API key from IT (`ETHOS_API_KEY`). Until then the fixture set stands in and the tests run against it.
+
 ## Done condition, checked
 
 1. Ingest twice, zero ID churn: yes. `books/id-map.json` is byte-identical after a re-ingest and after `--force`.
@@ -71,7 +78,8 @@ What works, what is next. Updated at the end of every phase.
 
 ## Known limits
 
-- One course and one book are seeded. Business Law is in the library but attached to no course, so nothing about it reaches the dashboards.
+- The seed still has one course on one book. `python sync.py fixtures fixtures/ethos` adds five synthetic sections across three courses, including Business Law, if you want the multi-section shape without Banner.
+- The sync does not remove a section that Banner cancels; it stays with its enrollments marked dropped. Cancelled-section handling and instructor changes mid-term are in the backlog.
 - The dev login cookie is unsigned. Fine on localhost, not beyond it.
 - The fee in `seed/prior-spend.json` is a placeholder; the college view says so until `verified` is set.
 - Page numbers are physical indices, not the book's printed page labels.

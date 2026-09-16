@@ -15,7 +15,7 @@ from typing import Any, Iterator
 
 LOGGER = logging.getLogger("zibili.db")
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 APP_VERSION = "0.2.0"
 
 BOOK_SELECT = """
@@ -162,6 +162,13 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE INDEX IF NOT EXISTS events_course_time ON events (course_id, occurred_at);
 CREATE INDEX IF NOT EXISTS events_student_time ON events (student_hash, occurred_at);
 CREATE INDEX IF NOT EXISTS events_verb ON events (course_id, verb);
+-- Which books a section uses. Filled by seed.py and sync.py from the
+-- sidecar course_codes; courses.book_id keeps the first one for old reads.
+CREATE TABLE IF NOT EXISTS course_books (
+    course_id TEXT NOT NULL REFERENCES courses (id),
+    book_id TEXT NOT NULL,
+    PRIMARY KEY (course_id, book_id)
+);
 CREATE TABLE IF NOT EXISTS positions (
     student_hash TEXT NOT NULL,
     book_id TEXT NOT NULL,
@@ -214,10 +221,39 @@ class Database:
                 raise RuntimeError(
                     "This Python's SQLite lacks JSON functions. Zibili needs SQLite 3.38 or newer."
                 )
+            self.migrate(connection)
             connection.execute(f"PRAGMA user_version = {SCHEMA_VERSION}")
             self.seed(connection)
         finally:
             connection.close()
+
+    # Columns added after the first schema. Each is added once, if missing,
+    # so an older database opens without a rebuild.
+    ADDED_COLUMNS = (
+        ("people", "external_id", "TEXT"),
+        ("people", "email", "TEXT"),
+        ("people", "source", "TEXT NOT NULL DEFAULT 'seed'"),
+        ("people", "updated_at", "TEXT"),
+        ("courses", "crn", "TEXT"),
+        ("courses", "subject", "TEXT"),
+        ("courses", "number", "TEXT"),
+        ("courses", "section_number", "TEXT"),
+        ("courses", "external_id", "TEXT"),
+        ("courses", "source", "TEXT NOT NULL DEFAULT 'seed'"),
+        ("enrollments", "status", "TEXT NOT NULL DEFAULT 'active'"),
+        ("enrollments", "source", "TEXT NOT NULL DEFAULT 'seed'"),
+        ("enrollments", "updated_at", "TEXT"),
+    )
+
+    def migrate(self, connection: sqlite3.Connection) -> None:
+        for table, column, declaration in self.ADDED_COLUMNS:
+            have = {row[1] for row in connection.execute(f"PRAGMA table_info({table})")}
+            if column not in have:
+                connection.execute(f"ALTER TABLE {table} ADD COLUMN {column} {declaration}")
+        connection.execute("CREATE INDEX IF NOT EXISTS courses_external ON courses (external_id)")
+        connection.execute(
+            "INSERT OR IGNORE INTO course_books (course_id, book_id) SELECT id, book_id FROM courses WHERE book_id != ''"
+        )
 
     def seed(self, connection: sqlite3.Connection) -> dict[str, int]:
         """Fill in whatever seed data is still missing. Safe to call often."""

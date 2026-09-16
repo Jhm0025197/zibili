@@ -1,0 +1,998 @@
+[
+  {
+    "id": "11e1e785-f2a4-520e-8d69-1fbfd1a706db",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "212573e6-3ce4-5c6a-b2dc-8683e08cb7f7"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "f6d1621d-5a5c-5c54-aecc-ee716f06b2f7",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "dfdec10b-c8ac-514b-b78c-fb8004ec2e1f"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "cabb490b-5300-5699-884e-2d297a67b28a",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "e5b8e15b-5a72-5803-b163-1e682b08dd7c"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "35f8d651-2584-5059-991f-5e2714b16fe2",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "f2994e67-7e3e-5812-bb5d-fbb62f8811e6"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "433c9eca-0bad-5b76-ab11-c10c85e70f20",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "d238563b-f962-5191-9711-b7f0288c8096"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "7434fe4a-09e6-5594-a0e7-8135660c2cf3",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "00723793-4105-5749-a47e-22ea085f739c"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "01865cbc-6d70-5410-b764-ea9bbe1bf18c",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "34e09984-e34b-5f35-909b-3f5728305393"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "e81c81bc-5fc1-5aee-bf7e-7340f475c95c",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "00ba9471-f8c2-5a97-a930-56c32f24489b"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "9b0e9e22-9779-5e1b-bc51-94193e8520be",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "f49e0450-2b60-5c52-93b6-d297bcf9eebf"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "e40f4e27-d708-5e81-9539-8cdd76456abb",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "3a244ee3-f3e6-5b34-9084-52c6f1257d5d"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "03ce3b48-2cb5-50a7-b5ab-0c37ac7942e8",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "59b87e4c-0fb1-5664-981d-3863fc98c771"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "7e480bd6-09f3-51d1-a031-12cc6cb7bac9",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "f886e790-8ecf-50f8-b6d4-7e2f4a209168"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "ab7d411b-2cc0-5410-b8f1-c4bc945e064e",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "8cb217d5-c690-5cfb-b231-2894878a81a2"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "0626ab07-0707-57c8-a228-e4fc0a64954b",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "2e4e29b3-3c56-5663-bc19-aa17f2542874"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "0e208e39-df15-52d2-bb99-ae394d52dde5",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "78165106-df68-5ccd-85cd-000445c904ba"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "abc8b41e-b812-57ff-af60-dae9ab3061fe",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "ff0c220a-61e1-5197-878c-2e47f8c1853c"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "06c6780c-a69b-5d3c-86d1-a66c5e790b6e",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "7f7fd51f-14bc-5f13-b7c3-48e15947139a"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "41882975-c65c-5a78-81f9-d71f590cef0b",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "7ce515d9-84dd-5fd6-ad3a-957fcb5295b3"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "b937df3f-ad9d-5466-9254-50fbaf3a21ee",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "d957093e-5128-55a4-9eed-a34d2b6d5a85"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "460292b4-e8db-53cc-8d5e-0d218290b340",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "00d07888-ce4d-5792-af15-c57943cc5fc4"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "76171521-0934-5422-939b-4edc0fe3400c",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "2cae0527-25aa-5c3d-a5f2-e209cfc6f8af"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "1f1f9fdf-b93d-5b77-966d-474ea047bc64",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "6465005f-addd-5c5b-abf4-f409bd8a18a4"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "e48ac420-b693-566f-8936-827a7c7adcb8",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "2034d03f-8cf8-5b3c-b7c2-5c0828c7e9bb"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "bdafb5ae-f743-5a24-850b-a94e02d98c7e",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "d8d5bf54-ee90-5bae-8dfa-29f35daba6ae"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "b7bd4a90-39ee-5dc9-a1d6-2b7eb3693d2f",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "3ee7e2cc-8ad5-5d64-a917-c5d7eea9bcc9"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "0c9dd119-5874-526d-b077-00c180c14644",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "e53cde6f-79bc-5a6f-8a59-377e0a87a1e7"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "fd5f8863-a5d3-50ed-baf9-dc11d98cc24c",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "7e44dc3a-3700-5e46-ae50-bbc47cabd42d"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "2c1c1398-4298-5089-81fa-5866aa18f988",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "846f39c3-e4d1-5e3b-8485-14df4ec5c1d9"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "25e8ce0d-9efe-52cd-8706-62020cb8bc63",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "cc894232-4cae-5477-bc77-58c427f1720e"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "93b0462e-7680-5a54-8bab-2d668add3456",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "registrant": {
+      "id": "9394dc51-2259-57af-b921-0a5c7352d6d8"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "acc1bd71-abb1-53ce-ace3-ed32d54897c6",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "00723793-4105-5749-a47e-22ea085f739c"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "1ac42363-9162-5370-a913-eaf034cacf15",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "34e09984-e34b-5f35-909b-3f5728305393"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "d9b19fc5-097a-5e73-bc36-9c07797fef5c",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "00ba9471-f8c2-5a97-a930-56c32f24489b"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "322ab3b4-abec-53ba-bebe-f633bb48aa9d",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "f49e0450-2b60-5c52-93b6-d297bcf9eebf"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "fc197ac6-cb8d-5955-821e-b0c9bf51c977",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "3a244ee3-f3e6-5b34-9084-52c6f1257d5d"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "5d0b7c90-e1e9-5e0d-bb1b-53c231fbc942",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "59b87e4c-0fb1-5664-981d-3863fc98c771"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "da6be34f-4617-51c1-ad52-8a46932d5446",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "f886e790-8ecf-50f8-b6d4-7e2f4a209168"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "2df0e3dd-4d3b-5f45-ad93-aa45605ee512",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "8cb217d5-c690-5cfb-b231-2894878a81a2"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "929c505c-ab9b-593f-9b24-d4222e176fc0",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "2e4e29b3-3c56-5663-bc19-aa17f2542874"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "65ba135e-c8b1-5fff-947a-712ac57c87a7",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "78165106-df68-5ccd-85cd-000445c904ba"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "37741982-5119-5088-96cb-d0b4b3374a18",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "ff0c220a-61e1-5197-878c-2e47f8c1853c"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "90cd0790-355d-5495-87df-bfd8a3c8ed7d",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "7f7fd51f-14bc-5f13-b7c3-48e15947139a"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "682b0917-e249-569b-a6c9-ff77971b7d5d",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "7ce515d9-84dd-5fd6-ad3a-957fcb5295b3"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "f859f16b-be66-5d06-bde1-e4b82b2d8f78",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "d957093e-5128-55a4-9eed-a34d2b6d5a85"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "bd0ae6c8-ef88-5355-8c2c-d86eb32a6193",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "00d07888-ce4d-5792-af15-c57943cc5fc4"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "89cf9da3-88d1-5277-9d44-70c23cf6e2d5",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "2cae0527-25aa-5c3d-a5f2-e209cfc6f8af"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "e0cf084c-f213-5754-a596-dd7954c0552c",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "6465005f-addd-5c5b-abf4-f409bd8a18a4"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "f30b185e-1380-509b-841b-8c35d2faab7d",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "2034d03f-8cf8-5b3c-b7c2-5c0828c7e9bb"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "4fb7cc0b-e331-5491-a25b-8c37866db90d",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "d8d5bf54-ee90-5bae-8dfa-29f35daba6ae"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "7ea412ce-e111-594b-9d02-6953305d9d08",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "registrant": {
+      "id": "3ee7e2cc-8ad5-5d64-a917-c5d7eea9bcc9"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "7ecd4d15-5f60-5155-84b2-3522bddf4b41",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "212573e6-3ce4-5c6a-b2dc-8683e08cb7f7"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "80d1df3e-68b9-5c01-a81c-6585ccee00fb",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "dfdec10b-c8ac-514b-b78c-fb8004ec2e1f"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "38c0bbbe-f24f-5a2c-b412-dfef57b02468",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "e5b8e15b-5a72-5803-b163-1e682b08dd7c"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "59d1b524-46a4-5449-8990-429aa5b3897c",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "f2994e67-7e3e-5812-bb5d-fbb62f8811e6"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "91af13d8-9e6b-54e4-8368-b014c04b3fb1",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "d238563b-f962-5191-9711-b7f0288c8096"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "7ac2f20f-12ad-5603-b7e4-93f0d03390b5",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "00723793-4105-5749-a47e-22ea085f739c"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "4c5bbabf-213d-5783-bfb2-f02d1343d491",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "34e09984-e34b-5f35-909b-3f5728305393"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "27fb0366-5ffa-50df-8794-2c66b7d8f1d7",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "00ba9471-f8c2-5a97-a930-56c32f24489b"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "31111c49-1745-534a-b741-0e77d7c7ebb2",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "f49e0450-2b60-5c52-93b6-d297bcf9eebf"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "8343e60c-c522-508d-8063-cce5b729055e",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "3a244ee3-f3e6-5b34-9084-52c6f1257d5d"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "9d74cd91-6f62-5f62-a5b6-fc633dde310b",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "2cae0527-25aa-5c3d-a5f2-e209cfc6f8af"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "f238c602-e04e-550a-a963-731c0ebbe92a",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "6465005f-addd-5c5b-abf4-f409bd8a18a4"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "34cf953e-6586-54c0-bb02-bd8d1578131a",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "2034d03f-8cf8-5b3c-b7c2-5c0828c7e9bb"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "fac8f9c5-3501-54ea-9e6d-9fc14d765a28",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "d8d5bf54-ee90-5bae-8dfa-29f35daba6ae"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "d3717672-6c0e-5be3-9165-31fff9dfaa2f",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "3ee7e2cc-8ad5-5d64-a917-c5d7eea9bcc9"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "bb0278d0-0ec2-52c0-86af-694134bf605e",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "e53cde6f-79bc-5a6f-8a59-377e0a87a1e7"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "ab16b4df-5669-5cf6-a190-ca0c0e49e2af",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "7e44dc3a-3700-5e46-ae50-bbc47cabd42d"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "e42b5c30-93a6-5442-b0a7-26452c00582d",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "846f39c3-e4d1-5e3b-8485-14df4ec5c1d9"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "4961f337-1c93-5d17-a172-698ebc3dc707",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "cc894232-4cae-5477-bc77-58c427f1720e"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "daee3b92-8f58-5096-b55b-2df224a5116c",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "registrant": {
+      "id": "9394dc51-2259-57af-b921-0a5c7352d6d8"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "15bf02c8-c0c7-5fd7-a79c-3ecb940dfaba",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "registrant": {
+      "id": "9394dc51-2259-57af-b921-0a5c7352d6d8"
+    },
+    "status": {
+      "registrationStatus": "notRegistered"
+    }
+  },
+  {
+    "id": "15116679-1efd-59c7-8f33-0bc7d06bc5ba",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "212573e6-3ce4-5c6a-b2dc-8683e08cb7f7"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "cdfedaac-0462-5010-8508-ab71c0f975a4",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "dfdec10b-c8ac-514b-b78c-fb8004ec2e1f"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "215b2c8d-ecfb-510f-b4e9-64244d145548",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "e5b8e15b-5a72-5803-b163-1e682b08dd7c"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "f692e07e-a6ce-5424-a3a8-a358ba24d968",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "f2994e67-7e3e-5812-bb5d-fbb62f8811e6"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "2b63f943-e251-52fa-b449-ed3df554bb79",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "d238563b-f962-5191-9711-b7f0288c8096"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "5d9c226c-dda7-534c-9ac6-0d59d595d047",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "00723793-4105-5749-a47e-22ea085f739c"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "d0e0f025-7959-5ab8-9c2d-fef382daf811",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "34e09984-e34b-5f35-909b-3f5728305393"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "5bd013b7-afc9-5b0d-980d-b387a8d0868b",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "00ba9471-f8c2-5a97-a930-56c32f24489b"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "d2b40a7c-7559-503b-b47d-b374858802e8",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "f49e0450-2b60-5c52-93b6-d297bcf9eebf"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "01256565-455c-5b52-8b25-36f233c19bdf",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "3a244ee3-f3e6-5b34-9084-52c6f1257d5d"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "95d92f89-cbf0-59fa-b291-e5eeb726ae0e",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "59b87e4c-0fb1-5664-981d-3863fc98c771"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  },
+  {
+    "id": "8af9d5eb-0973-5d4f-97d3-cb11a312a401",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "registrant": {
+      "id": "f886e790-8ecf-50f8-b6d4-7e2f4a209168"
+    },
+    "status": {
+      "registrationStatus": "registered"
+    }
+  }
+]

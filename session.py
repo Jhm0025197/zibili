@@ -12,7 +12,7 @@ reach the server.
 from __future__ import annotations
 
 import sqlite3
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from http.cookies import SimpleCookie
 from typing import Any
 
@@ -22,7 +22,7 @@ from ledger import student_hash
 SESSION_COOKIE = "zibili_person"
 COOKIE_MAX_AGE = 30 * 24 * 3600
 ROLES = ("student", "instructor", "admin")
-COURSE_COLUMNS = "c.id, c.code, c.title, c.term, c.term_label, c.starts_on, c.instructor_id, c.book_id"
+COURSE_COLUMNS = "c.id, c.code, c.title, c.term, c.term_label, c.starts_on, c.instructor_id, c.book_id, c.crn, c.section_number"
 
 
 @dataclass
@@ -30,13 +30,14 @@ class Session:
     person: dict[str, Any]
     course: dict[str, Any] | None
     hash: str | None
+    courses: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def role(self) -> str:
         return self.person["role"]
 
     def to_json(self) -> dict[str, Any]:
-        return {"person": public_person(self.person), "course": self.course}
+        return {"person": public_person(self.person), "course": self.course, "courses": self.courses}
 
 
 def public_person(row: Any) -> dict[str, Any]:
@@ -59,24 +60,31 @@ def get_person(connection: sqlite3.Connection, person_id: str) -> sqlite3.Row | 
     ).fetchone()
 
 
-def course_for(connection: sqlite3.Connection, person: sqlite3.Row) -> dict[str, Any] | None:
-    row = None
+def courses_for(connection: sqlite3.Connection, person: sqlite3.Row) -> list[dict[str, Any]]:
+    """Every section this person teaches or is actively enrolled in, latest first."""
     if person["role"] == "instructor":
-        row = connection.execute(
-            f"SELECT {COURSE_COLUMNS} FROM courses c WHERE c.instructor_id = ? ORDER BY c.starts_on DESC LIMIT 1",
+        rows = connection.execute(
+            f"SELECT {COURSE_COLUMNS} FROM courses c WHERE c.instructor_id = ? ORDER BY c.starts_on DESC, c.code, c.section_number",
             (person["id"],),
-        ).fetchone()
+        ).fetchall()
     elif person["role"] == "student" and person["student_hash"]:
-        row = connection.execute(
+        rows = connection.execute(
             f"""
             SELECT {COURSE_COLUMNS} FROM courses c
             JOIN enrollments e ON e.course_id = c.id
-            WHERE e.student_hash = ?
-            ORDER BY c.starts_on DESC LIMIT 1
+            WHERE e.student_hash = ? AND e.status = 'active'
+            ORDER BY c.starts_on DESC, c.code, c.section_number
             """,
             (person["student_hash"],),
-        ).fetchone()
-    return dict(row) if row else None
+        ).fetchall()
+    else:
+        rows = []
+    return [dict(row) for row in rows]
+
+
+def course_for(connection: sqlite3.Connection, person: sqlite3.Row) -> dict[str, Any] | None:
+    courses = courses_for(connection, person)
+    return courses[0] if courses else None
 
 
 def parse_cookies(header: str | None) -> dict[str, str]:
@@ -98,7 +106,8 @@ def get_session(connection: sqlite3.Connection, cookie_header: str | None) -> Se
     digest = person["student_hash"]
     if digest is None and person["role"] == "student":
         digest = student_hash(connection, person["id"])
-    return Session(person=dict(person), course=course_for(connection, person), hash=digest)
+    courses = courses_for(connection, person)
+    return Session(person=dict(person), course=courses[0] if courses else None, hash=digest, courses=courses)
 
 
 def require_session(session: Session | None) -> Session:

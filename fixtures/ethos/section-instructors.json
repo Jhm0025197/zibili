@@ -1,0 +1,62 @@
+[
+  {
+    "id": "97a7ec9e-f893-5d88-8551-4249c18c45a8",
+    "section": {
+      "id": "d055204a-e591-59d3-a3bb-64091504fb7c"
+    },
+    "instructor": {
+      "id": "fb3ef884-b7a6-5fe5-8d79-f3af33762960"
+    },
+    "instructorRole": {
+      "primary": true
+    }
+  },
+  {
+    "id": "bed8a773-3bc5-5283-aa47-4430fcdad8dd",
+    "section": {
+      "id": "7fdcbbc6-f17a-5708-8784-b008369ea5a3"
+    },
+    "instructor": {
+      "id": "fb3ef884-b7a6-5fe5-8d79-f3af33762960"
+    },
+    "instructorRole": {
+      "primary": true
+    }
+  },
+  {
+    "id": "58d58164-691a-58a2-bd27-277b81be0f2b",
+    "section": {
+      "id": "ce5a6b6c-55c8-5b4d-a202-87c90b1cf3f1"
+    },
+    "instructor": {
+      "id": "79dfc340-5a72-550e-833f-e60203cfdf59"
+    },
+    "instructorRole": {
+      "primary": true
+    }
+  },
+  {
+    "id": "d73ca05d-48a9-54c4-9817-81e189028cfd",
+    "section": {
+      "id": "a7f5017d-6650-5421-ad72-0aebc485418d"
+    },
+    "instructor": {
+      "id": "d55d9569-c7c0-589d-ba7a-a67a23e7576b"
+    },
+    "instructorRole": {
+      "primary": true
+    }
+  },
+  {
+    "id": "34ab040f-24e2-50c1-b709-6db4ebb8b3d1",
+    "section": {
+      "id": "3af7c0d6-247c-5ec9-9652-284f226d888a"
+    },
+    "instructor": {
+      "id": "fb3ef884-b7a6-5fe5-8d79-f3af33762960"
+    },
+    "instructorRole": {
+      "primary": true
+    }
+  }
+]

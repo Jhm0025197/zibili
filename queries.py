@@ -24,10 +24,67 @@ PRIMARY_CHUNK = "json_extract(e.chunk_ids, '$[0]')"
 DWELL_SECONDS = "COALESCE(json_extract(e.payload, '$.seconds'), 0)"
 COURSE_SUMMARY = """
     SELECT c.id, c.code, c.title, c.term, c.term_label, c.starts_on, c.book_id, c.instructor_id,
-           (SELECT COUNT(*) FROM enrollments WHERE course_id = c.id) AS enrolled,
-           (SELECT COUNT(*) FROM assignments WHERE course_id = c.id) AS assigned
+           c.crn, c.subject, c.number, c.section_number, c.source,
+           (SELECT COUNT(*) FROM enrollments WHERE course_id = c.id AND status = 'active') AS enrolled,
+           (SELECT COUNT(*) FROM assignments WHERE course_id = c.id) AS assigned,
+           (SELECT COUNT(*) FROM course_books WHERE course_id = c.id) AS books
       FROM courses c
 """
+
+
+def books_for_course(connection: sqlite3.Connection, course_id: str) -> list[dict[str, Any]]:
+    return _rows(
+        connection.execute(
+            """
+            SELECT b.id, b.title, b.author, b.color, b.page_count AS pages
+              FROM course_books cb JOIN books b ON b.id = cb.book_id
+             WHERE cb.course_id = ? ORDER BY b.title COLLATE NOCASE
+            """,
+            (course_id,),
+        )
+    )
+
+
+# --- student ------------------------------------------------------------------
+
+
+def courses_for_student(connection: sqlite3.Connection, student_hash: str) -> list[dict[str, Any]]:
+    """The student's active sections, latest term first, each with its books.
+    Used for the student's own shelf only; it never leaves their session."""
+    courses = _rows(
+        connection.execute(
+            """
+            SELECT c.id, c.code, c.title, c.term, c.term_label, c.starts_on, c.crn, c.section_number, c.source,
+                   p.display_name AS instructor
+              FROM enrollments e
+              JOIN courses c ON c.id = e.course_id
+              JOIN people p ON p.id = c.instructor_id
+             WHERE e.student_hash = ? AND e.status = 'active'
+             ORDER BY c.starts_on DESC, c.code, c.section_number
+            """,
+            (student_hash,),
+        )
+    )
+    for course in courses:
+        course["books"] = books_for_course(connection, course["id"])
+    return courses
+
+
+def course_for_book(connection: sqlite3.Connection, student_hash: str, book_id: str) -> dict[str, Any] | None:
+    """The section a student's reading of this book belongs to: the latest
+    active enrollment whose section uses the book."""
+    row = connection.execute(
+        """
+        SELECT c.id, c.instructor_id, c.term
+          FROM enrollments e
+          JOIN courses c ON c.id = e.course_id
+          JOIN course_books cb ON cb.course_id = c.id
+         WHERE e.student_hash = ? AND e.status = 'active' AND cb.book_id = ?
+         ORDER BY c.starts_on DESC LIMIT 1
+        """,
+        (student_hash, book_id),
+    ).fetchone()
+    return dict(row) if row else None
 
 
 def _rows(cursor: sqlite3.Cursor) -> list[dict[str, Any]]:
@@ -86,7 +143,7 @@ def roster(connection: sqlite3.Connection, course_id: str, instructor_id: str) -
               FROM enrollments en
               JOIN people p ON p.student_hash = en.student_hash
               LEFT JOIN activity a ON a.student_hash = en.student_hash
-             WHERE en.course_id = (SELECT id FROM course)
+             WHERE en.course_id = (SELECT id FROM course) AND en.status = 'active'
              ORDER BY p.display_name
             """,
             (course_id, instructor_id),
@@ -101,7 +158,7 @@ def student_name(connection: sqlite3.Connection, course_id: str, instructor_id: 
           FROM people p
           JOIN enrollments en ON en.student_hash = p.student_hash
          WHERE en.course_id = (SELECT id FROM courses WHERE id = ? AND instructor_id = ?)
-           AND p.student_hash = ?
+           AND p.student_hash = ? AND en.status = 'active'
         """,
         (course_id, instructor_id, student_hash),
     ).fetchone()
@@ -186,7 +243,7 @@ def term_totals(connection: sqlite3.Connection) -> list[dict[str, Any]]:
                    COUNT(DISTINCT c.id) AS courses,
                    (SELECT COUNT(*) FROM enrollments en
                       JOIN courses c2 ON c2.id = en.course_id
-                     WHERE c2.term = c.term) AS students_enrolled,
+                     WHERE c2.term = c.term AND en.status = 'active') AS students_enrolled,
                    (SELECT COUNT(DISTINCT e.student_hash) FROM events e WHERE e.term = c.term) AS students_active,
                    (SELECT COUNT(DISTINCT json_extract(e.chunk_ids, '$[0]')) FROM events e
                      WHERE e.term = c.term AND e.verb = 'opened') AS sections_opened,
@@ -195,7 +252,7 @@ def term_totals(connection: sqlite3.Connection) -> list[dict[str, Any]]:
                    (SELECT COALESCE(SUM(COALESCE(json_extract(e.payload, '$.seconds'), 0)), 0)
                       FROM events e WHERE e.term = c.term AND e.verb = 'dwelled') AS dwell_seconds,
                    (SELECT COALESCE(SUM(ps.fee_cents * (
-                             SELECT COUNT(*) FROM enrollments en WHERE en.course_id = ps.course_id
+                             SELECT COUNT(*) FROM enrollments en WHERE en.course_id = ps.course_id AND en.status = 'active'
                            )), 0)
                       FROM prior_spend ps
                       JOIN courses c3 ON c3.id = ps.course_id
@@ -214,7 +271,7 @@ def course_totals(connection: sqlite3.Connection, term: str) -> list[dict[str, A
             """
             SELECT c.id AS course_id, c.code, c.title, c.term, c.term_label, c.book_id,
                    p.display_name AS instructor,
-                   (SELECT COUNT(*) FROM enrollments en WHERE en.course_id = c.id) AS enrolled,
+                   (SELECT COUNT(*) FROM enrollments en WHERE en.course_id = c.id AND en.status = 'active') AS enrolled,
                    (SELECT COUNT(DISTINCT e.student_hash) FROM events e WHERE e.course_id = c.id) AS students_active,
                    (SELECT COUNT(DISTINCT json_extract(e.chunk_ids, '$[0]')) FROM events e
                      WHERE e.course_id = c.id AND e.verb = 'opened') AS sections_opened,
@@ -222,7 +279,7 @@ def course_totals(connection: sqlite3.Connection, term: str) -> list[dict[str, A
                       FROM events e WHERE e.course_id = c.id AND e.verb = 'dwelled') AS dwell_seconds,
                    ps.provider,
                    ps.fee_cents,
-                   COALESCE(ps.fee_cents, 0) * (SELECT COUNT(*) FROM enrollments en WHERE en.course_id = c.id) AS displaced_cents
+                   COALESCE(ps.fee_cents, 0) * (SELECT COUNT(*) FROM enrollments en WHERE en.course_id = c.id AND en.status = 'active') AS displaced_cents
               FROM courses c
               JOIN people p ON p.id = c.instructor_id
               LEFT JOIN prior_spend ps ON ps.course_id = c.id
@@ -239,7 +296,7 @@ def sections_live(connection: sqlite3.Connection, term: str) -> int:
         """
         SELECT COUNT(*) FROM sections
          WHERE tombstoned = 0
-           AND book_id IN (SELECT DISTINCT book_id FROM courses WHERE term = ?)
+           AND book_id IN (SELECT DISTINCT cb.book_id FROM course_books cb JOIN courses c ON c.id = cb.course_id WHERE c.term = ?)
         """,
         (term,),
     ).fetchone()

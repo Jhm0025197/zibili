@@ -91,6 +91,9 @@ def seed_people(connection: sqlite3.Connection, seed_dir: Path) -> int:
             "INSERT INTO enrollments (course_id, student_hash, enrolled_at) VALUES (?, ?, ?)",
             [(c["id"], digest, now) for _, _, digest in roster],
         )
+        connection.execute(
+            "INSERT OR IGNORE INTO course_books (course_id, book_id) VALUES (?, ?)", (c["id"], course["book_id"])
+        )
     connection.executemany(
         "INSERT OR IGNORE INTO prior_spend (course_id, provider, fee_cents, note) VALUES (?, ?, ?, ?)",
         [(row["course_id"], row["provider"], row["fee_cents"], row.get("note")) for row in spend["courses"]],

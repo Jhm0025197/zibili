@@ -67,7 +67,7 @@ class IngestTests(unittest.TestCase):
             version = connection.execute("PRAGMA user_version").fetchone()[0]
         finally:
             connection.close()
-        self.assertEqual(version, 2)
+        self.assertEqual(version, 3)
 
 
 if __name__ == "__main__":

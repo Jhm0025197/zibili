@@ -44,12 +44,19 @@ function sectionLink(bookId, row) {
   return `<a href="${readHref(bookId, row.start_page)}" target="_blank" rel="noopener">${sectionLabel(row)}</a>`
 }
 
+function sectionName(c) {
+  const bits = [c.code]
+  if (c.section_number) bits.push(c.section_number)
+  bits.push(c.term_label)
+  return bits.join(' · ')
+}
+
 function termNav(courses, current) {
   if (courses.length < 2) return ''
-  return `<nav class="term-nav" aria-label="Term">
+  return `<nav class="term-nav" aria-label="Section">
     ${courses
       .map(
-        (c) => `<a href="${courseHref(c.id)}" class="pill ${c.id === current.id ? 'is-on' : ''}" ${c.id === current.id ? 'aria-current="page"' : ''}>${escapeHtml(c.term_label)}</a>`,
+        (c) => `<a href="${courseHref(c.id)}" class="pill ${c.id === current.id ? 'is-on' : ''}" ${c.id === current.id ? 'aria-current="page"' : ''}>${escapeHtml(sectionName(c))}</a>`,
       )
       .join('')}
   </nav>`
@@ -100,7 +107,7 @@ async function renderRoster() {
     .sort((a, b) => b.dwell_seconds - a.dwell_seconds)
 
   const header = `<header class="dash-head">
-    <p class="dash-kicker">${escapeHtml(course.code)} · ${escapeHtml(course.term_label)}</p>
+    <p class="dash-kicker">${escapeHtml(sectionName(course))}${course.crn ? ` · CRN ${escapeHtml(course.crn)}` : ''}</p>
     <h1>${escapeHtml(course.title)}</h1>
     <p class="dash-lede">${course.enrolled} students, ${assignedTotal} sections set as reading. A section counts as read when a student reached the end of it and stayed at least a quarter of its estimated reading time.</p>
     ${termNav(courses, course)}

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "0136a615-0f84-569a-bf65-58fe274f71f4",
+    "subject": {
+      "id": "73a0715d-2bec-5a05-bf6a-f4886881e256"
+    },
+    "number": "1010",
+    "titles": [
+      {
+        "type": {
+          "category": "long"
+        },
+        "value": "Introduction to Philosophy"
+      }
+    ]
+  },
+  {
+    "id": "c6df38bf-e002-5a74-9ff0-96b8387328b8",
+    "subject": {
+      "id": "63554ba1-abcd-5e7f-a227-357f912e2949"
+    },
+    "number": "2241",
+    "titles": [
+      {
+        "type": {
+          "category": "long"
+        },
+        "value": "Business Law I"
+      }
+    ]
+  },
+  {
+    "id": "74ec7c04-85b2-51aa-928b-36d241931ccd",
+    "subject": {
+      "id": "daa123b9-67f0-50f1-9399-092dac9aca8d"
+    },
+    "number": "1101",
+    "titles": [
+      {
+        "type": {
+          "category": "long"
+        },
+        "value": "Composition I"
+      }
+    ]
+  }
+]

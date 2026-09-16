@@ -38,6 +38,7 @@ const body =
     </div>
 
     <div data-continue></div>
+    <div data-courses></div>
     ${shelf('All titles', 'list.html?list=all', all)}
     ${shelf('Newly added', 'list.html?list=new', added)}
 
@@ -60,7 +61,45 @@ renderLibby(
 
 bindCovers()
 
-if (CATALOG_STATUS === 'ok' && session.person?.role === 'student') loadContinue()
+if (CATALOG_STATUS === 'ok' && session.person?.role === 'student') {
+  loadContinue()
+  loadCourses()
+}
+
+async function loadCourses() {
+  try {
+    const response = await fetch('/api/me/courses', { headers: { Accept: 'application/json' } })
+    if (!response.ok) return
+    const courses = await response.json()
+    if (!courses.length) return
+    const slot = document.querySelector('[data-courses]')
+    slot.outerHTML = courses
+      .map((course) => {
+        const books = course.books.map((b) => getBook(b.id)).filter(Boolean)
+        const label = `${course.code}${course.section_number ? ` · ${course.section_number}` : ''} · ${course.term_label}`
+        const idAttr = `shelf-course-${escapeHtml(course.id)}`
+        return `<section class="home-shelf" aria-labelledby="${idAttr}">
+          <div class="shelf-head">
+            <h2 id="${idAttr}">${escapeHtml(label)}</h2>
+            <span class="muted small">${escapeHtml(course.title)} · ${escapeHtml(course.instructor)}</span>
+          </div>
+          ${
+            books.length
+              ? `<div class="shelf-rail">${books
+                  .map(
+                    (book) => `<a href="${titleHref(book.id)}" class="shelf-card" aria-label="${escapeHtml(book.title)}">${coverHTML(book)}</a>`,
+                  )
+                  .join('')}</div>`
+              : '<p class="libby-empty">No textbook is attached to this section yet.</p>'
+          }
+        </section>`
+      })
+      .join('')
+    bindCovers()
+  } catch {
+    // The course shelves are a convenience; the library still works without them.
+  }
+}
 
 async function loadContinue() {
   try {

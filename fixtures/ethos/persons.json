@@ -1,0 +1,827 @@
+[
+  {
+    "id": "fb3ef884-b7a6-5fe5-8d79-f3af33762960",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Marisol",
+        "lastName": "Reyes",
+        "fullName": "Marisol Reyes"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00100001"
+      }
+    ],
+    "emails": [
+      {
+        "address": "mreyes@example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "79dfc340-5a72-550e-833f-e60203cfdf59",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Chidi",
+        "lastName": "Okonkwo",
+        "fullName": "Chidi Okonkwo"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00100002"
+      }
+    ],
+    "emails": [
+      {
+        "address": "cokonkwo@example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "d55d9569-c7c0-589d-ba7a-a67a23e7576b",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Astrid",
+        "lastName": "Lund",
+        "fullName": "Astrid Lund"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00100003"
+      }
+    ],
+    "emails": [
+      {
+        "address": "alund@example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "212573e6-3ce4-5c6a-b2dc-8683e08cb7f7",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Ifeoma",
+        "lastName": "Abara",
+        "fullName": "Ifeoma Abara"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200000"
+      }
+    ],
+    "emails": [
+      {
+        "address": "iabara@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "dfdec10b-c8ac-514b-b78c-fb8004ec2e1f",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Rafael",
+        "lastName": "Alvarez",
+        "fullName": "Rafael Alvarez"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200001"
+      }
+    ],
+    "emails": [
+      {
+        "address": "ralvarez@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "e5b8e15b-5a72-5803-b163-1e682b08dd7c",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Casey",
+        "lastName": "Bennett",
+        "fullName": "Casey Bennett"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200002"
+      }
+    ],
+    "emails": [
+      {
+        "address": "cbennett@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "f2994e67-7e3e-5812-bb5d-fbb62f8811e6",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Jiwon",
+        "lastName": "Cho",
+        "fullName": "Jiwon Cho"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200003"
+      }
+    ],
+    "emails": [
+      {
+        "address": "jcho@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "d238563b-f962-5191-9711-b7f0288c8096",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Marek",
+        "lastName": "Dansky",
+        "fullName": "Marek Dansky"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200004"
+      }
+    ],
+    "emails": [
+      {
+        "address": "mdansky@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "00723793-4105-5749-a47e-22ea085f739c",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Nour",
+        "lastName": "El-Hassan",
+        "fullName": "Nour El-Hassan"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200005"
+      }
+    ],
+    "emails": [
+      {
+        "address": "nelhassan@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "34e09984-e34b-5f35-909b-3f5728305393",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Camille",
+        "lastName": "Fournier",
+        "fullName": "Camille Fournier"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200006"
+      }
+    ],
+    "emails": [
+      {
+        "address": "cfournier@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "00ba9471-f8c2-5a97-a930-56c32f24489b",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Tomás",
+        "lastName": "Gallardo",
+        "fullName": "Tomás Gallardo"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200007"
+      }
+    ],
+    "emails": [
+      {
+        "address": "tgallardo@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "f49e0450-2b60-5c52-93b6-d297bcf9eebf",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Layla",
+        "lastName": "Haddad",
+        "fullName": "Layla Haddad"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200008"
+      }
+    ],
+    "emails": [
+      {
+        "address": "lhaddad@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "3a244ee3-f3e6-5b34-9084-52c6f1257d5d",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Sol",
+        "lastName": "Ibarra",
+        "fullName": "Sol Ibarra"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200009"
+      }
+    ],
+    "emails": [
+      {
+        "address": "sibarra@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "59b87e4c-0fb1-5664-981d-3863fc98c771",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Pieter",
+        "lastName": "Jansen",
+        "fullName": "Pieter Jansen"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200010"
+      }
+    ],
+    "emails": [
+      {
+        "address": "pjansen@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "f886e790-8ecf-50f8-b6d4-7e2f4a209168",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Simran",
+        "lastName": "Kaur",
+        "fullName": "Simran Kaur"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200011"
+      }
+    ],
+    "emails": [
+      {
+        "address": "skaur@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "8cb217d5-c690-5cfb-b231-2894878a81a2",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Ingrid",
+        "lastName": "Larsen",
+        "fullName": "Ingrid Larsen"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200012"
+      }
+    ],
+    "emails": [
+      {
+        "address": "ilarsen@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "2e4e29b3-3c56-5663-bc19-aa17f2542874",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Thabo",
+        "lastName": "Mbeki",
+        "fullName": "Thabo Mbeki"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200013"
+      }
+    ],
+    "emails": [
+      {
+        "address": "tmbeki@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "78165106-df68-5ccd-85cd-000445c904ba",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Rin",
+        "lastName": "Nakamura",
+        "fullName": "Rin Nakamura"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200014"
+      }
+    ],
+    "emails": [
+      {
+        "address": "rnakamura@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "ff0c220a-61e1-5197-878c-2e47f8c1853c",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Bola",
+        "lastName": "Oyelaran",
+        "fullName": "Bola Oyelaran"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200015"
+      }
+    ],
+    "emails": [
+      {
+        "address": "boyelaran@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "7f7fd51f-14bc-5f13-b7c3-48e15947139a",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Yana",
+        "lastName": "Petrova",
+        "fullName": "Yana Petrova"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200016"
+      }
+    ],
+    "emails": [
+      {
+        "address": "ypetrova@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "7ce515d9-84dd-5fd6-ad3a-957fcb5295b3",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Diego",
+        "lastName": "Quintero",
+        "fullName": "Diego Quintero"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200017"
+      }
+    ],
+    "emails": [
+      {
+        "address": "dquintero@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "d957093e-5128-55a4-9eed-a34d2b6d5a85",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Ellis",
+        "lastName": "Rasmussen",
+        "fullName": "Ellis Rasmussen"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200018"
+      }
+    ],
+    "emails": [
+      {
+        "address": "erasmussen@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "00d07888-ce4d-5792-af15-c57943cc5fc4",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Beatriz",
+        "lastName": "Silva",
+        "fullName": "Beatriz Silva"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200019"
+      }
+    ],
+    "emails": [
+      {
+        "address": "bsilva@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "2cae0527-25aa-5c3d-a5f2-e209cfc6f8af",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Haruto",
+        "lastName": "Tanaka",
+        "fullName": "Haruto Tanaka"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200020"
+      }
+    ],
+    "emails": [
+      {
+        "address": "htanaka@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "6465005f-addd-5c5b-abf4-f409bd8a18a4",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Marisa",
+        "lastName": "Ubaldo",
+        "fullName": "Marisa Ubaldo"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200021"
+      }
+    ],
+    "emails": [
+      {
+        "address": "mubaldo@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "2034d03f-8cf8-5b3c-b7c2-5c0828c7e9bb",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Andrés",
+        "lastName": "Vargas",
+        "fullName": "Andrés Vargas"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200022"
+      }
+    ],
+    "emails": [
+      {
+        "address": "avargas@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "d8d5bf54-ee90-5bae-8dfa-29f35daba6ae",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Jordan",
+        "lastName": "Whitfield",
+        "fullName": "Jordan Whitfield"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200023"
+      }
+    ],
+    "emails": [
+      {
+        "address": "jwhitfield@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "3ee7e2cc-8ad5-5d64-a917-c5d7eea9bcc9",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Lian",
+        "lastName": "Zhao",
+        "fullName": "Lian Zhao"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200024"
+      }
+    ],
+    "emails": [
+      {
+        "address": "lzhao@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "e53cde6f-79bc-5a6f-8a59-377e0a87a1e7",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Priya",
+        "lastName": "Natarajan",
+        "fullName": "Priya Natarajan"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200025"
+      }
+    ],
+    "emails": [
+      {
+        "address": "pnatarajan@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "7e44dc3a-3700-5e46-ae50-bbc47cabd42d",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Mateo",
+        "lastName": "Ruiz",
+        "fullName": "Mateo Ruiz"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200026"
+      }
+    ],
+    "emails": [
+      {
+        "address": "mruiz@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "846f39c3-e4d1-5e3b-8485-14df4ec5c1d9",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Hana",
+        "lastName": "Kobayashi",
+        "fullName": "Hana Kobayashi"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200027"
+      }
+    ],
+    "emails": [
+      {
+        "address": "hkobayashi@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "cc894232-4cae-5477-bc77-58c427f1720e",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Omar",
+        "lastName": "Farouk",
+        "fullName": "Omar Farouk"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200028"
+      }
+    ],
+    "emails": [
+      {
+        "address": "ofarouk@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  },
+  {
+    "id": "9394dc51-2259-57af-b921-0a5c7352d6d8",
+    "names": [
+      {
+        "type": {
+          "category": "legal"
+        },
+        "firstName": "Greta",
+        "lastName": "Lindqvist",
+        "fullName": "Greta Lindqvist"
+      }
+    ],
+    "credentials": [
+      {
+        "type": "bannerId",
+        "value": "A00200029"
+      }
+    ],
+    "emails": [
+      {
+        "address": "glindqvist@students.example.edu",
+        "preference": "primary"
+      }
+    ]
+  }
+]

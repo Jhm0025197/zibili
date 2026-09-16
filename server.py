@@ -45,9 +45,11 @@ from library import (
 )
 from queries import (
     assigned_sections,
+    course_for_book,
     course_for_instructor,
     course_totals,
     courses_for_instructor,
+    courses_for_student,
     elapsed_days,
     prior_spend_meta,
     roster,
@@ -327,6 +329,9 @@ class ZibiliHandler(BaseHTTPRequestHandler):
         if method in {"GET", "HEAD"} and path == "/api/me/positions":
             self.handle_my_positions()
             return
+        if method in {"GET", "HEAD"} and path == "/api/me/courses":
+            self.handle_my_courses()
+            return
         progress = BOOK_PROGRESS_RE.match(path)
         if method in {"GET", "HEAD"} and progress:
             self.handle_progress(progress.group(1))
@@ -487,11 +492,14 @@ class ZibiliHandler(BaseHTTPRequestHandler):
                 events = validate_batch(body)
             except InvalidEvent as exc:
                 raise APIError(422, "invalid_event", str(exc)) from exc
+            # The section this reading belongs to: the latest active enrollment
+            # that uses the book, else the student's latest section.
+            course = course_for_book(connection, session.hash, events[0].book_id) or session.course
             context = EventContext(
                 student_hash=session.hash,
-                course_id=session.course["id"],
-                instructor_id=session.course["instructor_id"],
-                term=session.course["term"],
+                course_id=course["id"],
+                instructor_id=course["instructor_id"],
+                term=course["term"],
             )
             with self.app.db.transaction(connection):
                 written = write_events(connection, events, context)
@@ -518,6 +526,15 @@ class ZibiliHandler(BaseHTTPRequestHandler):
         finally:
             connection.close()
         self.send_json(200, payload)
+
+    def handle_my_courses(self) -> None:
+        connection = self.app.db.connect()
+        try:
+            session = require_session(self.session(connection))
+            rows = courses_for_student(connection, session.hash) if session.hash else []
+        finally:
+            connection.close()
+        self.send_json(200, rows)
 
     def handle_my_positions(self) -> None:
         connection = self.app.db.connect()

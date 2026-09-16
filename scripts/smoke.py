@@ -153,7 +153,7 @@ STEPS = [
     ("reader-tools", None, f"/read.html?id={BOOK}&page=20", CANVAS, "of 421", act_tools),
     ("reader-reload", None, f"/read.html?id={BOOK}&page=20", CANVAS, "of 421", act_reload),
     ("menu-picker", None, "/menu.html", ".picker-person", "Prof. Marisol Reyes"),
-    ("home-student", "stu-cho", "/index.html", ".shelf-card", "Your library"),
+    ("home-student", "stu-cho", "/index.html", ".shelf-card", "PHIL 1010"),
     ("reader-student", "stu-cho", f"/read.html?id={BOOK}&page=30", CANVAS, "1.2"),
     ("reader-contents", "stu-cho", f"/read.html?id={BOOK}&page=30", CANVAS, "1.2", act_contents),
     ("shelf-student", "stu-cho", "/shelf.html", ".chip-row", "Reading"),

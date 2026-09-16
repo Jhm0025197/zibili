@@ -14,7 +14,10 @@ One line per thing that is out of scope for SLC v1. Anything here is a deliberat
 - Reading-profile typography (typeface, spacing, measure): the book is a PDF, so Reading tools offer zoom, page colour, a ruler and focus mode instead. Typeface and spacing need the markdown reader.
 - App-chrome text size: browser zoom covers it; a dedicated control would need the px-based styles rewritten in rem.
 - EPUB and CNXML ingest adapters.
-- Multi-course, multi-book seeding: one course, one book. The second ingested book is in the library but not attached to a course.
+- Cancelled sections: the sync marks enrollments dropped but keeps the section; hide cancelled sections from the course window.
+- Sync scheduling: run `python sync.py ethos` nightly from a scheduler; the app has no built-in timer on purpose.
+- Banner ID as the login identity: the dev picker still lists everyone; SSO or LTI should map to `people.external_id`.
+- Books per section beyond the sidecar: a bookstore adoption feed or an instructor override.
 - Signed session cookie and CSRF token: v1 dev login sets an unsigned cookie on localhost. Do this before the server is reachable from anywhere else.
 - Rate limiting on POST /api/events.
 - Instructor-authored assignments: the assignment set is seeded.

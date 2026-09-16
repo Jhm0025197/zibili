@@ -43,6 +43,24 @@ Signed-out visitors can read and download but nothing is recorded. All people, t
 - `seed.py` fills an empty database on first run.
 - `js/` is one module per page plus `chrome.js` (shell), `data.js` (catalog), `session.js` (who is signed in), and `ledger.js` (the event batcher).
 
+## Banner
+
+Sections, instructors, and enrollments come from Banner through the Ellucian Ethos Integration API. Nothing calls Ethos at request time; an admin runs the sync from a terminal or a schedule:
+
+```bash
+python sync.py fixtures fixtures/ethos       # the shipped synthetic set, no key needed
+ETHOS_API_KEY=... python sync.py ethos --term 202680
+python sync.py ethos --dry-run               # fetch and report, write nothing
+```
+
+The sync writes people (with Banner ID and email), one course row per section (CRN, subject, number, section, term, primary instructor), the section-to-book mapping, and active enrollments. A registration that disappears or reads not-registered becomes `dropped`; nothing is deleted, so the ledger keeps its context. Running it twice changes nothing. Seeded rows are never touched.
+
+Books attach to sections through the `course_codes` in each book's sidecar: a book listing `PHI1010` attaches to every section of subject PHI number 1010. A section with no matching book still appears on the student's home page, saying no textbook is attached yet.
+
+Students see a shelf per enrolled section on the home page. Instructors see every section they teach in the course window. Reading events are attributed to the student's latest active section that uses the book.
+
+`ethos.py` holds the client and the fixture reader; `sync.py` holds the writes. If IT hands over a different interface, `ethos.py` is the one file to swap.
+
 ## Checks
 
 ```bash
