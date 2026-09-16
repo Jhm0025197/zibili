@@ -66,6 +66,10 @@ What works, what is next. Updated at the end of every phase.
 - Books attach to sections through the sidecar `course_codes`. Students get a shelf per enrolled section on the home page; instructors get every section they teach in the course window; reading events are attributed to the latest active section that uses the book.
 - Live Ethos access needs an API key from IT (`ETHOS_API_KEY`). Until then the fixture set stands in and the tests run against it.
 
+## Palette: IRSC (done)
+
+- Colours come from the IRSC Brand Guide (2025): River Blue `#003DA5` is the accent, on a simple off-white, with a light tint of the blue for the rail and selection. Navy, gray, and yellow are defined as variables for later use. Dark mode is a cool navy with a lighter River Blue as the accent. Every colour routes through `--libby-*` variables in `css/styles.css`; the IRSC values sit at the top of the file.
+
 ## Done condition, checked
 
 1. Ingest twice, zero ID churn: yes. `books/id-map.json` is byte-identical after a re-ingest and after `--force`.
